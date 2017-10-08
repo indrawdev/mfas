@@ -9,4 +9,14 @@ class MApkPerorangan extends CI_Model {
 		$this->load->database();
 	}
 
+	public function listPeroranganAll()
+	{
+
+	}
+
+	public function listPerorangan()
+	{
+		
+	}
+
 }

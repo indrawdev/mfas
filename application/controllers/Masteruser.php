@@ -13,4 +13,29 @@ class Masteruser extends CI_Controller {
 	public function index() {
 		$this->load->view('vmasteruser');
 	}
+
+	// TAB SETUP USER
+	public function gridcabang() {
+
+	}
+
+	public function gridaksescabang() {
+
+	}
+
+	// TAB SETUP LEVEL
+	public function gridlevel() {
+
+	}
+
+	// TAB DAFTAR USER
+	public function griduser() {
+
+	}
+
+	// TAB ACTIVITY
+	public function gridactivity() {
+
+	}
+
 }

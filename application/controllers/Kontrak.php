@@ -13,4 +13,21 @@ class Kontrak extends CI_Controller {
 	public function index() {
 		$this->load->view('vkontrak');
 	}
+
+	public function gridkonsumen() {
+		
+	}
+
+	public function griddokumen() {
+
+	}
+
+	public function cekprint() {
+
+	}
+
+	public function print() {
+
+	}
+
 }

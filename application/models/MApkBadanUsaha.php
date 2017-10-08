@@ -9,4 +9,24 @@ class MApkBadanUsaha extends CI_Model {
 		$this->load->database();
 	}
 
+	public function listBadanUsahaAll($sCari)
+	{
+		$xSQL = ("
+
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listBadanUsaha($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+
+		");
+		
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 }
