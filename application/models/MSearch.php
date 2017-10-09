@@ -9,6 +9,23 @@ class MSearch extends CI_Model {
 		$this->load->database();
 	}
 
+	public function getLembaga($sKode)
+	{
+		$xSQL = ("
+			SELECT fs_kode_lembaga_keuangan1, 
+				fs_kode_lembaga_keuangan2, fs_nama_lembaga_keuangan
+			FROM tm_lembagakeuangan
+			WHERE fs_kode_cabang = '".trim($sKode)."'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fs_kode_lembaga_keuangan1 ASC
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function getReferensi($sKode) 
 	{
 		$xSQL = ("

@@ -144,7 +144,52 @@ Ext.onReady(function() {
 		}
 	});
 
-	// COMPONENT FORM DATA KONSUMEN
+
+	// GROUP SELECT 'TM_LEMBAGAKEUANGAN'
+	var grupLembaga = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/lembaga'
+		}
+	});
+
+	// GROUP SELECT 'TM_REFERENSI'
+	var grupJenisPiutan = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'jenis_piutang'
+				});
+			}
+		}
+	});
+
+
+	// COMPONENT FORM DATA UTAMA
 	var txtNoAPK = {
 		anchor: '100%',
 		fieldLabel: 'No. APK',
@@ -307,7 +352,7 @@ Ext.onReady(function() {
 
 	var txtPropinsi = {
 		anchor: '100%',
-		fieldLabel: 'Provinsi',
+		fieldLabel: 'Propinsi',
 		fieldStyle: 'text-transform: uppercase;',
 		id: 'txtPropinsi',
 		name: 'txtPropinsi',
@@ -434,7 +479,7 @@ Ext.onReady(function() {
 		xtype: 'textfield'
 	};
 
-	// COMPONENT FORM DATA UTAMA
+	// COMPONENT FORM DATA KONSUMEN
 	var txtNamaPerusahaan = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
@@ -1106,7 +1151,15 @@ Ext.onReady(function() {
 	};
 
 	var cboPotongPencairan = {
-
+		anchor: '100%',
+		displayField: 'fs_nama',
+		editable: false,
+		fieldLabel: 'Dimuka',
+		id: 'cboPotongPencairan',
+		name: 'cboPotongPencairan',
+		store: '',
+		valueField: 'fs_kode',
+		xtype: 'combobox'
 	};
 
 	var txtHargaOTR = {
@@ -1237,7 +1290,7 @@ Ext.onReady(function() {
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
-		fieldLabel: 'Cara Bayar',
+		fieldLabel: 'Angs Dibayar Dealer',
 		id: 'cboAngsDibayarDealer',
 		name: 'cboAngsDibayarDealer',
 		store: '',
@@ -1658,8 +1711,94 @@ Ext.onReady(function() {
 	};
 
 	var lblNilaiCair = {
-
+		anchor: '100%',
+		fieldLabel: 'Nilai Cair',
+		fieldStyle: 'text-transform: uppercase;',
+        name: 'lblNilaiCair',
+        value: '10.000.000',
+        fieldCls: 'biggertext',
+        labelCls: 'redlabel',
+        xtype: 'displayfield'
 	};
+
+
+	// FUNCTIONS TAB DATA UTAMA
+	function fnResetDataUtama() {
+
+	}
+
+	function fnCekSaveDataUtama() {
+
+	}
+
+	function fnSaveDataUtama() {
+
+	}
+
+	// FUNCTIONS TAB DATA PERORANGAN
+	function fnResetDataPerorangan() {
+
+	}
+
+	function fnCekSaveDataPerorangan() {
+
+	}
+
+	function fnSaveDataPerorangan() {
+
+	}
+
+	// FUNCTIONS TAB DATA KENDARAAN
+	function fnResetDataKendaraan() {
+
+	}
+
+	function fnCekSaveDataKendaraan() {
+
+	}
+
+	function fnSaveDataKendaraan() {
+
+	}
+
+	// FUNCTIONS TAB DATA STRUKTUR KREDIT
+	function fnResetDataStrukturKredit() {
+
+	}
+
+	function fnCekSaveDataStrukturKredit() {
+
+	}
+
+	function fnSaveDataStrukturKredit() {
+
+	}
+
+	// FUNCTIONS TAB DATA PENGURUS
+	function fnResetDataPengurus() {
+
+	}
+
+	function fnCekSaveDataPengurus() {
+
+	}
+
+	function fnSaveDataPengurus() {
+
+	}
+
+	// FUNCTIONS TAB DATA PENCAIRAN
+	function fnResetDataPencairan() {
+
+	}
+
+	function fnCekSaveDataPencairan() {
+
+	}
+
+	function fnSaveDataPencairan() {
+
+	}
 
 	var frmApkPerorangan = Ext.create('Ext.form.Panel', {
 		border: false,
@@ -2033,7 +2172,8 @@ Ext.onReady(function() {
 								style: 'padding: 5px;',
 								xtype: 'fieldset',
 								items: [
-									txtTdkAngsuran
+									txtTdkAngsuran,
+									cboPotongPencairan
 								]
 							}]
 						}]
@@ -2209,7 +2349,7 @@ Ext.onReady(function() {
 								title: 'Hasil Nilai Cair',
 								xtype: 'fieldset',
 								items: [
-									
+									lblNilaiCair
 								]
 							}]
 						},{

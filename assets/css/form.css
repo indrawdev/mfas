@@ -56,6 +56,17 @@ body {
     min-height: 10px;
 }*/
 
+/* SET SIZE FONT */
+.redlabel {
+    font-size: 12px;
+    color: red;
+}
+
+.biggertext {
+    font-size: 40px;
+}
+
+
 /* SUPPORT */
 .support {
     position: relative;
