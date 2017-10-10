@@ -148,7 +148,8 @@ Ext.onReady(function() {
 	var txtNoAPK = {
 		anchor: '100%',
 		fieldLabel: 'No. APK',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtNoAPK',
 		name: 'txtNoAPK',
 		xtype: 'textfield',
@@ -173,6 +174,8 @@ Ext.onReady(function() {
 	};
 
 	var cboLembaga = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -185,6 +188,8 @@ Ext.onReady(function() {
 	};
 
 	var cboJnsUsaha = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -197,6 +202,8 @@ Ext.onReady(function() {
 	};
 
 	var cboJnsPiutang = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -209,6 +216,8 @@ Ext.onReady(function() {
 	};
 
 	var cboPolaTransaksi = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -223,7 +232,8 @@ Ext.onReady(function() {
 	var txtNoPJJ = {
 		anchor: '100%',
 		fieldLabel: 'No. PJJ',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtNoPJJ',
 		name: 'txtNoPJJ',
 		xtype: 'textfield',
@@ -306,36 +316,48 @@ Ext.onReady(function() {
 	};
 
 	var txtPropinsi = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Propinsi',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtPropinsi',
 		name: 'txtPropinsi',
 		xtype: 'textfield'
 	};
 
 	var txtKota = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKota',
 		name: 'txtKota',
 		xtype: 'textfield'
 	};
 
 	var txtKecamatan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Kecamatan',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKecamatan',
 		name: 'txtKecamatan',
 		xtype: 'textfield'
 	};
 
 	var txtKelurahan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Kelurahan',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKelurahan',
 		name: 'txtKelurahan',
 		xtype: 'textfield'
@@ -450,6 +472,8 @@ Ext.onReady(function() {
 	};
 
 	var cboSkalaPerusahaan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -462,6 +486,8 @@ Ext.onReady(function() {
 	};
 
 	var cboStatusUsaha = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -474,6 +500,8 @@ Ext.onReady(function() {
 	};
 
 	var cboBentukUsaha = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -486,6 +514,8 @@ Ext.onReady(function() {
 	};
 
 	var cboStatusTempatUsaha = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -498,6 +528,8 @@ Ext.onReady(function() {
 	};
 
 	var txtOperasiSejak = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Operasi Sejak',
 		emptyText: '1987',
@@ -507,9 +539,11 @@ Ext.onReady(function() {
 	};
 
 	var txtJumlahKaryawan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Jumlah Karyawan',
-		emptyText: '',
+		emptyText: '200',
 		id: 'txtJumlahKaryawan',
 		name: 'txtJumlahKaryawan',
 		xtype: 'textfield'
@@ -593,8 +627,6 @@ Ext.onReady(function() {
 	};
 
 	var txtNoNPWPPenanggungJawab = {
-		afterLabelTextTpl: required,
-		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'NPWP',
 		fieldStyle: 'text-transform: uppercase;',
@@ -652,9 +684,12 @@ Ext.onReady(function() {
 	};
 
 	var txtKotaPenanggungJawab = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKotaPenanggungJawab',
 		name: 'txtKotaPenanggungJawab',
 		xtype: 'textfield'
@@ -679,6 +714,8 @@ Ext.onReady(function() {
 	};
 
 	var cboRepeatOrderKe = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -691,6 +728,8 @@ Ext.onReady(function() {
 	};
 
 	var txtJmlRepeatKe = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Repeat Ke',
 		fieldStyle: 'text-transform: uppercase;',
@@ -745,7 +784,8 @@ Ext.onReady(function() {
 	var txtKotaKorespondensi = {
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKotaKorespondensi',
 		name: 'txtKotaKorespondensi',
 		xtype: 'textfield'
@@ -779,26 +819,32 @@ Ext.onReady(function() {
 	};
 
 	var txtJnsKendaraan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Jenis Kendaraan',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtJnsKendaraan',
 		name: 'txtJnsKendaraan',
 		xtype: 'textfield'
 	};
 
 	var txtSilinder = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Silinder',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtSilinder',
 		name: 'txtSilinder',
 		xtype: 'textfield'
 	};
 
 	var txtTahunKendaraan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Tahun Kendaraan',
 		fieldStyle: 'text-transform: uppercase;',
@@ -809,6 +855,8 @@ Ext.onReady(function() {
 	};
 
 	var txtWarnaKendaraan = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Warna Kendaraan',
 		fieldStyle: 'text-transform: uppercase;',
@@ -819,6 +867,8 @@ Ext.onReady(function() {
 	};
 
 	var txtNoRangka = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'No. Rangka',
 		fieldStyle: 'text-transform: uppercase;',
@@ -841,6 +891,8 @@ Ext.onReady(function() {
 	};
 
 	var cboSesuaiKontrak = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		displayField: 'fs_nama',
 		editable: false,
@@ -992,6 +1044,8 @@ Ext.onReady(function() {
 	};
 
 	var txtSales = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
 		fieldLabel: 'Nama Sales',
 		fieldStyle: 'text-transform: uppercase;',
@@ -1029,8 +1083,8 @@ Ext.onReady(function() {
 	var txtTdkAngsuran = {
 		anchor: '100%',
 		fieldLabel: 'Tdk Angsuran',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtTdkAngsuran',
 		name: 'txtTdkAngsuran',
 		xtype: 'textfield'
@@ -1127,8 +1181,8 @@ Ext.onReady(function() {
 	var txtPremiAsuransi = {
 		anchor: '100%',
 		fieldLabel: 'Premi Asuransi',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtPremiAsuransi',
 		name: 'txtPremiAsuransi',
 		xtype: 'textfield'
@@ -1137,8 +1191,8 @@ Ext.onReady(function() {
 	var txtPremiPerluasan = {
 		anchor: '100%',
 		fieldLabel: 'Premi Perluasan',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtPremiPerluasan',
 		name: 'txtPremiPerluasan',
 		xtype: 'textfield'
@@ -1157,8 +1211,8 @@ Ext.onReady(function() {
 	var txtPremiAssGross = {
 		anchor: '100%',
 		fieldLabel: 'Premi Ass Gross',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtPremiAssGross',
 		name: 'txtPremiAssGross',
 		xtype: 'textfield'
@@ -1187,8 +1241,8 @@ Ext.onReady(function() {
 	var txtPremiAssNet = {
 		anchor: '100%',
 		fieldLabel: 'Premi Ass Net',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtPremiAssNet',
 		name: 'txtPremiAssNet',
 		xtype: 'textfield'
@@ -1270,8 +1324,8 @@ Ext.onReady(function() {
 	var txtKotaPengurus = {
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKotaPengurus',
 		name: 'txtKotaPengurus',
 		xtype: 'textfield'
@@ -1393,8 +1447,8 @@ Ext.onReady(function() {
 	var txtNamaRekeningCair = {
 		anchor: '100%',
 		fieldLabel: 'Nama Rekening Cair',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtNamaRekeningCair',
 		name: 'txtNamaRekeningCair',
 		xtype: 'textfield'
@@ -1403,8 +1457,8 @@ Ext.onReady(function() {
 	var txtNamaBank = {
 		anchor: '100%',
 		fieldLabel: 'Nama Bank',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtNamaBank',
 		name: 'txtNamaBank',
 		xtype: 'textfield'
@@ -1413,8 +1467,8 @@ Ext.onReady(function() {
 	var txtNoRekeningCair = {
 		anchor: '100%',
 		fieldLabel: 'No. Rekening Cair',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtNoRekeningCair',
 		name: 'txtNoRekeningCair',
 		xtype: 'textfield'
@@ -1430,11 +1484,91 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataUtama() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatautama',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataUtama();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataUtama() {
+		Ext.Ajax.on('beforerequest', fnMaskShow);
+		Ext.Ajax.on('requestcomplete', fnMaskHide);
+		Ext.Ajax.on('requestexception', fnMaskHide);
 
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkbadanusaha/savedatautama',
+			params: {
+
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	// FUNCTIONS TAB DATA BADAN USAHA
@@ -1443,11 +1577,91 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataBadanUsaha() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatabadanusaha',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataBadanUsaha();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataBadanUsaha() {
+		Ext.Ajax.on('beforerequest', fnMaskShow);
+		Ext.Ajax.on('requestcomplete', fnMaskHide);
+		Ext.Ajax.on('requestexception', fnMaskHide);
 
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkbadanusaha/savedatabadanusaha',
+			params: {
+
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	// FUNCTIONS TAB DATA KENDARAAN
@@ -1456,7 +1670,55 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataKendaraan() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatakendaraan',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataKendaraan();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataKendaraan() {
@@ -1469,7 +1731,55 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataStrukturKredit() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatastrukturkredit',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataStrukturKredit();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataStrukturKredit() {
@@ -1482,7 +1792,55 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataPengurus() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatapengurus',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataPengurus();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataPengurus() {
@@ -1495,13 +1853,60 @@ Ext.onReady(function() {
 	}
 
 	function fnCekSaveDataPencairan() {
+		if (this.up('form').getForm().isValid()) {
+			Ext.Ajax.on('beforerequest', fnMaskShow);
+			Ext.Ajax.on('requestcomplete', fnMaskHide);
+			Ext.Ajax.on('requestexception', fnMaskHide);
 
+			Ext.Ajax.request({
+				method: 'POST',
+				url: 'apkbadanusaha/ceksavedatapencairan',
+				params: {
+					'fn_no_apk':''
+				},
+				success: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					if (xtext.sukses === false) {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.MessageBox.INFO,
+							msg: xtext.hasil,
+							title: 'MFAS'
+						});
+					} else {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.YESNO,
+							closable: false,
+							icon: Ext.MessageBox.QUESTION,
+							msg: xtext.hasil,
+							title: 'MFAS',
+							fn: function(btn) {
+								if (btn == 'yes') {
+									fnSaveDataPencairan();
+								}
+							}
+						});
+					}
+				},
+				failure: function(response) {
+					var xtext = Ext.decode(response.responseText);
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: 'Simpan Gagal, Koneksi Gagal',
+						title: 'MFAS'
+					});
+					fnMaskHide();
+				}
+			});
+		}
 	}
 
 	function fnSaveDataPencairan() {
 
 	}
-
 
 	var frmApkBadanUsaha = Ext.create('Ext.form.Panel', {
 		border: false,

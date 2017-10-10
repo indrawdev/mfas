@@ -51,7 +51,6 @@ class Transferapk extends CI_Controller {
 	}
 	
 	public function ceksave() {
-
 	}
 
 	public function save() {

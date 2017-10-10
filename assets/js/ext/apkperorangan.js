@@ -193,7 +193,8 @@ Ext.onReady(function() {
 	var txtNoAPK = {
 		anchor: '100%',
 		fieldLabel: 'No. APK',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtNoAPK',
 		name: 'txtNoAPK',
 		xtype: 'textfield',
@@ -268,7 +269,8 @@ Ext.onReady(function() {
 	var txtNoPJJ = {
 		anchor: '100%',
 		fieldLabel: 'No. PJJ',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtNoPJJ',
 		name: 'txtNoPJJ',
 		xtype: 'textfield',
@@ -353,7 +355,8 @@ Ext.onReady(function() {
 	var txtPropinsi = {
 		anchor: '100%',
 		fieldLabel: 'Propinsi',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtPropinsi',
 		name: 'txtPropinsi',
 		xtype: 'textfield'
@@ -362,7 +365,8 @@ Ext.onReady(function() {
 	var txtKota = {
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKota',
 		name: 'txtKota',
 		xtype: 'textfield'
@@ -371,7 +375,8 @@ Ext.onReady(function() {
 	var txtKecamatan = {
 		anchor: '100%',
 		fieldLabel: 'Kecamatan',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKecamatan',
 		name: 'txtKecamatan',
 		xtype: 'textfield'
@@ -380,7 +385,8 @@ Ext.onReady(function() {
 	var txtKelurahan = {
 		anchor: '100%',
 		fieldLabel: 'Kelurahan',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtKelurahan',
 		name: 'txtKelurahan',
 		xtype: 'textfield'
@@ -782,7 +788,8 @@ Ext.onReady(function() {
 	var txtKotaKonsumen = {
 		anchor: '100%',
 		fieldLabel: 'Kota / Kabupaten',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		emptyText: '',
 		id: 'txtKotaKonsumen',
 		name: 'txtKotaKonsumen',
@@ -839,7 +846,8 @@ Ext.onReady(function() {
 	var txtJnsKendaraan = {
 		anchor: '100%',
 		fieldLabel: 'Jenis Kendaraan',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		emptyText: '',
 		id: 'txtJnsKendaraan',
 		name: 'txtJnsKendaraan',
@@ -849,7 +857,8 @@ Ext.onReady(function() {
 	var txtSilinder = {
 		anchor: '100%',
 		fieldLabel: 'Silinder',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		emptyText: '',
 		id: 'txtSilinder',
 		name: 'txtSilinder',
@@ -1121,8 +1130,8 @@ Ext.onReady(function() {
 	var txtTdkAngsuran = {
 		anchor: '100%',
 		fieldLabel: 'Tdk Angsuran',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtTdkAngsuran',
 		name: 'txtTdkAngsuran',
 		xtype: 'textfield'
@@ -1219,8 +1228,8 @@ Ext.onReady(function() {
 	var txtPremiAsuransi = {
 		anchor: '100%',
 		fieldLabel: 'Premi Asuransi',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none;',
+		readOnly: true,
 		id: 'txtPremiAsuransi',
 		name: 'txtPremiAsuransi',
 		xtype: 'textfield'
@@ -1683,7 +1692,8 @@ Ext.onReady(function() {
 	var txtNamaRekeningCair = {
 		anchor: '100%',
 		fieldLabel: 'Nama Rekening Cair',
-		fieldStyle: 'text-transform: uppercase;',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		emptyText: '',
 		id: 'txtNamaRekeningCair',
 		name: 'txtNamaRekeningCair',
@@ -1693,8 +1703,8 @@ Ext.onReady(function() {
 	var txtNamaBank = {
 		anchor: '100%',
 		fieldLabel: 'Nama Bank',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtNamaBank',
 		name: 'txtNamaBank',
 		xtype: 'textfield'
@@ -1703,8 +1713,8 @@ Ext.onReady(function() {
 	var txtNoRekeningCair = {
 		anchor: '100%',
 		fieldLabel: 'No. Rekening Cair',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		fieldStyle: 'background-color: #eee; background-image: none; text-transform: uppercase;',
+		readOnly: true,
 		id: 'txtNoRekeningCair',
 		name: 'txtNoRekeningCair',
 		xtype: 'textfield'
