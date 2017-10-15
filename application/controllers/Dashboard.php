@@ -11,11 +11,7 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function index() {
-		if ($this->session->userdata('kdcabang') <> '00') {
-			$this->load->view('vdashboardcabang');
-		} else {
-			$this->load->view('vdashboardpusat');
-		}
+		$this->load->view('vdashboard');
 	}
 
 	public function setuju() {

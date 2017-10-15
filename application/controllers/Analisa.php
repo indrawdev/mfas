@@ -12,7 +12,7 @@ class Analisa extends CI_Controller {
 
 	public function index() {
 		if ($this->session->userdata('kdcabang') <> '00') {
-			$this->load->view('vanalisacabang');
+			$this->load->view('vanalisapusat');
 		} else {
 			$this->load->view('vanalisapusat');
 		}

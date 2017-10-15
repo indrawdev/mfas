@@ -20,17 +20,18 @@ Ext.onReady(function() {
 
 	var vMask = new Ext.LoadMask({
 		msg: 'Please wait...',
-		target: frmAnalisa
+		target: frmHelpdesk
 	});
 
 	function fnMaskShow() {
-		frmAnalisa.mask('Please wait...');
+		frmHelpdesk.mask('Please wait...');
 	}
 
 	function fnMaskHide() {
-		frmAnalisa.unmask();
+		frmHelpdesk.unmask();
 	}
 	
-	frmAnalisa.render(Ext.getBody());
+	frmHelpdesk.render(Ext.getBody());
 	Ext.get('loading').destroy();
+
 });
