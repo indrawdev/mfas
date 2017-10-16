@@ -69,6 +69,7 @@ class Login extends CI_Controller {
 
 	public function ceklogin() {
 		$this->load->library('form_validation');
+		$this->form_validation->set_rules('txtKdCabang', 'Cabang', 'trim|required');
 		$this->form_validation->set_rules('txtUserName', 'Username', 'trim|required');
 		$this->form_validation->set_rules('txtUserPass', 'Password', 'trim|required');
 		$this->form_validation->set_rules('txtCaptcha', 'CAPTCHA', 'trim|required');
@@ -90,6 +91,8 @@ class Login extends CI_Controller {
 			$jml = $sSQL->fn_jml;
 
 			if ($jml > 0) {
+				$xkdcabang = trim($this->input->post('txtKdCabang'));
+				$xnmcabang = trim($this->input->post('cboCabang'));
 				$xusername = str_replace("'",'"',trim($this->input->post('txtUserName')));
 				$xuserpass = str_replace("'",'"',trim($this->input->post('txtUserPass')));
 				
@@ -102,32 +105,40 @@ class Login extends CI_Controller {
 				$this->load->model('MLogin');
 				$sSQL = $this->MLogin->validUserPass($username, $xpass);
 				if (!empty($sSQL)) {
-					// SET SESSION
-					$session = array(
-								'login'	=> TRUE,
-								'username' => $this->encryption->encrypt($sSQL->fs_username),
-								'password' => $this->encryption->encrypt($sSQL->fs_password),
-								'leveluser' => $this->encryption->encrypt($sSQL->fs_level_user)
+
+					$xSQL = $this->MLogin->validAkses($xkdcabang, $username);
+					if(!empty($xSQL)) {
+						// SET SESSION
+						$session = array(
+									'login'	=> TRUE,
+									'username' => $this->encryption->encrypt($sSQL->fs_username),
+									'password' => $this->encryption->encrypt($sSQL->fs_password),
+									'leveluser' => $this->encryption->encrypt($sSQL->fs_level_user),
+									'kodecabang' => $this->encryption->encrypt($xkdcabang),
+									'namacabang' => $this->encryption->encrypt($xnmcabang)
+								);
+						$this->session->set_userdata($session); 
+								
+						// UPDATE LAST LOGIN
+						$data = array(
+								'fs_ip_address' => $this->input->ip_address(),
+								'fd_last_login' => date('Y-m-d H:i:s'),
+								'fs_user_edit' => trim($username),
+								'fd_tanggal_edit' => date('Y-m-d H:i:s')
 							);
-					$this->session->set_userdata($session); 
-							
-					// UPDATE LAST LOGIN
-					$data = array(
-							'fs_ip_address' => $this->input->ip_address(),
-							'fd_last_login' => date('Y-m-d H:i:s'),
-							'fs_user_edit' => trim($username),
-							'fd_tanggal_edit' => date('Y-m-d H:i:s')
-						);
-					$where = "fs_username = '".trim($username)."'";
-					$this->db->where($where);
-					$this->db->update('tm_user', $data);
+						$where = "fs_username = '".trim($username)."'";
+						$this->db->where($where);
+						$this->db->update('tm_user', $data);
 
-					// START LOGGING
-					$this->load->model('MLog');
-					$this->MLog->logger('LOGIN', $username, 'MASUK KE SISTEM MFAS');
-					// END LOGGING
+						// START LOGGING
+						$this->load->model('MLog');
+						$this->MLog->logger('LOGIN', $username, 'MASUK KE SISTEM MFAS');
+						// END LOGGING
 
-					echo "{success:true}";
+						echo "{success:true}";
+					} else {
+						echo "Akses Cabang Tidak Ada...";
+					}
 				}
 				else {
 					echo "User Name or Password Incorrect...";

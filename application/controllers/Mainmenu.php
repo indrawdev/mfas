@@ -19,6 +19,7 @@ class Mainmenu extends CI_Controller {
 			'sukses' => true,
 			'user' => $this->encryption->decrypt($this->session->userdata('username')),
 			'level' => $this->encryption->decrypt($this->session->userdata('leveluser')),
+			'nama_cabang' => $this->encryption->decrypt($this->session->userdata('namacabang')),
 			'ip_address' => $this->input->ip_address()
 		);
 		echo json_encode($hasil);

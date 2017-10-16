@@ -29,6 +29,58 @@ Ext.onReady(function() {
 		]
 	});
 
+	Ext.define('DataGridKodePos', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_dati', type: 'string'},
+			{name: 'fs_nama_dati', type: 'string'},
+			{name: 'fs_kodepos', type: 'string'},
+			{name: 'fs_kelurahan', type: 'string'},
+			{name: 'fs_kecamatan', type: 'string'},
+			{name: 'fs_dati', type: 'string'},
+			{name: 'fs_propinsi', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridKategori', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_sektor_ekonomi', type: 'string'},
+			{name: 'fs_nama_sektor_ekonomi', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridPekerjaan', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_referensi', type: 'string'},
+			{name: 'fs_nilai1_referensi', type: 'string'},
+			{name: 'fs_nilai2_referensi', type: 'string'},
+			{name: 'fs_nama_referensi', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridKendaraan', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_kendaraan', type: 'string'},
+			{name: 'fs_kode_kendaraan_lama', type: 'string'},
+			{name: 'fs_model_kendaraan', type: 'string'},
+			{name: 'fs_jenis_kendaraan', type: 'string'},
+			{name: 'fs_merek_kendaraan', type: 'string'},
+			{name: 'fs_silinder_kendaraan', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridAsuransi', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_asuransi1', type: 'string'},
+			{name: 'fs_kode_asuransi2', type: 'string'},
+			{name: 'fs_nama_perusahaan_asuransi', type: 'string'}
+		]
+	});
+
 	var grupPerorangan = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		model: 'DataGridPerorangan',
@@ -147,6 +199,33 @@ Ext.onReady(function() {
 
 	// GROUP SELECT 'TM_LEMBAGAKEUANGAN'
 	var grupLembaga = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		fields: [
+			'fs_kode_lembaga_keuangan1',
+			'fs_kode_lembaga_keuangan2',
+			'fs_nama_lembaga_keuangan'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridlembaga'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': ''
+				});
+			}
+		}
+	});
+
+	// GROUP TAB FORM DATA UTAMA
+	var grupJenisUsaha = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		fields: [
 			'fs_kode','fs_nama'
@@ -159,12 +238,18 @@ Ext.onReady(function() {
 				type: 'json'
 			},
 			type: 'ajax',
-			url: 'apkperorangan/lembaga'
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'jenis_usaha'
+				});
+			}
 		}
 	});
 
-	// GROUP SELECT 'TM_REFERENSI'
-	var grupJenisPiutan = Ext.create('Ext.data.Store', {
+	var grupJenisPiutang = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		fields: [
 			'fs_kode','fs_nama'
@@ -187,6 +272,1283 @@ Ext.onReady(function() {
 			}
 		}
 	});
+
+	var grupPolaTrans = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'pola_transaksi'
+				});
+			}
+		}
+	});
+
+	var grupFleet = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupKodePos = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridKodePos',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridkodepos'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariKodePos').getValue(),
+					'fs_cari': Ext.getCmp('txtCariKodePosKonsumen').getValue()
+				});
+			}
+		}
+	});
+
+	// GROUP TAB FORM DATA KONSUMEN
+	var grupKategoriUsaha = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridKategori',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridkategori'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariKategori').getValue()
+				});
+			}
+		}
+	});
+
+	var grupSkala = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'skala_perusahaan'
+				});
+			}
+		}
+	});
+
+	var grupPekerjaan = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridPekerjaan',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridpekerjaan'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariPekerjaan').getValue()
+				});
+			}
+		}
+	});
+
+	var grupJekel = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'jenis_kelamin'
+				});
+			}
+		}
+	});	
+
+	var grupStatus = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'status_konsumen'
+				});
+			}
+		}
+	});
+
+	var grupStatusRumah = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'status_rumah'
+				});
+			}
+		}
+	});
+
+	var grupAgama = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'agama'
+				});
+			}
+		}
+	});
+
+	var grupPendidikan = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'pendidikan'
+				});
+			}
+		}
+	});
+
+	// GROUP TAB FORM DATA KENDARAAN
+	var grupModelKendaraan = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridKendaraan',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridkendaraan'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariKendaraan').getValue()
+				});
+			}
+		}
+	});
+
+	var grupKomersil = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupJenisAsuransi = Ext.create('Ext.data.Store', {
+
+	});
+
+	var grupPerusahaanAsuransi = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridAsuransi',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridasuransi'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariAsuransi').getValue()
+				});
+			}
+		}
+	});
+
+	var grupSesuai = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	// GROUP TAB FORM DATA STRUKTUR KREDIT
+	var grupPolaAngs = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'pola_angsuran'
+				});
+			}
+		}
+	});
+
+	var grupDimuka = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupCaraBayar = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'cara_bayar'
+				});
+			}
+		}
+	});
+
+	var grupAngsDiabayarDealer = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	// GROUP TAB FORM DATA TAMBAHAN
+
+
+	// GROUP TAB FORM DATA PENCAIRAN
+	var grupDepositPotong = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupPencairanKe = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'pencairan_ke'
+				});
+			}
+		}
+	});
+
+	var grupUangMukaKe = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'uangmuka_ke'
+				});
+			}
+		}
+	});
+
+
+	// POPUP TAB FORM DATA UTAMA
+	var winGrid1 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupLembaga,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Lembaga 1", dataIndex: 'fs_kode_lembaga_keuangan1', menuDisabled: true, flex: 1},
+			{text: "Kode Lembaga 2", dataIndex: 'fs_kode_lembaga_keuangan1', menuDisabled: true, flex: 1},
+			{text: "Nama Lembaga Keuangan", dataIndex: 'fs_nama_lembaga_keuangan', menuDisabled: true, flex: 2.5}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Lembaga Keuangan',
+				id: 'txtCariNamaLembaga',
+				name: 'txtCariNamaLembaga',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupLembaga.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupLembaga,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari1.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboLembaga').setValue(record.get('fs_nama_lembaga_keuangan'));
+				Ext.getCmp('txtKdLembaga1').setValue(record.get('fs_kode_lembaga_keuangan1'));
+				Ext.getCmp('txtKdLembaga2').setValue(record.get('fs_kode_lembaga_keuangan2'));
+				winCari1.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari1 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid1
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupLembaga.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid2 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupPolaTrans,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Pola", dataIndex: 'fs_kode_pola', menuDisabled: true, flex: 1},
+			{text: "Nama Pola Transaksi", dataIndex: 'fs_nama_pola', menuDisabled: true, flex: 2}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Pola Transaksi',
+				id: 'txtCariPolaTrans',
+				name: 'txtCariPolaTrans',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupPolaTrans.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupPolaTrans,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari2.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				//Ext.getCmp('cboLembaga').setValue(record.get('fs_nama_lembaga_keuangan'));
+				//Ext.getCmp('txtKdLembaga1').setValue(record.get('fs_kode_lembaga_keuangan1'));
+				winCari2.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari2 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid2
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupPolaTrans .load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid3 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 750,
+		sortableColumns: false,
+		store: grupKodePos,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Pos", dataIndex: 'fs_kodepos', menuDisabled: true, flex: 0.5},
+			{text: "Kelurahan", dataIndex: 'fs_kelurahan', menuDisabled: true, flex: 1},
+			{text: "Kecamatan", dataIndex: 'fs_kecamatan', menuDisabled: true, flex: 1},
+			{text: "Kota", dataIndex: 'fs_nama_dati', menuDisabled: true, flex: 1},
+			{text: "Propinsi", dataIndex: 'fs_propinsi', menuDisabled: true, flex: 1.3},
+			{text: "Kode Dati", dataIndex: 'fs_kode_dati', menuDisabled: true, hidden: true}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Kode Pos / Kelurahan / Kecamatan / Kota / Propinsi',
+				id: 'txtCariKodePos',
+				name: 'txtCariKodePos',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupKodePos.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupKodePos,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari3.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboKodePos').setValue(record.get('fs_kodepos'));
+				Ext.getCmp('txtPropinsi').setValue(record.get('fs_propinsi'));
+				Ext.getCmp('txtKota').setValue(record.get('fs_nama_dati'));
+				Ext.getCmp('txtKecamatan').setValue(record.get('fs_kecamatan'));
+				Ext.getCmp('txtKelurahan').setValue(record.get('fs_kelurahan'));
+				winCari3.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari3 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid3
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupKodePos.load();
+				vMask.show();
+			}
+		}
+	});
+
+	// POPUP TAB FORM DATA KONSUMEN
+	var winGrid4 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupKategoriUsaha,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Kategori Usaha", dataIndex: 'fs_kode_sektor_ekonomi', menuDisabled: true, hidden: true},
+			{text: "Nama Kategori Usaha", dataIndex: 'fs_nama_sektor_ekonomi', menuDisabled: true, flex: 2}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Kategori Usaha',
+				id: 'txtCariKategori',
+				name: 'txtCariKategori',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupKategoriUsaha.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupKategoriUsaha,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari4.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboKategoriUsaha').setValue(record.get('fs_nama_sektor_ekonomi'));
+				Ext.getCmp('txtKdKategoriUsaha').setValue(record.get('fs_kode_sektor_ekonomi'));
+				winCari4.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari4 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid4
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupKategoriUsaha.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid5 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupPekerjaan,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Pekerjaan", dataIndex: 'fs_nilai1_referensi', menuDisabled: true, hidden: true},
+			{text: "Nama Pekerjaan", dataIndex: 'fs_nama_referensi', menuDisabled: true, flex: 2}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Pekerjaan',
+				id: 'txtCariPekerjaan',
+				name: 'txtCariPekerjaan',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupPekerjaan.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupPekerjaan,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari5.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboPekerjaan').setValue(record.get('fs_nama_referensi'));
+				Ext.getCmp('txtKdPekerjaan').setValue(record.get('fs_nilai1_referensi'));
+				winCari5.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari5 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid5
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupPekerjaan.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid6 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 750,
+		sortableColumns: false,
+		store: grupKodePos,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Pos", dataIndex: 'fs_kodepos', menuDisabled: true, flex: 0.5},
+			{text: "Kelurahan", dataIndex: 'fs_kelurahan', menuDisabled: true, flex: 1},
+			{text: "Kecamatan", dataIndex: 'fs_kecamatan', menuDisabled: true, flex: 1},
+			{text: "Kota", dataIndex: 'fs_nama_dati', menuDisabled: true, flex: 1},
+			{text: "Propinsi", dataIndex: 'fs_propinsi', menuDisabled: true, flex: 1.3},
+			{text: "Kode Dati", dataIndex: 'fs_kode_dati', menuDisabled: true, hidden: true}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Kode Pos / Kelurahan / Kecamatan / Kota / Propinsi',
+				id: 'txtCariKodePosKonsumen',
+				name: 'txtCariKodePosKonsumen',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupKodePos.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupKodePos,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari6.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboKodePosKonsumen').setValue(record.get('fs_kodepos'));
+				Ext.getCmp('txtKotaKonsumen').setValue(record.get('fs_propinsi'));
+				winCari6.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari6 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid6
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupKodePos.load();
+				vMask.show();
+			}
+		}
+	});
+
+	// POPUP TAB FORM DATA KENDARAAN
+	var winGrid7 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 750,
+		sortableColumns: false,
+		store: grupModelKendaraan,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Model Kendaraan", dataIndex: 'fs_model_kendaraan', menuDisabled: true, flex: 1.5},
+			{text: "Jenis Kendaraan", dataIndex: 'fs_jenis_kendaraan', menuDisabled: true, flex: 1},
+			{text: "Merek Kendaraan", dataIndex: 'fs_merek_kendaraan', menuDisabled: true, flex: 1},
+			{text: "Silinder Kendaraan", dataIndex: 'fs_silinder_kendaraan', menuDisabled: true, flex: 1},
+			{text: "Kode Baru", dataIndex: 'fs_kode_kendaraan', menuDisabled: true, hidden: true},
+			{text: "Kode Lama", dataIndex: 'fs_kode_kendaraan_lama', menuDisabled: true, hidden: true}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Model / Jenis / Merek / Kota / Silinder',
+				id: 'txtCariKendaraan',
+				name: 'txtCariKendaraan',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupModelKendaraan.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupModelKendaraan,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari7.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboModelKendaraan').setValue(record.get('fs_model_kendaraan'));
+				Ext.getCmp('txtJnsKendaraan').setValue(record.get('fs_jenis_kendaraan'));
+				Ext.getCmp('txtSilinder').setValue(record.get('fs_silinder_kendaraan'));
+				winCari7.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari7 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid7
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupModelKendaraan.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid8 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupPerusahaanAsuransi,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Asuransi 1", dataIndex: 'fs_kode_asuransi1', menuDisabled: true, hidden: true},
+			{text: "Kode Asuransi 2", dataIndex: 'fs_kode_asuransi2', menuDisabled: true, hidden: true},
+			{text: "Nama Perusahaan Asuransi", dataIndex: 'fs_nama_perusahaan_asuransi', menuDisabled: true, flex: 2}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Perusahaan',
+				id: 'txtCariAsuransi',
+				name: 'txtCariAsuransi',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupPerusahaanAsuransi.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupPerusahaanAsuransi,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari8.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboPerusahaanAsuransi').setValue(record.get('fs_nama_perusahaan_asuransi'));
+				winCari8.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari8 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid8
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupPerusahaanAsuransi.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid9 = Ext.create('Ext.grid.Panel', {
+
+	});
+
+	var winCari9 = Ext.create('Ext.window.Window', {
+
+	});
+
+	// POPUP TAB FORM DATA STRUKTUR KREDIT
+
+
+	// POPUP TAB FORM DATA TAMBAHAN
+
+
+	// POPUP TAB FORM DATA PENCAIRAN
 
 
 	// COMPONENT FORM DATA UTAMA
@@ -219,15 +1581,44 @@ Ext.onReady(function() {
 	};
 
 	var cboLembaga = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
 		anchor: '100%',
-		displayField: 'fs_nama',
+		emptyText: 'Lembaga Keuangan',
+		fieldLabel: 'Lembaga Keuangan',
 		editable: false,
-		fieldLabel: 'Lembaga Pembiayaan',
 		id: 'cboLembaga',
 		name: 'cboLembaga',
-		store: '',
-		valueField: 'fs_kode',
-		xtype: 'combobox'
+		xtype: 'textfield',
+		triggers: {
+			reset: {
+				cls: 'x-form-clear-trigger',
+				handler: function(field) {
+					field.setValue('');
+				}
+			},
+			cari: {
+				cls: 'x-form-search-trigger',
+				handler: function() {
+					winCari1.show();
+					winCari1.center();
+				}
+			}
+		}
+	};
+
+	var txtKdLembaga1 = {
+		id: 'txtKdLembaga1',
+		name: 'txtKdLembaga1',
+		xtype: 'textfield',
+		hidden: true
+	};
+
+	var txtKdLembaga2 = {
+		id: 'txtKdLembaga2',
+		name: 'txtKdLembaga2',
+		xtype: 'textfield',
+		hidden: true
 	};
 
 	var cboJnsUsaha = {
@@ -237,7 +1628,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Jenis Usaha',
 		id: 'cboJnsUsaha',
 		name: 'cboJnsUsaha',
-		store: '',
+		store: grupJenisUsaha,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -249,7 +1640,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Jenis Piutang',
 		id: 'cboJnsPiutang',
 		name: 'cboJnsPiutang',
-		store: '',
+		store: grupJenisPiutang,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -261,7 +1652,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Pola Transaksi',
 		id: 'cboPolaTransaksi',
 		name: 'cboPolaTransaksi',
-		store: '',
+		store: grupPolaTrans,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -287,7 +1678,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Fleet',
 		id: 'cboFleet',
 		name: 'cboFleet',
-		store: '',
+		store: grupFleet,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -346,7 +1737,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari3.show();
+					winCari3.center();
 				}
 			}
 		}
@@ -553,10 +1945,18 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari4.show();
+					winCari4.center();
 				}
 			}
 		}
+	};
+
+	var txtKdKategoriUsaha = {
+		id: 'txtKdKategoriUsaha',
+		name: 'txtKdKategoriUsaha',
+		xtype: 'textfield',
+		hidden: true
 	};
 
 	var txtKerjaSejak = {
@@ -589,7 +1989,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Skala Perusahaan',
 		id: 'cboSkalaPerusahaan',
 		name: 'cboSkalaPerusahaan',
-		store: '',
+		store: grupSkala,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -614,10 +2014,18 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari5.show();
+					winCari5.center();
 				}
 			}
 		}
+	};
+
+	var txtKdPekerjaan = {
+		id: 'txtKdPekerjaan',
+		name: 'txtKdPekerjaan',
+		xtype: 'textfield',
+		hidden: true
 	};
 
 	var txtKetPekerjaan = {
@@ -644,7 +2052,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Jenis Kelamin',
 		id: 'cboJekel',
 		name: 'cboJekel',
-		store: '',
+		store: grupJekel,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -686,7 +2094,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Agama',
 		id: 'cboAgama',
 		name: 'cboAgama',
-		store: '',
+		store: grupAgama,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -698,7 +2106,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Pendidikan',
 		id: 'cboPendidikan',
 		name: 'cboPendidikan',
-		store: '',
+		store: grupPendidikan,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -725,7 +2133,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Status',
 		id: 'cboStatusPerkawinan',
 		name: 'cboStatusPerkawinan',
-		store: '',
+		store: grupStatus,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -737,7 +2145,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Status Rumah',
 		id: 'cboStatusRumah',
 		name: 'cboStatusRumah',
-		store: '',
+		store: grupStatusRumah,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -779,7 +2187,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari6.show();
+					winCari6.center();
 				}
 			}
 		}
@@ -837,7 +2246,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari7.show();
+					winCari7.center();
 				}
 			}
 		}
@@ -914,7 +2324,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Nama Sesuai Kontrak',
 		id: 'cboSesuaiKontrak',
 		name: 'cboSesuaiKontrak',
-		store: '',
+		store: grupSesuai,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -984,7 +2394,15 @@ Ext.onReady(function() {
 	};
 
 	var cboKomersil = {
-
+		anchor: '100%',
+		displayField: 'fs_nama',
+		editable: false,
+		fieldLabel: 'Komersil',
+		id: 'cboKomersil',
+		name: 'cboKomersil',
+		store: grupKomersil,
+		valueField: 'fs_kode',
+		xtype: 'combobox'
 	};
 
 	var cboJnsAsuransi = {
@@ -1031,7 +2449,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-
+					winCari8.show();
+					winCari8.center();
 				}
 			}
 		}
@@ -1110,7 +2529,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Pola Angsuran',
 		id: 'cboPolaAngsuran',
 		name: 'cboPolaAngsuran',
-		store: '',
+		store: grupPolaAngs,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1122,7 +2541,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Cara Bayar',
 		id: 'cboCaraBayar',
 		name: 'cboCaraBayar',
-		store: '',
+		store: grupCaraBayar,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1144,7 +2563,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Dimuka',
 		id: 'cboBayarDimuka',
 		name: 'cboBayarDimuka',
-		store: '',
+		store: grupDimuka,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1302,7 +2721,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Angs Dibayar Dealer',
 		id: 'cboAngsDibayarDealer',
 		name: 'cboAngsDibayarDealer',
-		store: '',
+		store: grupAngsDiabayarDealer,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1660,7 +3079,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Pencairan Ke',
 		id: 'cboPencairanKe',
 		name: 'cboPencairanKe',
-		store: '',
+		store: grupPencairanKe,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1672,7 +3091,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Uang Muka Ke',
 		id: 'cboUangMukaKe',
 		name: 'cboUangMukaKe',
-		store: '',
+		store: grupUangMukaKe,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1684,7 +3103,7 @@ Ext.onReady(function() {
 		fieldLabel: 'Deposit Potong Cair',
 		id: 'cboDepositPotongCair',
 		name: 'cboDepositPotongCair',
-		store: '',
+		store: grupDepositPotong,
 		valueField: 'fs_kode',
 		xtype: 'combobox'
 	};
@@ -1877,6 +3296,8 @@ Ext.onReady(function() {
 									txtNoAPK,
 									cboTglAPK,
 									cboLembaga,
+									txtKdLembaga1,
+									txtKdLembaga2,
 									cboJnsUsaha,
 									cboJnsPiutang,
 									cboPolaTransaksi,
@@ -1975,6 +3396,7 @@ Ext.onReady(function() {
 									txtAlamatPerusahaan,
 									txtNoTlpPerusahaan,
 									cboKategoriUsaha,
+									txtKdKategoriUsaha,
 									cboSkalaPerusahaan,
 									txtKerjaSejak,
 									txtPendapatan
@@ -1986,6 +3408,7 @@ Ext.onReady(function() {
 								xtype: 'fieldset',
 								items: [
 									cboPekerjaan,
+									txtKdPekerjaan,
 									txtKetPekerjaan
 								]
 							}]
@@ -2003,6 +3426,7 @@ Ext.onReady(function() {
 									txtTempatLahir,
 									cboTglLahir,
 									cboStatusPerkawinan,
+									cboStatusRumah,
 									cboAgama,
 									cboPendidikan,
 									txtNamaIbu
@@ -2071,7 +3495,8 @@ Ext.onReady(function() {
 									txtTahunKendaraan,
 									txtWarnaKendaraan,
 									txtNoRangka,
-									txtNoMesin
+									txtNoMesin,
+									cboKomersil
 								]
 							},{
 								anchor: '98%',

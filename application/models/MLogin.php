@@ -36,4 +36,16 @@ class MLogin extends CI_Model {
 		return $sSQL->row();
 	}
 
+	public function validAkses($sKdCab, $sUser)
+	{
+		$xSQL = ("
+			SELECT fs_kode_cabang, fs_username
+			FROM tm_akses_cabang
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' AND fs_username = '".trim($sUser)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL->row();
+	}
+
 }

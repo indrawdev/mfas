@@ -29,7 +29,7 @@ Ext.onReady(function() {
 		];
 
 		var datatree =  Ext.create('Ext.data.TreeStore', {
-           autoLoad: true,
+			autoLoad: true,
 			proxy: {
 				actionMethods: {
 					read: 'POST'
@@ -95,6 +95,9 @@ Ext.onReady(function() {
 					}), '-',
 					Ext.create('Ext.toolbar.TextItem', {
 						text: vLevel.toUpperCase()
+					}), '-',
+					Ext.create('Ext.toolbar.TextItem', {
+						text: vNamaCabang.toUpperCase()
 					}), '-',
 					Ext.create('Ext.toolbar.TextItem', {
 						text: vIP.toUpperCase()
@@ -234,8 +237,8 @@ Ext.onReady(function() {
 			if (xText.sukses === true) {
 				vUser = xText.user;
 				vLevel = xText.level;
+				vNamaCabang = xText.nama_cabang;
 				vIP = xText.ip_address;
-				vServer = xText.nmserver;
 
 				buatMenu();
 			}
@@ -247,7 +250,7 @@ Ext.onReady(function() {
 				closable: false,
 				icon: Ext.MessageBox.INFO,
 				message: 'Tampil nilai default Gagal, Koneksi Gagal!!',
-				title: 'HRD'
+				title: 'MFAS'
 			});
 		}
 	});
