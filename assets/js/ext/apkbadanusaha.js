@@ -1926,6 +1926,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Daftar Badan Usaha',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -1947,6 +1948,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Utama',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -2043,6 +2045,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Badan Usaha',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -2143,6 +2146,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Kendaraan',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -2234,6 +2238,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Struktur Kredit',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -2355,6 +2360,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Pengurus',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -2425,6 +2431,7 @@ Ext.onReady(function() {
 				border: false,
 				frame: false,
 				title: 'Data Pencairan',
+				xtype: 'form',
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',

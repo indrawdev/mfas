@@ -358,7 +358,7 @@ class MSearch extends CI_Model {
 				fs_handphone_dealer, fs_nama_pemilik, fs_npwp_pemilik,
 				fs_ktp_pemilik, fs_nama_bank_pencairan, fs_rekening_bank_pencairan,
 				fs_atasnama_bank_pencairan, fn_persen_refund_bunga, fn_persen_refund_asuransi
-			FROM tm_perusahaan_asuransi
+			FROM tm_dealer
 			WHERE fs_aktif = '1'
 		");
 
@@ -381,7 +381,7 @@ class MSearch extends CI_Model {
 				fs_handphone_dealer, fs_nama_pemilik, fs_npwp_pemilik,
 				fs_ktp_pemilik, fs_nama_bank_pencairan, fs_rekening_bank_pencairan,
 				fs_atasnama_bank_pencairan, fn_persen_refund_bunga, fn_persen_refund_asuransi
-			FROM tm_perusahaan_asuransi
+			FROM tm_dealer
 			WHERE fs_aktif = '1'
 		");
 
@@ -413,6 +413,20 @@ class MSearch extends CI_Model {
 
 		$sSQL = $this->db->query($xSQL);
 		return $sSQL;
+	}
+
+	public function getCounter($sKdCab, $sJnsCtr, $nNoJns)
+	{
+		$xSQL = ("
+			SELECT fn_counter
+			FROM tm_counter
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+			AND fs_jenis_counter = '".trim($sJnsCtr)."'
+			AND fs_no_jenis_counter = '".trim($nNoJns)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL->row();
 	}
 
 }

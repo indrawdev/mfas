@@ -9,6 +9,18 @@ class MApkPerorangan extends CI_Model {
 		$this->load->database();
 	}
 
+	public function checkAPK($sKdCab, $nNoApk)
+	{
+		$xSQL = ("
+			SELECT fs_kode_cabang, fn_no_apk, fs_nama_konsumen
+			FROM tx_apk
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' AND fn_no_apk = '".trim($nNoApk)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function listPeroranganAll()
 	{
 
