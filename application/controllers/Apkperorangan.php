@@ -41,7 +41,28 @@ class Apkperorangan extends CI_Controller {
 	}
 
 	public function gridperorangan() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$this->db->trans_start();
+		$this->load->model('MApkPerorangan');
+		$sSQL = $this->MApkPerorangan->listPeroranganAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MApkPerorangan->listPerorangan($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fs_kode_cabang' => trim($xRow->fs_kode_cabang),
+					'fn_no_apk' => trim($xRow->fn_no_apk),
+					'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function gridlembaga() {
@@ -349,8 +370,8 @@ class Apkperorangan extends CI_Controller {
 		);
 
 		if ($update == false) {
+			// GET COUNTER
 			$this->load->model('MSearch');
-
 			$counterapk = $this->MSearch->getCounter($cabang, 'APK', 0);
 			$counterpjj = $this->MSearch->getCounter($cabang, 'PJJ', $pola);
 			$newapk = $counterapk->fn_counter;
@@ -366,6 +387,8 @@ class Apkperorangan extends CI_Controller {
 
 			$data = array_merge($dt, $dt1);
 			$this->db->insert('tx_apk', $data);
+
+			// UPDATE COUNTER
 
 			$hasil = array(
 						'sukses' => true,
@@ -389,7 +412,6 @@ class Apkperorangan extends CI_Controller {
 					);
 			echo json_encode($hasil);
 		}
-
 	}
 
 	// TAB DATA KONSUMEN
@@ -587,6 +609,34 @@ class Apkperorangan extends CI_Controller {
 		$selisihdp = $this->input->post('fn_selisih_dp');
 		$angsdimukapotong = $this->input->post('fs_angsuran_dimuka_potong_pencairan');
 		$dpbayar = $this->input->post('fn_dp_bayar');
+		$angsdibayar = $this->input->post('fs_angsuran_dibayar_dealer');
+		$biayaadm = $this->input->post('fn_biaya_adm');
+		$premiasuransigross = $this->input->post('fn_premi_asuransi_gross');
+		$premiasuransi = $this->input->post('fn_premi_asuransi');
+		$premiasuransigrossperluasan = $this->input->post('fn_premi_asuransi_gross_perluasan');
+		$premiasuransinetto = $this->input->post('fn_premi_asuransi_netto');
+		$dendaperhari = $this->input->post('fn_denda_perhari');
+		$hargaotr = $this->input->post('fn_harga_otr');
+		$uangmukadealer = $this->input->post('fn_uang_muka_dealer');
+		$asuransidikreditdealer = $this->input->post('fn_asuransi_dikredit_dealer');
+		$persenbungaflatdealer = $this->input->post('fn_persen_bunga_flat_dealer');
+		$pokokpembiayaandealer = $this->input->post('fn_pokok_pembiayaan_dealer');
+		$persenbungaefektifdealer = $this->input->post('fn_persen_bunga_efektif_dealer');
+		$bulanmasaangsurandealer = $this->input->post('fn_bulan_masa_angsuran_dealer');
+		$kalimasaangsurandealer = $this->input->post('fn_kali_masa_angsuran_dealer');
+		$bungadealer = $this->input->post('fn_bunga_dealer');
+		$angsurandealer = $this->input->post('fn_angsuran_dealer');
+		$angsurantidaksamadealer = $this->input->post('fn_angsuran_tidak_sama_dealer');
+		$uangmukakonsumen = $this->input->post('fn_uang_muka_konsumen');
+		$asuransidikreditkonsumen = $this->input->post('fn_asuransi_dikredit_konsumen');
+		$pokokpembiayaankonsumen = $this->input->post('fn_pokok_pembiayaan_konsumen');
+		$persenbungaflatkonsumen = $this->input->post('fn_persen_bunga_flat_konsumen');
+		$persenbungaefektifkonsumen = $this->input->post('fn_persen_bunga_efektif_konsumen');
+		$bulanmasaangsurankonsumen = $this->input->post('fn_bulan_masa_angsuran_konsumen');
+		$kalimasaangsurankonsumen = $this->input->post('fn_kali_masa_angsuran_konsumen');
+		$bungakonsumen = $this->input->post('fn_bunga_konsumen');
+		$angsurankonsumen = $this->input->post('fn_angsuran_konsumen');
+		$angsurantidaksamakonsumen = $this->input->post('fn_angsuran_tidak_sama_konsumen');
 
 		$update = false;
 		$this->load->model('MApkPerorangan');
@@ -597,43 +647,43 @@ class Apkperorangan extends CI_Controller {
 		}
 
 		$dt = array(
-			'fs_pola_angsuran' => '',
-			'fs_cara_bayar' => '',
-			'fs_angsuran_dimuka' => '',
-			'fn_kali_angsuran_dimuka' => '',
-			'fn_jumlah_angsuran_dimuka' => '',
-			'fn_biaya_tjh' => '',
-			'fn_selisih_dp' => '',
-			'fs_angsuran_dimuka_potong_pencairan' => '',
-			'fn_dp_bayar' => '',
-			'fs_angsuran_dibayar_dealer' => '',
-			'fn_biaya_adm' => '',
-			'fn_premi_asuransi_gross' => '',
-			'fn_premi_asuransi' => '',
-			'fn_premi_asuransi_gross_perluasan' => '',
-			'fn_premi_asuransi_netto' => '',
-			'fn_denda_perhari' => '',
-			'fn_harga_otr' => '',
-			'fn_uang_muka_dealer' => '',
-			'fn_asuransi_dikredit_dealer' => '',
-			'fn_persen_bunga_flat_dealer' => '',
-			'fn_pokok_pembiayaan_dealer' => '',
-			'fn_persen_bunga_efektif_dealer' => '',
-			'fn_bulan_masa_angsuran_dealer' => '',
-			'fn_kali_masa_angsuran_dealer' => '',
-			'fn_bunga_dealer' => '',
-			'fn_angsuran_dealer' => '',
-			'fn_angsuran_tidak_sama_dealer' => '',
-			'fn_uang_muka_konsumen' => '',
-			'fn_asuransi_dikredit_konsumen' => '',
-			'fn_pokok_pembiayaan_konsumen' => '',
-			'fn_persen_bunga_flat_konsumen' => '',
-			'fn_persen_bunga_efektif_konsumen' => '',
-			'fn_bulan_masa_angsuran_konsumen' => '',
-			'fn_kali_masa_angsuran_konsumen' => '',
-			'fn_bunga_konsumen' => '',
-			'fn_angsuran_konsumen' => '',
-			'fn_angsuran_tidak_sama_konsumen' => ''
+			'fs_pola_angsuran' => trim($pola),
+			'fs_cara_bayar' => trim($carabayar),
+			'fs_angsuran_dimuka' => trim($angsdimuka),
+			'fn_kali_angsuran_dimuka' => trim($kaliangsuran),
+			'fn_jumlah_angsuran_dimuka' => trim($jmlangsuran),
+			'fn_biaya_tjh' => trim($biayatjh),
+			'fn_selisih_dp' => trim($selisihdp),
+			'fs_angsuran_dimuka_potong_pencairan' => trim($angsdimukapotong),
+			'fn_dp_bayar' => trim($dpbayar),
+			'fs_angsuran_dibayar_dealer' => trim($angsdibayar),
+			'fn_biaya_adm' => trim($biayaadm),
+			'fn_premi_asuransi_gross' => trim($premiasuransigross),
+			'fn_premi_asuransi' => trim($premiasuransi),
+			'fn_premi_asuransi_gross_perluasan' => trim($premiasuransigrossperluasan),
+			'fn_premi_asuransi_netto' => trim($premiasuransinetto),
+			'fn_denda_perhari' => trim($dendaperhari),
+			'fn_harga_otr' => trim($hargaotr),
+			'fn_uang_muka_dealer' => trim($uangmukadealer),
+			'fn_asuransi_dikredit_dealer' => trim($asuransidikreditdealer),
+			'fn_persen_bunga_flat_dealer' => trim($persenbungaflatdealer),
+			'fn_pokok_pembiayaan_dealer' => trim($pokokpembiayaandealer),
+			'fn_persen_bunga_efektif_dealer' => trim($persenbungaefektifdealer),
+			'fn_bulan_masa_angsuran_dealer' => trim($bulanmasaangsurandealer),
+			'fn_kali_masa_angsuran_dealer' => trim($kalimasaangsurandealer),
+			'fn_bunga_dealer' => trim($bungadealer),
+			'fn_angsuran_dealer' => trim($angsurandealer),
+			'fn_angsuran_tidak_sama_dealer' => trim($angsurantidaksamadealer),
+			'fn_uang_muka_konsumen' => trim($uangmukakonsumen),
+			'fn_asuransi_dikredit_konsumen' => trim($asuransidikreditkonsumen),
+			'fn_pokok_pembiayaan_konsumen' => trim($pokokpembiayaankonsumen),
+			'fn_persen_bunga_flat_konsumen' => trim($persenbungaflatkonsumen),
+			'fn_persen_bunga_efektif_konsumen' => trim($persenbungaefektifkonsumen),
+			'fn_bulan_masa_angsuran_konsumen' => trim($bulanmasaangsurankonsumen),
+			'fn_kali_masa_angsuran_konsumen' => trim($kalimasaangsurankonsumen),
+			'fn_bunga_konsumen' => trim($bungakonsumen),
+			'fn_angsuran_konsumen' => trim($angsurankonsumen),
+			'fn_angsuran_tidak_sama_konsumen' => trim($angsurantidaksamakonsumen)
 		);
 
 		if ($update == true) {
@@ -669,6 +719,76 @@ class Apkperorangan extends CI_Controller {
 		$user = $this->encryption->decrypt($this->session->userdata('username'));
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		$namapasangan = $this->input->post('fs_nama_pasangan');
+		$handphonepasangan = $this->input->post('fs_handphone_pasangan');
+		$usahapasangan = $this->input->post('fs_usaha_pasangan');
+		$keteranganusahapasangan = $this->input->post('fs_keterangan_usaha_pasangan');
+		$alamatusahapasangan = $this->input->post('fs_alamat_usaha_pasangan');
+		$teleponusahapasangan = $this->input->post('fs_telepon_usaha_pasangan');
+		$pendapatanpasangan = $this->input->post('fn_pendapatan_pasangan');
+		$namapenjamin = $this->input->post('fs_nama_penjamin');
+		$alamatpenjamin = $this->input->post('fs_alamat_penjamin');
+		$kotapenjamin = $this->input->post('fs_kota_penjamin');
+		$kodepospenjamin = $this->input->post('fs_kodepos_penjamin');
+		$teleponpenjamin = $this->input->post('fs_telepon_penjamin');
+		$usahapenjamin = $this->input->post('fs_usaha_penjamin');
+		$keteranganusahapenjamin = $this->input->post('fs_keterangan_usaha_penjamin');
+		$alamatusahapenjamin = $this->input->post('fs_alamat_usaha_penjamin');
+		$teleponusahapenjamin = $this->input->post('fs_telepon_usaha_penjamin');
+		$pendapatanpenjamin = $this->input->post('fn_pendapatan_penjamin');
+		$statuspenjamin = $this->input->post('fs_status_penjamin');
+
+		$update = false;
+		$this->load->model('MApkPerorangan');
+		$sSQL = $this->MApkPerorangan->checkAPK($cabang, $noapk);
+
+		if ($sSQL->num_rows() > 0) {
+			$update = true;
+		}
+
+		$dt = array(
+			'fs_nama_pasangan' => trim($namapasangan),
+			'fs_handphone_pasangan' => trim($handphonepasangan),
+			'fs_usaha_pasangan' => trim($usahapasangan),
+			'fs_keterangan_usaha_pasangan' => trim($keteranganusahapasangan),
+			'fs_alamat_usaha_pasangan' => trim($alamatusahapasangan),
+			'fs_telepon_usaha_pasangan' => trim($teleponusahapasangan),
+			'fn_pendapatan_pasangan' => trim($pendapatanpasangan),
+			'fs_nama_penjamin' => trim($namapenjamin),
+			'fs_alamat_penjamin' => trim($alamatpenjamin),
+			'fs_kota_penjamin' => trim($kotapenjamin),
+			'fs_kodepos_penjamin' => trim($kodepospenjamin),
+			'fs_telepon_penjamin' => trim($teleponpenjamin),
+			'fs_usaha_penjamin' => trim($usahapenjamin),
+			'fs_keterangan_usaha_penjamin' => trim($keteranganusahapenjamin),
+			'fs_alamat_usaha_penjamin' => trim($alamatusahapenjamin),
+			'fs_telepon_usaha_penjamin' => trim($teleponusahapenjamin),
+			'fn_pendapatan_penjamin' => trim($pendapatanpenjamin),
+			'fs_status_penjamin' => trim($statuspenjamin)
+		);
+		
+		if ($update == true) {
+			$dt1 = array(
+				'fs_user_edit' => trim($user),
+				'fd_tanggal_edit' => date('Y-m-d H:i:s')
+			);
+			$data = array_merge($dt, $dt1);
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+			$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Update Data APK, Sukses!!'
+					);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+						'sukses' => false,
+						'hasil' => 'Simpan Gagal, APK Tidak Ada...'
+					);
+			echo json_encode($hasil);
+		}
 	}
 
 	// TAB DATA PENCAIRAN
@@ -681,5 +801,59 @@ class Apkperorangan extends CI_Controller {
 		$user = $this->encryption->decrypt($this->session->userdata('username'));
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		$tanggalperjanjian = $this->input->post('fd_tanggal_perjanjian');
+		$tanggalangsuranpertama = $this->input->post('fd_tanggal_angsuran_pertama');
+		$tanggaljatuhtempoperbulan = $this->input->post('fn_tanggal_jatuhtempo_perbulan');
+		$cairke = $this->input->post('fs_cair_ke');
+		$uangmukabayardi = $this->input->post('fs_uang_muka_bayar_di');
+		$depositpotongpencairan = $this->input->post('fs_deposit_potong_pencairan');
+		$atasnamabankpencairan = $this->input->post('fs_atasnama_bank_pencairan');
+		$namabankpencairan = $this->input->post('fs_nama_bank_pencairan');
+		$rekeningbankpencairan = $this->input->post('fs_rekening_bank_pencairan');
+		$nilaipencairan = $this->input->post('fn_nilai_pencairan');
+
+		$update = false;
+		$this->load->model('MApkPerorangan');
+		$sSQL = $this->MApkPerorangan->checkAPK($cabang, $noapk);
+
+		if ($sSQL->num_rows() > 0) {
+			$update = true;
+		}
+
+		$dt = array(
+			'fd_tanggal_perjanjian' => trim($tanggalperjanjian),
+			'fd_tanggal_angsuran_pertama' => trim($tanggalangsuranpertama),
+			'fn_tanggal_jatuhtempo_perbulan' => trim($tanggaljatuhtempoperbulan),
+			'fs_cair_ke' => trim($cairke),
+			'fs_uang_muka_bayar_di' => trim($uangmukabayardi),
+			'fs_deposit_potong_pencairan' => trim($depositpotongpencairan),
+			'fs_atasnama_bank_pencairan' => trim($atasnamabankpencairan),
+			'fs_nama_bank_pencairan' => trim($namabankpencairan),
+			'fs_rekening_bank_pencairan' => trim($rekeningbankpencairan),
+			'fn_nilai_pencairan' => trim($nilaipencairan)
+		);
+
+		if ($update == true) {
+			$dt1 = array(
+				'fs_user_edit' => trim($user),
+				'fd_tanggal_edit' => date('Y-m-d H:i:s')
+			);
+			$data = array_merge($dt, $dt1);
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+			$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Update Data APK, Sukses!!'
+					);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+						'sukses' => false,
+						'hasil' => 'Simpan Gagal, APK Tidak Ada...'
+					);
+			echo json_encode($hasil);
+		}
 	}
 }

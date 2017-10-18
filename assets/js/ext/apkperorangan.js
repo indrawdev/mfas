@@ -1459,7 +1459,7 @@ Ext.onReady(function() {
 			xtype: 'container',
 			items: [{
 				anchor: '98%',
-				emptyText: 'Model / Jenis / Merek / Kota / Silinder',
+				emptyText: 'Model / Jenis / Merek / Silinder',
 				id: 'txtCariKendaraan',
 				name: 'txtCariKendaraan',
 				xtype: 'textfield'
@@ -4092,7 +4092,8 @@ Ext.onReady(function() {
 	// FUNCTIONS TAB DATA UTAMA
 	function fnResetDataUtama() {
 		// FORM APK
-		Ext.getCmp('cboTglAPK').setValue('');
+		Ext.getCmp('txtNoAPK').setValue('');
+		Ext.getCmp('cboTglAPK').setValue(new Date());
 		Ext.getCmp('cboLembaga').setValue('');
 		Ext.getCmp('txtKdLembaga1').setValue('');
 		Ext.getCmp('txtKdLembaga2').setValue('');
@@ -4184,12 +4185,26 @@ Ext.onReady(function() {
 			params: {
 				'fn_no_apk': '',
 				'fn_no_pjj': '',
-				'': '',
-				'': '',
-				'': '',
-				'': '',
-				'': '',
-				'': '',
+				'fd_tgl_apk': '',
+				'fs_jenis_pembiayaan': '',
+				'fs_kode_lokasi': '',
+				'fs_nomor_dealer': '',
+				'fs_fleet': '',
+				'fs_nama_konsumen': '',
+				'fs_alamat_konsumen': '',
+				'fs_kelurahan_konsumen': '',
+				'fs_kecamatan_konsumen': '',
+				'fs_kode_dati_konsumen': '',
+				'fs_propinsi_konsumen': '',
+				'fs_kota_konsumen': '',
+				'fs_kodepos_konsumen': '',
+				'fs_ktp_konsumen': '',
+				'fs_masa_ktp_konsumen': '',
+				'fs_npwp_konsumen': '',
+				'fs_kartu_keluarga': '',
+				'fs_telepon_konsumen': '',
+				'fs_handphone_konsumen': '',
+				'fs_email_konsumen': '',
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);
@@ -4203,7 +4218,7 @@ Ext.onReady(function() {
 				if (xtext.sukses === true) {
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
-					tabPanel.setActiveTab('tab2');
+					tabPanel.setActiveTab('tab3');
 				}
 			},
 			failure: function(response) {
@@ -4220,8 +4235,8 @@ Ext.onReady(function() {
 		});
 	}
 
-	// FUNCTIONS TAB DATA PERORANGAN
-	function fnResetDataPerorangan() {
+	// FUNCTIONS TAB DATA KONSUMEN
+	function fnResetDataKonsumen() {
 		// FORM PERUSAHAAN
 		Ext.getCmp('txtNamaPerusahaan').setValue('');
 		Ext.getCmp('txtAlamatPerusahaan').setValue('');
@@ -4248,7 +4263,7 @@ Ext.onReady(function() {
 		Ext.getCmp('txtKotaKonsumen').setValue('');
 	}
 
-	function fnCekSaveDataPerorangan() {
+	function fnCekSaveDataKonsumen() {
 		if (this.up('form').getForm().isValid()) {
 			Ext.Ajax.on('beforerequest', fnMaskShow);
 			Ext.Ajax.on('requestcomplete', fnMaskHide);
@@ -4256,10 +4271,9 @@ Ext.onReady(function() {
 
 			Ext.Ajax.request({
 				method: 'POST',
-				url: 'apkperorangan/ceksavedataperorangan',
+				url: 'apkperorangan/ceksavedatakonsumen',
 				params: {
-					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-					'fn_no_pjj': Ext.getCmp('txtNoPJJ').getValue()
+					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4280,7 +4294,7 @@ Ext.onReady(function() {
 							title: 'MFAS',
 							fn: function(btn) {
 								if (btn == 'yes') {
-									fnSaveDataPerorangan();
+									fnSaveDataKonsumen();
 								}
 							}
 						});
@@ -4301,10 +4315,63 @@ Ext.onReady(function() {
 		}
 	}
 
-	function fnSaveDataPerorangan() {
+	function fnSaveDataKonsumen() {
 		Ext.Ajax.on('beforerequest', fnMaskShow);
 		Ext.Ajax.on('requestcomplete', fnMaskHide);
 		Ext.Ajax.on('requestexception', fnMaskHide);
+
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkperorangan/savedatakonsumen',
+			params: {
+				'fn_no_apk': '',
+				'fs_nama_perusahaan_konsumen': '',
+				'fs_alamat_usaha_konsumen': '',
+				'fs_telfon_usaha_konsumen': '',
+				'fs_kategori_usaha_konsumen': '',
+				'fs_skala_perusahaan_konsumen': '',
+				'fs_kerja_sejak_konsumen': '',
+				'fs_usaha_pekerjaan_konsumen': '',
+				'fs_keterangan_usaha_konsumen': '',
+				'fs_jenis_kelamin_konsumen': '',
+				'fs_tempat_lahir_konsumen': '',
+				'fd_tanggal_lahir_konsumen': '',
+				'fs_status_konsumen': '',
+				'fs_status_rumah': '',
+				'fs_agama_konsumen': '',
+				'fs_pendidikan_konsumen': '',
+				'fs_nama_ibu_kandung': '',
+				'fs_alamat_korespondensi': '',
+				'fs_kodepos_korespondensi': '',
+				'fs_kota_korespondensi': '',
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+				if (xtext.sukses === true) {
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab4');
+				}
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	// FUNCTIONS TAB DATA KENDARAAN
@@ -4341,8 +4408,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkperorangan/ceksavedatakendaraan',
 				params: {
-					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-					'fn_no_pjj': Ext.getCmp('txtNoPJJ').getValue()
+					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4388,6 +4454,62 @@ Ext.onReady(function() {
 		Ext.Ajax.on('beforerequest', fnMaskShow);
 		Ext.Ajax.on('requestcomplete', fnMaskHide);
 		Ext.Ajax.on('requestexception', fnMaskHide);
+
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkperorangan/savedatakendaraan',
+			params: {
+				'fn_no_apk': '',
+				'fs_kode_kendaraan': '',
+				'fs_jenis_kendaraan': '',
+				'fs_silinder_kendaraan': '',
+				'fn_tahun_kendaraan': '',
+				'fs_warna_kendaraan': '',
+				'fs_no_rangka': '',
+				'fs_no_mesin': '',
+				'fs_komersial': '',
+				'fs_nama_sesuai_kontrak': '',
+				'fs_nama_bpkb': '',
+				'fs_alamat_bpkb': '',
+				'fs_nomor_bpkb': '',
+				'fs_no_polisi': '',
+				'fs_kode_wilayah_no_polisi': '',
+				'fs_kode_akhir_wilayah_no_polisi': '',
+				'fs_salesman': '',
+				'fs_jenis_asuransi': '',
+				'fs_kode_asuransi1': '',
+				'fs_kode_asuransi2': '',
+				'fn_cabang_dealer': '',
+				'fs_kode_dealer1': '',
+				'fs_kode_dealer2': ''
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+				if (xtext.sukses === true) {
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab5');
+				}
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	// FUNCTIONS TAB DATA STRUKTUR KREDIT
@@ -4472,6 +4594,77 @@ Ext.onReady(function() {
 		Ext.Ajax.on('beforerequest', fnMaskShow);
 		Ext.Ajax.on('requestcomplete', fnMaskHide);
 		Ext.Ajax.on('requestexception', fnMaskHide);
+
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkperorangan/savestrukturkredit',
+			params: {
+				'fn_no_apk': '',
+				'fs_pola_angsuran': '',
+				'fs_cara_bayar': '',
+				'fs_angsuran_dimuka': '',
+				'fn_kali_angsuran_dimuka': '',
+				'fn_jumlah_angsuran_dimuka': '',
+				'fn_biaya_tjh': '',
+				'fn_selisih_dp': '',
+				'fs_angsuran_dimuka_potong_pencairan': '',
+				'fn_dp_bayar': '',
+				'fs_angsuran_dibayar_dealer': '',
+				'fn_biaya_adm': '',
+				'fn_premi_asuransi_gross': '',
+				'fn_premi_asuransi': '',
+				'fn_premi_asuransi_gross_perluasan': '',
+				'fn_premi_asuransi_netto': '',
+				'fn_denda_perhari': '',
+				'fn_harga_otr': '',
+				'fn_uang_muka_dealer': '',
+				'fn_asuransi_dikredit_dealer': '',
+				'fn_persen_bunga_flat_dealer': '',
+				'fn_pokok_pembiayaan_dealer': '',
+				'fn_persen_bunga_efektif_dealer': '',
+				'fn_bulan_masa_angsuran_dealer': '',
+				'fn_kali_masa_angsuran_dealer': '',
+				'fn_bunga_dealer': '',
+				'fn_angsuran_dealer': '',
+				'fn_angsuran_tidak_sama_dealer': '',
+				'fn_uang_muka_konsumen': '',
+				'fn_asuransi_dikredit_konsumen': '',
+				'fn_pokok_pembiayaan_konsumen': '',
+				'fn_persen_bunga_flat_konsumen': '',
+				'fn_persen_bunga_efektif_konsumen': '',
+				'fn_bulan_masa_angsuran_konsumen': '',
+				'fn_kali_masa_angsuran_konsumen': '',
+				'fn_bunga_konsumen': '',
+				'fn_angsuran_konsumen': '',
+				'fn_angsuran_tidak_sama_konsumen': ''
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+				if (xtext.sukses === true) {
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab6');
+				}
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	// FUNCTIONS TAB DATA TAMBAHAN
@@ -4508,8 +4701,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkperorangan/ceksavedatatambahan',
 				params: {
-					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-					'fn_no_pjj': Ext.getCmp('txtNoPJJ').getValue()
+					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4560,14 +4752,51 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkperorangan/ceksavedatatambahan',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-				'fn_no_pjj': Ext.getCmp('txtNoPJJ').getValue()
+				'fn_no_apk': '',
+				'fs_nama_pasangan': '',
+				'fs_handphone_pasangan': '',
+				'fs_usaha_pasangan': '',
+				'fs_keterangan_usaha_pasangan': '',
+				'fs_alamat_usaha_pasangan': '',
+				'fs_telepon_usaha_pasangan': '',
+				'fn_pendapatan_pasangan': '',
+				'fs_nama_penjamin': '',
+				'fs_alamat_penjamin': '',
+				'fs_kota_penjamin': '',
+				'fs_kodepos_penjamin': '',
+				'fs_telepon_penjamin': '',
+				'fs_usaha_penjamin': '',
+				'fs_keterangan_usaha_penjamin': '',
+				'fs_alamat_usaha_penjamin': '',
+				'fs_telepon_usaha_penjamin': '',
+				'fn_pendapatan_penjamin': '',
+				'fs_status_penjamin': ''
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+				if (xtext.sukses === true) {
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab7');
+				}
 			},
 			failure: function(response) {
 				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
 			}
 		});
 	}
@@ -4598,8 +4827,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkperorangan/ceksavedatapencairan',
 				params: {
-					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-					'fn_no_pjj': Ext.getCmp('txtNoPJJ').getValue()
+					'fn_no_apk': Ext.getCmp('txtNoAPK').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4645,6 +4873,50 @@ Ext.onReady(function() {
 		Ext.Ajax.on('beforerequest', fnMaskShow);
 		Ext.Ajax.on('requestcomplete', fnMaskHide);
 		Ext.Ajax.on('requestexception', fnMaskHide);
+
+		Ext.Ajax.request({
+			method: 'POST',
+			url: 'apkperorangan/savedatapencairan',
+			params: {
+				'fn_no_apk': '',
+				'fd_tanggal_perjanjian': '',
+				'fd_tanggal_angsuran_pertama': '',
+				'fn_tanggal_jatuhtempo_perbulan': '',
+				'fs_cair_ke': '',
+				'fs_uang_muka_bayar_di': '',
+				'fs_deposit_potong_pencairan': '',
+				'fs_atasnama_bank_pencairan': '',
+				'fs_nama_bank_pencairan': '',
+				'fs_rekening_bank_pencairan': '',
+				'fn_nilai_pencairan': ''
+			},
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+				if (xtext.sukses === true) {
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab1');
+				}
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+				fnMaskHide();
+			}
+		});
 	}
 
 	var frmApkPerorangan = Ext.create('Ext.form.Panel', {
@@ -4872,12 +5144,12 @@ Ext.onReady(function() {
 					name: 'btnSaveDataKonsumen',
 					text: 'Save',
 					scale: 'medium',
-					handler: fnCekSaveDataPerorangan
+					handler: fnCekSaveDataKonsumen
 				},{
 					iconCls: 'icon-reset',
 					text: 'Reset',
 					scale: 'medium',
-					handler: fnResetDataPerorangan
+					handler: fnResetDataKonsumen
 				}]
 			},{
 				id: 'tab4',

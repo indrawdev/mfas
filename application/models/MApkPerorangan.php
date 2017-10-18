@@ -21,14 +21,46 @@ class MApkPerorangan extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPeroranganAll()
+	public function listPeroranganAll($sCari)
 	{
+		$xSQL = ("
+			SELECT *
+			FROM tx_apk
+			WHERE fs_jenis_pembiayaan = 'P'
+		");
 
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_nama_konsumen LIKE '%".trim($sCari)."%' 
+					OR fn_no_apk LIKE '%".trim($sCari)."%')
+			");
+		}
+		
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
 	}
 
-	public function listPerorangan()
+	public function listPerorangan($sCari, $nStart, $nLimit)
 	{
-		
+		$xSQL = ("
+			SELECT *
+			FROM tx_apk
+			WHERE fs_jenis_pembiayaan = 'P'
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_nama_konsumen LIKE '%".trim($sCari)."%' 
+					OR fn_no_apk LIKE '%".trim($sCari)."%')
+			");
+		}
+
+		$xSQL = $xSQL.("
+			ORDER BY fd_tgl_apk DESC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
 	}
 
 }
