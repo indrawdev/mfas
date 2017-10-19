@@ -55,7 +55,7 @@ Ext.onReady(function() {
 		store: grupCabang,
 		columns: [
 			{xtype: 'rownumberer', width: 45},
-			{text: "Kode Cabang", dataIndex: 'fs_kode_cabang', menuDisabled: true, flex: 1},
+			{text: "Kode Cabang", dataIndex: 'fs_kode_cabang', menuDisabled: true, flex: 0.5},
 			{text: "Nama Cabang", dataIndex: 'fs_nama_cabang', menuDisabled: true, flex: 2}
 		],
 		tbar: [{

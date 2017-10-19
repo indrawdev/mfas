@@ -399,50 +399,6 @@ class MSearch extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPengurusAll($sCari)
-	{
-		$xSQL = ("
-			SELECT fs_kode_cabang, fn_no_apk, fs_kode_jabatan,
-				fs_nama_pengurus, fs_alamat_pengurus, fs_kodepos_pengurus,
-				fs_kota_pengurus, fs_ktp_pengurus, fs_npwp_pengurus, 
-				fn_persen_saham, fs_aktif
-			FROM tx_apk_pengurus
-		");
-
-		if (!empty($sCari)) {
-			$xSQL = $xSQL.("
-				WHERE fs_nama_pengurus LIKE '%".trim($sCari)."%'
-			");
-		}
-
-		$sSQL = $this->db->query($xSQL);
-		return $sSQL;
-	}
-
-	public function listPengurus($sCari, $nStart, $nLimit)
-	{
-		$xSQL = ("
-			SELECT fs_kode_cabang, fn_no_apk, fs_kode_jabatan,
-				fs_nama_pengurus, fs_alamat_pengurus, fs_kodepos_pengurus,
-				fs_kota_pengurus, fs_ktp_pengurus, fs_npwp_pengurus, 
-				fn_persen_saham, fs_aktif
-			FROM tx_apk_pengurus
-		");
-
-		if (!empty($sCari)) {
-			$xSQL = $xSQL.("
-				WHERE fs_nama_pengurus LIKE '%".trim($sCari)."%'
-			");
-		}
-
-		$xSQL = $xSQL.("
-			ORDER BY fs_kode_jabatan ASC LIMIT ".$nStart.",".$nLimit."
-		");
-
-		$sSQL = $this->db->query($xSQL);
-		return $sSQL;
-	}
-
 	public function getReferensi($sKode) 
 	{
 		$xSQL = ("

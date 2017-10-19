@@ -21,6 +21,19 @@ class MApkBadanUsaha extends CI_Model {
 		return $sSQL;
 	}
 
+	public function checkPengurus($sKdCab, $nNoApk, $sKdJab, $sNama)
+	{
+		$xSQL = ("
+			SELECT fs_kode_cabang, fn_no_apk, fs_kode_jabatan, fs_nama_pengurus
+			FROM tx_apk_pengurus
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' AND fn_no_apk = '".trim($nNoApk)."'
+			AND fs_kode_jabatan = '".trim($sKdJab)."' AND fs_nama_pengurus = '".trim($sNama)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function listBadanUsahaAll($sCari)
 	{
 		$xSQL = ("
@@ -59,6 +72,52 @@ class MApkBadanUsaha extends CI_Model {
 			ORDER BY fd_tgl_apk DESC LIMIT ".$nStart.",".$nLimit."
 		");
 		
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPengurusAll($sCari)
+	{
+		$xSQL = ("
+			SELECT a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
+				a.fs_kodepos_pengurus, a.fs_kota_pengurus, a.fs_ktp_pengurus,
+				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, b.fs_nama_referensi
+			FROM tx_apk_pengurus a
+			LEFT JOIN tm_referensi b ON b.fs_kode_referensi = 'jabatan_pengurus' 
+			AND  b.fs_nilai1_referensi = a.fs_kode_jabatan
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				WHERE a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
+			");
+		}
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPengurus($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
+				a.fs_kodepos_pengurus, a.fs_kota_pengurus, a.fs_ktp_pengurus,
+				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, b.fs_nama_referensi
+			FROM tx_apk_pengurus a
+			LEFT JOIN tm_referensi b ON b.fs_kode_referensi = 'jabatan_pengurus' 
+			AND  b.fs_nilai1_referensi = a.fs_kode_jabatan
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				WHERE a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
+			");
+		}
+
+		$xSQL = $xSQL.("
+			ORDER BY a.fd_tanggal_buat DESC LIMIT ".$nStart.",".$nLimit."
+		");
+
 		$sSQL = $this->db->query($xSQL);
 		return $sSQL;
 	}
