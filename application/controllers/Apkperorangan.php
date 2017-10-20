@@ -40,6 +40,30 @@ class Apkperorangan extends CI_Controller {
 		echo json_encode($out);
 	}
 
+	public function setapk($newapk) {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$apk = $newapk + 1;
+		$set = array(
+			'fn_counter' => trim($apk)
+		);
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fs_jenis_counter = 'APK'";
+		$this->db->where($where);
+		$this->db->update('tm_counter', $set);
+	}
+
+	public function setpjj($newpjj, $jenis) {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$pjj = $newpjj + 1;
+		$set = array(
+			'fn_counter' => trim($pjj)
+		);
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fs_jenis_counter = 'PJJ' AND fs_no_jenis_counter = '".trim($jenis)."'";
+		$this->db->where($where);
+		$this->db->update('tm_counter', $set);
+	}
+
 	public function gridperorangan() {
 		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
@@ -125,7 +149,73 @@ class Apkperorangan extends CI_Controller {
 					'fs_pertama_kali_kredit' => trim($xRow->fs_pertama_kali_kredit),
 					'fn_jumlah_kali_kredit' => trim($xRow->fn_jumlah_kali_kredit),
 					'fn_mutasi_debet' => trim($xRow->fn_mutasi_debet),
-					'fn_mutasi_kredit' => trim($xRow->fn_mutasi_kredit)
+					'fn_mutasi_kredit' => trim($xRow->fn_mutasi_kredit),
+					'fs_pola_angsuran' => trim($xRow->fs_pola_angsuran),
+					'fs_cara_bayar' => trim($xRow->fs_cara_bayar),
+					'fs_angsuran_dimuka' => trim($xRow->fs_angsuran_dimuka),
+					'fn_kali_angsuran_dimuka' => trim($xRow->fn_kali_angsuran_dimuka),
+					'fn_jumlah_angsuran_dimuka' => trim($xRow->fn_jumlah_angsuran_dimuka),
+					'fn_biaya_tjh' => trim($xRow->fn_biaya_tjh),
+					'fn_selisih_dp' => trim($xRow->fn_selisih_dp),
+					'fs_angsuran_dimuka_potong_pencairan' => trim($xRow->fs_angsuran_dimuka_potong_pencairan),
+					'fn_dp_bayar' => trim($xRow->fn_dp_bayar),
+					'fs_angsuran_dibayar_dealer' => trim($xRow->fs_angsuran_dibayar_dealer),
+					'fn_biaya_adm' => trim($xRow->fn_biaya_adm),
+					'fn_premi_asuransi_gross' => trim($xRow->fn_premi_asuransi_gross),
+					'fn_premi_asuransi' => trim($xRow->fn_premi_asuransi),
+					'fn_premi_asuransi_gross_perluasan' => trim($xRow->fn_premi_asuransi_gross_perluasan),
+					'fn_premi_asuransi_netto' => trim($xRow->fn_premi_asuransi_netto),
+					'fn_denda_perhari' => trim($xRow->fn_denda_perhari),
+					'fn_harga_otr' => trim($xRow->fn_harga_otr),
+					'fn_uang_muka_dealer' => trim($xRow->fn_uang_muka_dealer),
+					'fn_asuransi_dikredit_dealer' => trim($xRow->fn_asuransi_dikredit_dealer),
+					'fn_persen_bunga_flat_dealer' => trim($xRow->fn_persen_bunga_flat_dealer),
+					'fn_pokok_pembiayaan_dealer' => trim($xRow->fn_pokok_pembiayaan_dealer),
+					'fn_persen_bunga_efektif_dealer' => trim($xRow->fn_persen_bunga_efektif_dealer),
+					'fn_bulan_masa_angsuran_dealer' => trim($xRow->fn_bulan_masa_angsuran_dealer),
+					'fn_kali_masa_angsuran_dealer' => trim($xRow->fn_kali_masa_angsuran_dealer),
+					'fn_bunga_dealer' => trim($xRow->fn_bunga_dealer),
+					'fn_angsuran_dealer' => trim($xRow->fn_angsuran_dealer),
+					'fn_angsuran_tidak_sama_dealer' => trim($xRow->fn_angsuran_tidak_sama_dealer),
+					'fn_uang_muka_konsumen' => trim($xRow->fn_uang_muka_konsumen),
+					'fn_asuransi_dikredit_konsumen' => trim($xRow->fn_asuransi_dikredit_konsumen),
+					'fn_pokok_pembiayaan_konsumen' => trim($xRow->fn_pokok_pembiayaan_konsumen),
+					'fn_persen_bunga_flat_konsumen' => trim($xRow->fn_persen_bunga_flat_konsumen),
+					'fn_persen_bunga_efektif_konsumen' => trim($xRow->fn_persen_bunga_efektif_konsumen),
+					'fn_bulan_masa_angsuran_konsumen' => trim($xRow->fn_bulan_masa_angsuran_konsumen),
+					'fn_kali_masa_angsuran_konsumen' => trim($xRow->fn_kali_masa_angsuran_konsumen),
+					'fn_bunga_konsumen' => trim($xRow->fn_bunga_konsumen),
+					'fn_angsuran_konsumen' => trim($xRow->fn_angsuran_konsumen),
+					'fn_angsuran_tidak_sama_konsumen' => trim($xRow->fn_angsuran_tidak_sama_konsumen),
+					'fs_nama_pasangan' => trim($xRow->fs_nama_pasangan),
+					'fs_handphone_pasangan' => trim($xRow->fs_handphone_pasangan),
+					'fs_usaha_pasangan' => trim($xRow->fs_usaha_pasangan),
+					'fs_keterangan_usaha_pasangan' => trim($xRow->fs_keterangan_usaha_pasangan),
+					'fs_alamat_usaha_pasangan' => trim($xRow->fs_alamat_usaha_pasangan),
+					'fs_telepon_usaha_pasangan' => trim($xRow->fs_telepon_usaha_pasangan),
+					'fn_pendapatan_pasangan' => trim($xRow->fn_pendapatan_pasangan),
+					'fs_nama_penjamin' => trim($xRow->fs_nama_penjamin),
+					'fs_alamat_penjamin' => trim($xRow->fs_alamat_penjamin),
+					'fs_kota_penjamin' => trim($xRow->fs_kota_penjamin),
+					'fs_kodepos_penjamin' => trim($xRow->fs_kodepos_penjamin),
+					'fs_telepon_penjamin' => trim($xRow->fs_telepon_penjamin),
+					'fs_usaha_penjamin' => trim($xRow->fs_usaha_penjamin),
+					'fs_keterangan_usaha_penjamin' => trim($xRow->fs_keterangan_usaha_penjamin),
+					'fs_alamat_usaha_penjamin' => trim($xRow->fs_alamat_usaha_penjamin),
+					'fs_telepon_usaha_penjamin' => trim($xRow->fs_telepon_usaha_penjamin),
+					'fn_pendapatan_penjamin' => trim($xRow->fn_pendapatan_penjamin),
+					'fs_status_penjamin' => trim($xRow->fs_status_penjamin),
+					'fd_tanggal_perjanjian' => trim($xRow->fd_tanggal_perjanjian),
+					'fd_tanggal_angsuran_pertama' => trim($xRow->fd_tanggal_angsuran_pertama),
+					'fn_tanggal_jatuhtempo_perbulan' => trim($xRow->fn_tanggal_jatuhtempo_perbulan),
+					'fs_cair_ke' => trim($xRow->fs_cair_ke),
+					'fs_uang_muka_bayar_di' => trim($xRow->fs_uang_muka_bayar_di),
+					'fs_deposit_potong_pencairan' => trim($xRow->fs_deposit_potong_pencairan),
+					'fs_atasnama_bank_pencairan' => trim($xRow->fs_atasnama_bank_pencairan),
+					'fs_nama_bank_pencairan' => trim($xRow->fs_nama_bank_pencairan),
+					'fs_rekening_bank_pencairan' => trim($xRow->fs_rekening_bank_pencairan),
+					'fn_nilai_pencairan' => trim($xRow->fn_nilai_pencairan),
+					'fs_flag_apk' => trim($xRow->fs_flag_apk)
 				);
 			}
 		}
@@ -451,6 +541,8 @@ class Apkperorangan extends CI_Controller {
 			$this->db->insert('tx_apk', $data);
 
 			// UPDATE COUNTER
+			$this->setapk($newapk);
+			$this->setpjj($newpjj, $pola);
 
 			$hasil = array(
 						'sukses' => true,

@@ -40,6 +40,30 @@ class Apkbadanusaha extends CI_Controller {
 		echo json_encode($out);
 	}
 
+	public function setapk($newapk) {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$apk = $newapk + 1;
+		$set = array(
+			'fn_counter' => trim($apk)
+		);
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fs_jenis_counter = 'APK'";
+		$this->db->where($where);
+		$this->db->update('tm_counter', $set);
+	}
+
+	public function setpjj($newpjj, $jenis) {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$pjj = $newpjj + 1;
+		$set = array(
+			'fn_counter' => trim($pjj)
+		);
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fs_jenis_counter = 'PJJ' AND fs_no_jenis_counter = '".trim($jenis)."'";
+		$this->db->where($where);
+		$this->db->update('tm_counter', $set);
+	}
+
 	public function gridbadanusaha() {
 		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
@@ -59,6 +83,92 @@ class Apkbadanusaha extends CI_Controller {
 					'fs_kode_cabang' => trim($xRow->fs_kode_cabang),
 					'fn_no_apk' => trim($xRow->fn_no_apk),
 					'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
+					'fs_nama_konsumen' => trim($xRow->fs_nama_konsumen),
+					'fs_nama_lembaga_keuangan' => trim($xRow->fs_nama_lembaga_keuangan),
+					'fs_jenis_usaha' => trim($xRow->fs_jenis_usaha),
+					'fs_jenis_piutang' => trim($xRow->fs_jenis_piutang),
+					'fs_pola_transaksi' => trim($xRow->fs_pola_transaksi),
+					'fs_fleet' => trim($xRow->fs_fleet),
+					'fs_alamat_konsumen' => trim($xRow->fs_alamat_konsumen),
+					'fs_kodepos_konsumen' => trim($xRow->fs_kodepos_konsumen),
+					'fs_kode_dati_konsumen' => trim($xRow->fs_kode_dati_konsumen),
+					'fs_propinsi_konsumen' => trim($xRow->fs_propinsi_konsumen),
+					'fs_kota_konsumen' => trim($xRow->fs_kota_konsumen),
+					'fs_kecamatan_konsumen' => trim($xRow->fs_kecamatan_konsumen),
+					'fs_kelurahan_konsumen' => trim($xRow->fs_kelurahan_konsumen),
+					'fs_npwp_konsumen' => trim($xRow->fs_npwp_konsumen),
+					'fs_siup_perusahaan' => trim($xRow->fs_siup_perusahaan),
+					'fs_tdp_perusahaan' => trim($xRow->fs_tdp_perusahaan),
+					'fs_telepon_konsumen' => trim($xRow->fs_telepon_konsumen),
+					'fs_email_konsumen' => trim($xRow->fs_email_konsumen),
+					'fs_group_perusahaan' => trim($xRow->fs_group_perusahaan),
+					'fs_telfon_usaha_konsumen' => trim($xRow->fs_telfon_usaha_konsumen),
+					'fs_kategori_usaha_konsumen' => trim($xRow->fs_kategori_usaha_konsumen),
+					'fs_skala_perusahaan_konsumen' => trim($xRow->fs_skala_perusahaan_konsumen),
+					'fs_status_perusahaan' => trim($xRow->fs_status_perusahaan),
+					'fs_bentuk_perusahaan' => trim($xRow->fs_bentuk_perusahaan),
+					'fs_tempat_perusahaan' => trim($xRow->fs_tempat_perusahaan),
+					'fs_beroperasi_sejak' => trim($xRow->fs_beroperasi_sejak),
+					'fn_jumlah_karyawan_perusahaan' => trim($xRow->fn_jumlah_karyawan_perusahaan),
+					'fs_keterangan_usaha_konsumen' => trim($xRow->fs_keterangan_usaha_konsumen),
+					'fn_pendapatan_konsumen' => trim($xRow->fn_pendapatan_konsumen),
+					'fn_biaya_konsumen' => trim($xRow->fn_biaya_konsumen),
+					'fs_penanggungjawab_perusahaan' => trim($xRow->fs_penanggungjawab_perusahaan),
+					'fs_jabatan_penanggungjawab_perusahaan' => trim($xRow->fs_jabatan_penanggungjawab_perusahaan),
+					'fs_ktp_penanggungjawab_perusahaan' => trim($xRow->fs_ktp_penanggungjawab_perusahaan),
+					'fs_npwp_penanggungjawab_perusahaan' => trim($xRow->fs_npwp_penanggungjawab_perusahaan),
+					'fs_alamat_penanggungjawab_perusahaan' => trim($xRow->fs_alamat_penanggungjawab_perusahaan),
+					'fs_kodepos_penanggungjawab_perusahaan' => trim($xRow->fs_kodepos_penanggungjawab_perusahaan),
+					'fs_telepon_penanggungjawab_perusahaan' => trim($xRow->fs_telepon_penanggungjawab_perusahaan),
+					'fs_handphone_penanggungjawab_perusahaan' => trim($xRow->fs_handphone_penanggungjawab_perusahaan),
+					'fs_repeat_order' => trim($xRow->fs_repeat_order),
+					'fs_repeat_order_ke' => trim($xRow->fs_repeat_order_ke),
+					'fs_alamat_korespondensi' => trim($xRow->fs_alamat_korespondensi),
+					'fs_kodepos_korespondensi' => trim($xRow->fs_kodepos_korespondensi),
+					'fs_kota_korespondensi' => trim($xRow->fs_kota_korespondensi),
+					'fs_model_kendaraan' => trim($xRow->fs_model_kendaraan),
+					'fs_kode_kendaraan' => trim($xRow->fs_kode_kendaraan),
+					'fs_jenis_kendaraan' => trim($xRow->fs_jenis_kendaraan),
+					'fs_silinder_kendaraan' => trim($xRow->fs_silinder_kendaraan),
+					'fn_tahun_kendaraan' => trim($xRow->fn_tahun_kendaraan),
+					'fs_warna_kendaraan' => trim($xRow->fs_warna_kendaraan),
+					'fs_no_rangka' => trim($xRow->fs_no_rangka),
+					'fs_no_mesin' => trim($xRow->fs_no_mesin),
+					'fs_komersial' => trim($xRow->fs_komersial),
+					'fs_nama_sesuai_kontrak' => trim($xRow->fs_nama_sesuai_kontrak),
+					'fs_nama_bpkb' => trim($xRow->fs_nama_bpkb),
+					'fs_alamat_bpkb' => trim($xRow->fs_alamat_bpkb),
+					'fs_kota_bpkb' => trim($xRow->fs_kota_bpkb),
+					'fs_no_polisi' => trim($xRow->fs_no_polisi),
+					'fs_kode_wilayah_no_polisi' => trim($xRow->fs_kode_wilayah_no_polisi),
+					'fs_kode_akhir_wilayah_no_polisi' => trim($xRow->fs_kode_akhir_wilayah_no_polisi),
+					'fs_salesman' => trim($xRow->fs_salesman),
+					'fs_jenis_asuransi' => trim($xRow->fs_jenis_asuransi),
+					'fs_kode_asuransi1' => trim($xRow->fs_kode_asuransi1),
+					'fs_kode_asuransi2' => trim($xRow->fs_kode_asuransi2),
+					'fn_cabang_dealer' => trim($xRow->fn_cabang_dealer),
+					'fs_kode_dealer1' => trim($xRow->fs_kode_dealer1),
+					'fs_kode_dealer2' => trim($xRow->fs_kode_dealer2),
+					'fs_pola_angsuran' => trim($xRow->fs_pola_angsuran),
+					'fs_cara_bayar' => trim($xRow->fs_cara_bayar),
+					'fs_angsuran_dimuka' => trim($xRow->fs_angsuran_dimuka),
+					'fn_kali_angsuran_dimuka' => trim($xRow->fn_kali_angsuran_dimuka),
+					'fn_jumlah_angsuran_dimuka' => trim($xRow->fn_jumlah_angsuran_dimuka),
+					'fn_biaya_tjh' => trim($xRow->fn_biaya_tjh),
+					'fn_selisih_dp' => trim($xRow->fn_selisih_dp),
+					'fs_angsuran_dimuka_potong_pencairan' => trim($xRow->fs_angsuran_dimuka_potong_pencairan),
+					'fn_dp_bayar' => trim($xRow->fn_dp_bayar),
+					'fs_angsuran_dibayar_dealer' => trim($xRow->fs_angsuran_dibayar_dealer),
+					'fn_biaya_adm' => trim($xRow->fn_biaya_adm),
+					'fn_premi_asuransi_gross' => trim($xRow->fn_premi_asuransi_gross),
+					'fn_premi_asuransi' => trim($xRow->fn_premi_asuransi),
+					'fn_premi_asuransi_gross_perluasan' => trim($xRow->fn_premi_asuransi_gross_perluasan),
+					'fn_premi_asuransi_netto' => trim($xRow->fn_premi_asuransi_netto),
+					'fn_denda_perhari' => trim($xRow->fn_denda_perhari),
+					'fn_harga_otr' => trim($xRow->fn_harga_otr),
+					'fn_uang_muka_dealer' => trim($xRow->fn_uang_muka_dealer),
+					'fn_asuransi_dikredit_dealer' => trim($xRow->fn_asuransi_dikredit_dealer),
+					'fn_pokok_pembiayaan_dealer' => trim($xRow->fn_pokok_pembiayaan_dealer),
 				);
 			}
 		}
@@ -399,6 +509,8 @@ class Apkbadanusaha extends CI_Controller {
 			$this->db->insert('tx_apk', $data);
 
 			// UPDATE COUNTER
+			$this->setapk($newapk);
+			$this->setpjj($newpjj, $pola);
 
 			$hasil = array(
 						'sukses' => true,
@@ -428,6 +540,24 @@ class Apkbadanusaha extends CI_Controller {
 	public function ceksavebadanusaha() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkBadanUsaha');
+			$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, APK Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savebadanusaha() {
@@ -530,6 +660,24 @@ class Apkbadanusaha extends CI_Controller {
 	public function ceksavedatakendaraan() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkBadanUsaha');
+			$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, APK Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savedatakendaraan() {
@@ -620,6 +768,24 @@ class Apkbadanusaha extends CI_Controller {
 	public function ceksavedatastrukturkredit() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkBadanUsaha');
+			$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, APK Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savedatastrukturkredit() {
@@ -814,6 +980,24 @@ class Apkbadanusaha extends CI_Controller {
 	public function ceksavedatapencairan() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkBadanUsaha');
+			$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, APK Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savedatapencairan() {

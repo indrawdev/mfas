@@ -147,33 +147,133 @@ Ext.onReady(function() {
 		height: 400,
 		sortableColumns: false,
 		store: grupBadanUsaha,
-		columns: [{
-			xtype: 'rownumberer',
-			width: 45
-		},{
-			text: 'No. APK',
-			dataIndex: 'fn_no_apk',
-			menuDisabled: true,
-			width: 90
-		},{
-			text: 'Nama Konsumen',
-			dataIndex: 'fs_nama_konsumen',
-			menuDisabled: true,
-			width: 240
-		},{
-			text: 'Tanggal APK',
-			dataIndex: 'fd_tgl_apk',
-			menuDisabled: true,
-			width: 90,
-			renderer: Ext.util.Format.dateRenderer('d-m-Y')
-		}],
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: 'No. APK', dataIndex: 'fn_no_apk', menuDisabled: true, width: 90},
+			{text: 'Nama Badan Usaha', dataIndex: 'fs_nama_konsumen', menuDisabled: true, width: 240},
+			{text: 'Tanggal APK', dataIndex: 'fd_tgl_apk', menuDisabled: true, width: 90, renderer: Ext.util.Format.dateRenderer('d-m-Y')},
+			{text: 'Nama Lembaga', dataIndex: 'fs_nama_lembaga_keuangan', menuDisabled: true, hidden: true},
+			{text: 'Jenis Usaha', dataIndex: 'fs_jenis_usaha', menuDisabled: true, hidden: true},
+			{text: 'Jenis Piutang', dataIndex: 'fs_jenis_piutang', menuDisabled: true, hidden: true},
+			{text: 'Pola Transaksi', dataIndex: 'fs_pola_transaksi', menuDisabled: true, hidden: true},
+			{text: 'No. PJJ', dataIndex: 'fs_pjj',menuDisabled: true, hidden: true},
+			{text: 'Fleet', dataIndex: 'fs_fleet', menuDisabled: true, hidden: true},
+			{text: 'Alamat Badan Usaha', dataIndex: 'fs_alamat_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kode Pos', dataIndex: 'fs_kodepos_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kode Dati', dataIndex: 'fs_kode_dati_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Propinsi', dataIndex: 'fs_propinsi_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kota', dataIndex: 'fs_kota_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kecamatan', dataIndex: 'fs_kecamatan_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kelurahan', dataIndex: 'fs_kelurahan_konsumen', menuDisabled: true, hidden: true},
+			{text: 'NPWP B.U', dataIndex: 'fs_npwp_konsumen', menuDisabled: true, hidden: true},
+			{text: 'SIUP B.U', dataIndex: 'fs_siup_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'TDP B.U', dataIndex: 'fs_tdp_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Telp. B.U', dataIndex: 'fs_telepon_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Email B.U', dataIndex: 'fs_email_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Group B.U', dataIndex: 'fs_group_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Telp. Usaha B.U', dataIndex: 'fs_telfon_usaha_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kategori Usaha B.U', dataIndex: 'fs_kategori_usaha_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Skala Usaha B.U', dataIndex: 'fs_skala_perusahaan_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Status Usaha', dataIndex: 'fs_status_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Bentuk Usaha B.U', dataIndex: 'fs_bentuk_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Status Tempat Usaha B.U', dataIndex: 'fs_tempat_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Operasi Sejak', dataIndex: 'fs_beroperasi_sejak', menuDisabled: true, hidden: true},
+			{text: 'Jml. Karyawan', dataIndex: 'fn_jumlah_karyawan_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Keterangan Usaha', dataIndex: 'fs_keterangan_usaha_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Omzet Perbulan', dataIndex: 'fn_pendapatan_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Biaya Perbulan', dataIndex: 'fn_biaya_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Nama P.J', dataIndex: 'fs_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Jabatan P.J', dataIndex: 'fs_jabatan_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'KTP P.J', dataIndex: 'fs_ktp_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'NPWP P.J', dataIndex: 'fs_npwp_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Alamat P.J', dataIndex: 'fs_alamat_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'KodePos P.J', dataIndex: 'fs_kodepos_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Telp. P.J', dataIndex: 'fs_telepon_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'HP. P.J', dataIndex: 'fs_handphone_penanggungjawab_perusahaan', menuDisabled: true, hidden: true},
+			{text: 'Repeat Order', dataIndex: 'fs_repeat_order', menuDisabled: true, hidden: true},
+			{text: 'Repeat Order Ke', dataIndex: 'fs_repeat_order_ke', menuDisabled: true, hidden: true},
+			{text: 'Alamat Surat', dataIndex: 'fs_alamat_korespondensi', menuDisabled: true, hidden: true},
+			{text: 'KodePos Surat', dataIndex: 'fs_kodepos_korespondensi', menuDisabled: true, hidden: true},
+			{text: 'Kota Surat', dataIndex: 'fs_kota_korespondensi', menuDisabled: true, hidden: true},
+			{text: 'Model Kend.', dataIndex: 'fs_model_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'Kode Kend.', dataIndex: 'fs_kode_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'Jenis Kend.', dataIndex: 'fs_jenis_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'Silinder', dataIndex: 'fs_silinder_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'Tahun Kend.', dataIndex: 'fn_tahun_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'Warna Kend.', dataIndex: 'fs_warna_kendaraan', menuDisabled: true, hidden: true},
+			{text: 'No. Rangka', dataIndex: 'fs_no_rangka', menuDisabled: true, hidden: true},
+			{text: 'No. Mesin', dataIndex: 'fs_no_mesin', menuDisabled: true, hidden: true},
+			{text: 'Komersil', dataIndex: 'fs_komersial', menuDisabled: true, hidden: true},
+			{text: 'Sesuai Kontrak', dataIndex: 'fs_nama_sesuai_kontrak', menuDisabled: true, hidden: true},
+			{text: 'Nama BPKB', dataIndex: 'fs_nama_bpkb', menuDisabled: true, hidden: true},
+			{text: 'Alamat BPKB', dataIndex: 'fs_alamat_bpkb', menuDisabled: true, hidden: true},
+			{text: 'Kota BPKB', dataIndex: 'fs_kota_bpkb', menuDisabled: true, hidden: true},
+			{text: 'No. Plat', dataIndex: 'fs_no_polisi', menuDisabled: true, hidden: true},
+			{text: 'Wilayah No. Plat', dataIndex: 'fs_kode_wilayah_no_polisi', menuDisabled: true, hidden: true},
+			{text: 'Wilayah Akhir No. Plat', dataIndex: 'fs_kode_akhir_wilayah_no_polisi', menuDisabled: true, hidden: true},
+			{text: 'Sales', dataIndex: 'fs_salesman', menuDisabled: true, hidden: true},
+			{text: 'Jenis Asuransi', dataIndex: 'fs_jenis_asuransi', menuDisabled: true, hidden: true},
+			{text: 'Kode Asuransi 1', dataIndex: 'fs_kode_asuransi1', menuDisabled: true, hidden: true},
+			{text: 'Kode Asuransi 2', dataIndex: 'fs_kode_asuransi2', menuDisabled: true, hidden: true},
+			{text: 'Cabang Dealer', dataIndex: 'fn_cabang_dealer', menuDisabled: true, hidden: true},
+			{text: 'Kode Dealer 1', dataIndex: 'fs_kode_dealer1', menuDisabled: true, hidden: true},
+			{text: 'Kode Dealer 2', dataIndex: 'fs_kode_dealer2', menuDisabled: true, hidden: true},
+			{text: 'Pola Angsuran', dataIndex: 'fs_pola_angsuran', menuDisabled: true, hidden: true},
+			{text: 'Cara Bayar', dataIndex: 'fs_cara_bayar', menuDisabled: true, hidden: true},
+			{text: 'Angsuran Dimuka', dataIndex: 'fs_angsuran_dimuka', menuDisabled: true, hidden: true},
+			{text: 'Kali Angsuran Dimuka', dataIndex: 'fn_kali_angsuran_dimuka', menuDisabled: true, hidden: true},
+			{text: 'Jumlah Angsuran', dataIndex: 'fn_jumlah_angsuran_dimuka', menuDisabled: true, hidden: true},
+			{text: 'Biaya TJH', dataIndex: 'fn_biaya_tjh', menuDisabled: true, hidden: true},
+			{text: 'Selisih DP', dataIndex: 'fn_selisih_dp', menuDisabled: true, hidden: true},
+			{text: 'Potong Pencairan', dataIndex: 'fs_angsuran_dimuka_potong_pencairan', menuDisabled: true, hidden: true},
+			{text: 'DP Bayar', dataIndex: 'fn_dp_bayar', menuDisabled: true, hidden: true},
+			{text: 'Angs. Dibayar Dealer', dataIndex: 'fs_angsuran_dibayar_dealer', menuDisabled: true, hidden: true},
+			{text: 'Biaya ADM', dataIndex: 'fn_biaya_adm', menuDisabled: true, hidden: true},
+			{text: 'Premi Ass Gross', dataIndex: 'fn_premi_asuransi_gross', menuDisabled: true, hidden: true},
+			{text: 'Premi Ass', dataIndex: 'fn_premi_asuransi', menuDisabled: true, hidden: true},
+			{text: 'Premi Ass Gross Perluasan', dataIndex: 'fn_premi_asuransi_gross_perluasan', menuDisabled: true, hidden: true},
+			{text: 'Premi Ass Netto', dataIndex: 'fn_premi_asuransi_netto', menuDisabled: true, hidden: true},
+			{text: 'Denda perhari', dataIndex: 'fn_denda_perhari', menuDisabled: true, hidden: true},
+			{text: 'Harga OTR', dataIndex: 'fn_harga_otr', menuDisabled: true, hidden: true},
+			{text: 'Uang Muka Dealer', dataIndex: 'fn_uang_muka_dealer', menuDisabled: true, hidden: true},
+			{text: 'Asuransi Dikredit Dealer', dataIndex: 'fn_asuransi_dikredit_dealer', menuDisabled: true, hidden: true},
+			{text: 'Pokok Pembiayaan Dealer', dataIndex: 'fn_pokok_pembiayaan_dealer', menuDisabled: true, hidden: true},
+			{text: 'Persen Bunga Flat Dealer', dataIndex: 'fn_persen_bunga_flat_dealer', menuDisabled: true, hidden: true},
+			{text: 'Persen Bunga Efektif Dealer', dataIndex: 'fn_persen_bunga_efektif_dealer', menuDisabled: true, hidden: true},
+			{text: 'Bulan Masa Angs. Dealer', dataIndex: 'fn_bulan_masa_angsuran_dealer', menuDisabled: true, hidden: true},
+			{text: 'Kali Masa Angs. Dealer', dataIndex: 'fn_kali_masa_angsuran_dealer', menuDisabled: true, hidden: true},
+			{text: 'Bunga Dealer', dataIndex: 'fn_bunga_dealer', menuDisabled: true, hidden: true},
+			{text: 'Angsuran Dealer', dataIndex: 'fn_angsuran_dealer', menuDisabled: true, hidden: true},
+			{text: 'Angs. Tidak Sama Dealer', dataIndex: 'fn_angsuran_tidak_sama_dealer', menuDisabled: true, hidden: true},
+			{text: 'Uang Muka Konsumen', dataIndex: 'fn_uang_muka_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Asuransi Dikredit Konsumen', dataIndex: 'fn_asuransi_dikredit_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Pokok Pembiayaan Konsumen', dataIndex: 'fn_pokok_pembiayaan_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Persen Bunga Flat Konsumen', dataIndex: 'fn_persen_bunga_flat_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Persen Bunga Efektif Konsumen', dataIndex: 'fn_persen_bunga_efektif_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Bulan Masa Angs. Konsumen', dataIndex: 'fn_bulan_masa_angsuran_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Kali Masa Angs. Konsumen', dataIndex: 'fn_kali_masa_angsuran_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Bunga Konsumen', dataIndex: 'fn_bunga_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Angsuran Konsumen', dataIndex: 'fn_angsuran_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Angs. Tidak Sama Konsumen', dataIndex: 'fn_angsuran_tidak_sama_konsumen', menuDisabled: true, hidden: true},
+			{text: 'Tanggal Perjanjian', dataIndex: 'fd_tanggal_perjanjian', menuDisabled: true, hidden: true},
+			{text: 'Tanggal Angs. Pertama', dataIndex: 'fd_tanggal_angsuran_pertama', menuDisabled: true, hidden: true},
+			{text: 'Tanggal Jatuh Tempo perbulan', dataIndex: 'fn_tanggal_jatuhtempo_perbulan', menuDisabled: true, hidden: true},
+			{text: 'Cair Ke', dataIndex: 'fs_cair_ke', menuDisabled: true, hidden: true},
+			{text: 'Uang Muka Bayar Di', dataIndex: 'fs_uang_muka_bayar_di', menuDisabled: true, hidden: true},
+			{text: 'Deposit Potong Pencairan', dataIndex: 'fs_deposit_potong_pencairan', menuDisabled: true, hidden: true},
+			{text: 'A/N Bank Pencairan', dataIndex: 'fs_atasnama_bank_pencairan', menuDisabled: true, hidden: true},
+			{text: 'Nama Bank Pencairan', dataIndex: 'fs_nama_bank_pencairan', menuDisabled: true, hidden: true},
+			{text: 'Rek. Bank Pencairan', dataIndex: 'fs_rekening_bank_pencairan', menuDisabled: true, hidden: true},
+			{text: 'Nilai Pencairan', dataIndex: 'fn_nilai_pencairan', menuDisabled: true, hidden: true},
+			{text: 'Flag APK', dataIndex: 'fs_flag_apk', menuDisabled: true, hidden: true},
+		],
 		tbar: [{
 			flex: 1.4,
 			layout: 'anchor',
 			xtype: 'container',
 			items: [{
 				anchor: '98%',
-				emptyText: 'No. APK / Nama Konsumen',
+				emptyText: 'No. APK / Nama Badan Usaha',
 				id: 'txtCari',
 				name: 'txtCari',
 				xtype: 'textfield'
@@ -205,16 +305,93 @@ Ext.onReady(function() {
 		listeners: {
 			itemdblclick: function(grid, record) {
 				// SET RECORD IN TAB DATA UTAMA
+				Ext.getCmp('txtNoAPK').setValue(record.get('fn_no_apk'));
+				Ext.getCmp('cboTglAPK').setValue(record.get('fd_tgl_apk'));
+				Ext.getCmp('cboJnsPiutang').setValue(record.get('fs_jenis_piutang'));
+				Ext.getCmp('cboPolaTransaksi').setValue(record.get('fs_pola_transaksi'));
+				Ext.getCmp('txtNoPJJ').setValue(record.get('fs_pjj'));
+				Ext.getCmp('cboFleet').setValue(record.get('fs_fleet'));
+				Ext.getCmp('txtNamaBadanUsaha').setValue(record.get('fs_nama_konsumen'));
+				Ext.getCmp('txtAlamatBadanUsaha').setValue(record.get('fs_alamat_konsumen'));
+				Ext.getCmp('cboKodePos').setValue(record.get('fs_kodepos_konsumen'));
+				Ext.getCmp('txtPropinsi').setValue(record.get('fs_propinsi_konsumen'));
+				Ext.getCmp('txtKota').setValue(record.get('fs_kota_konsumen'));
+				Ext.getCmp('txtKecamatan').setValue(record.get('fs_kecamatan_konsumen'));
+				Ext.getCmp('txtKelurahan').setValue(record.get('fs_kelurahan_konsumen'));
+				Ext.getCmp('txtNoNPWP').setValue(record.get('fs_npwp_konsumen'));
+				Ext.getCmp('txtNoSIUP').setValue(record.get('fs_siup_perusahaan'));
+				Ext.getCmp('txtNoTDP').setValue(record.get('fs_tdp_perusahaan'));
+				Ext.getCmp('txtNoTlpBadanUsaha').setValue(record.get('fs_telfon_usaha_konsumen'));
+				Ext.getCmp('txtEmail').setValue(record.get('fs_email_konsumen'));
+				Ext.getCmp('txtGroupUsaha').setValue(record.get('fs_group_perusahaan'));
 
 				// SET RECORD IN TAB DATA BADAN USAHA
+				Ext.getCmp('txtNoAPKTab3').setValue(record.get('fn_no_apk'));
+				Ext.getCmp('cboKategoriUsaha').setValue(record.get('fs_kategori_usaha_konsumen'));
+				Ext.getCmp('cboSkalaPerusahaan').setValue(record.get('fs_skala_perusahaan_konsumen'));
+				Ext.getCmp('cboStatusUsaha').setValue(record.get('fs_status_perusahaan'));
+				Ext.getCmp('cboBentukUsaha').setValue(record.get('fs_bentuk_perusahaan'));
+				Ext.getCmp('cboStatusTempatUsaha').setValue(record.get('fs_tempat_perusahaan'));
+				Ext.getCmp('txtOperasiSejak').setValue(record.get('fs_beroperasi_sejak'));
+				Ext.getCmp('txtJumlahKaryawan').setValue(record.get('fn_jumlah_karyawan_perusahaan'));
+				Ext.getCmp('txtKetUsaha').setValue(record.get('fs_keterangan_usaha_konsumen'));
+				Ext.getCmp('txtOmsetPerBulan').setValue(record.get('fn_pendapatan_konsumen'));
+				Ext.getCmp('txtBiayaPerBulan').setValue(record.get('fn_biaya_konsumen'));
+				Ext.getCmp('txtNamaPenanggungJawab').setValue(record.get('fs_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtJabatanPenanggungJawab').setValue(record.get('fs_jabatan_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtNoKTPPenanggungJawab').setValue(record.get('fs_ktp_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtNoNPWPPenanggungJawab').setValue(record.get('fs_npwp_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtAlamatPenanggungJawab').setValue(record.get('fs_alamat_penanggungjawab_perusahaan'));
+				Ext.getCmp('cboKodePosPenanggungJawab').setValue(record.get('fs_kodepos_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtKotaPenanggungJawab').setValue(record.get('fs_kota_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtTeleponPenanggungJawab').setValue(record.get('fs_telepon_penanggungjawab_perusahaan'));
+				Ext.getCmp('txtHandphonePenanggungJawab').setValue(record.get('fs_handphone_penanggungjawab_perusahaan'));
+				Ext.getCmp('cboRepeatOrder').setValue(record.get('fs_repeat_order'));
+				Ext.getCmp('txtJmlRepeatKe').setValue(record.get('fs_repeat_order_ke'));
+				Ext.getCmp('txtAlamatKorespondensi').setValue(record.get('fs_alamat_korespondensi'));
+				Ext.getCmp('cboKodePosKorespondensi').setValue(record.get('fs_kodepos_korespondensi'));
+				Ext.getCmp('txtKotaKorespondensi').setValue(record.get('fs_kota_korespondensi'));
 
 				// SET RECORD IN TAB DATA KENDARAAN
+				Ext.getCmp('txtNoAPKTab4').setValue(record.get('fn_no_apk'));
+				Ext.getCmp('cboModelKendaraan').setValue(record.get('fs_model_kendaraan'));
+				Ext.getCmp('txtKdKendaraan').setValue(record.get('fs_kode_kendaraan'));
+				Ext.getCmp('txtJnsKendaraan').setValue(record.get('fs_jenis_kendaraan'));
+				Ext.getCmp('txtSilinder').setValue(record.get('fs_silinder_kendaraan'));
+				Ext.getCmp('txtTahunKendaraan').setValue(record.get('fn_tahun_kendaraan'));
+				Ext.getCmp('txtWarnaKendaraan').setValue(record.get('fs_warna_kendaraan'));
+				Ext.getCmp('txtNoRangka').setValue(record.get('fs_no_rangka'));
+				Ext.getCmp('txtNoMesin').setValue(record.get('fs_no_mesin'));
+				Ext.getCmp('cboKomersil').setValue(record.get('fs_komersial'));
+				Ext.getCmp('cboSesuaiKontrak').setValue(record.get('fs_nama_sesuai_kontrak'));
+				Ext.getCmp('txtNamaBPKP').setValue(record.get('fs_nama_bpkb'));
+				Ext.getCmp('txtAlamatBPKP').setValue(record.get('fs_alamat_bpkb'));
+				Ext.getCmp('txtNoBPKP').setValue(record.get('fs_nomor_bpkb'));
+				Ext.getCmp('cboNoPolisi').setValue(record.get('fs_no_polisi'));
+				Ext.getCmp('txtSales').setValue(record.get('fs_salesman'));
 
 				// SET RECORD IN TAB DATA STRUKTUR KREDIT
+				Ext.getCmp('txtNoAPKTab5').setValue(record.get('fn_no_apk'));
+				Ext.getCmp('cboPolaAngsuran').setValue(record.get('fs_pola_angsuran'));
+				Ext.getCmp('cboCaraBayar').setValue(record.get('fs_cara_bayar'));
+				Ext.getCmp('cboAngsuranDimuka').setValue(record.get('fs_angsuran_dimuka'));
+				Ext.getCmp('txtTenor').setValue(record.get('fn_kali_angsuran_dimuka'));
+				Ext.getCmp('cboPotongPencairan').setValue(record.get('fs_angsuran_dimuka_potong_pencairan'));
 
 				// SET RECORD IN TAB DATA PENGURUS
+				Ext.getCmp('txtNoAPKTab6').setValue(record.get('fn_no_apk'));
 
 				// SET RECORD IN TAB DATA PENCAIRAN
+				Ext.getCmp('txtNoAPKTab7').setValue(record.get('fn_no_apk'));
+				Ext.getCmp('cboTglAngsuran').setValue(record.get('fd_tanggal_angsuran_pertama'));
+				Ext.getCmp('txtJatuhTempo').setValue(record.get('fn_tanggal_jatuhtempo_perbulan'));
+				Ext.getCmp('cboTglCair').setValue(record.get('fd_tanggal_perjanjian'));
+				Ext.getCmp('cboPencairanKe').setValue(record.get('fs_cair_ke'));
+				Ext.getCmp('cboUangMukaKe').setValue(record.get('fs_uang_muka_bayar_di'));
+				Ext.getCmp('cboDepositPotongCair').setValue(record.get('fs_deposit_potong_pencairan'));
+				Ext.getCmp('txtNamaRekeningCair').setValue(record.get('fs_atasnama_bank_pencairan'));
+				Ext.getCmp('txtNamaBank').setValue(record.get('fs_nama_bank_pencairan'));
+				Ext.getCmp('txtNoRekeningCair').setValue(record.get('fs_rekening_bank_pencairan'));
 
 				// CHANGE TAB
 				var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
@@ -901,7 +1078,7 @@ Ext.onReady(function() {
 			{xtype: 'rownumberer', width: 45},
 			{text: "Kode Lembaga 1", dataIndex: 'fs_kode_lembaga_keuangan1', menuDisabled: true, flex: 1},
 			{text: "Kode Lembaga 2", dataIndex: 'fs_kode_lembaga_keuangan1', menuDisabled: true, flex: 1},
-			{text: "Nama Lembaga Keuangan", dataIndex: 'fs_nama_lembaga_keuangan', menuDisabled: true, flex: 2.5}
+			{text: "Nama Lembaga Pembiayaan", dataIndex: 'fs_nama_lembaga_keuangan', menuDisabled: true, flex: 2.5}
 		],
 		tbar: [{
 			flex: 1,
@@ -909,7 +1086,7 @@ Ext.onReady(function() {
 			xtype: 'container',
 			items: [{
 				anchor: '98%',
-				emptyText: 'Nama Lembaga Keuangan',
+				emptyText: 'Nama Lembaga Pembiayaan',
 				id: 'txtCariNamaLembaga',
 				name: 'txtCariNamaLembaga',
 				xtype: 'textfield'
@@ -1522,6 +1699,7 @@ Ext.onReady(function() {
 		listeners: {
 			itemdblclick: function(grid, record) {
 				Ext.getCmp('cboModelKendaraan').setValue(record.get('fs_model_kendaraan'));
+				Ext.getCmp('txtKdKendaraan').setValue(record.get('fs_kode_kendaraan'));
 				Ext.getCmp('txtJnsKendaraan').setValue(record.get('fs_jenis_kendaraan'));
 				Ext.getCmp('txtSilinder').setValue(record.get('fs_silinder_kendaraan'));
 				winCari7.hide();
@@ -1949,6 +2127,11 @@ Ext.onReady(function() {
 			xtype: 'rownumberer',
 			width: 45
 		},{
+			text: 'No. APK',
+			dataIndex: 'fn_no_apk',
+			menuDisabled: true,
+			hidden: true
+		},{
 			text: 'Jabatan',
 			dataIndex: 'fs_jabatan_pengurus',
 			menuDisabled: true,
@@ -2011,6 +2194,41 @@ Ext.onReady(function() {
 				},
 				scope: this
 			}]
+		},{
+			text: 'Alamat Pengurus',
+			dataIndex: 'fs_alamat_pengurus',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'KodePos',
+			dataIndex: 'fs_kodepos_pengurus',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'Kota Pengurus',
+			dataIndex: 'fs_kota_pengurus',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'KTP Pengurus',
+			dataIndex: 'fs_ktp_pengurus',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'NPWP Pengurus',
+			dataIndex: 'fs_npwp_pengurus',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'Persen Saham',
+			dataIndex: 'fn_persen_saham',
+			menuDisabled: true,
+			hidden: true
+		},{
+			text: 'Aktif',
+			dataIndex: 'fs_aktif',
+			menuDisabled: true,
+			hidden: true
 		}],
 		tbar: [{
 			flex: 2.8,
@@ -2049,10 +2267,15 @@ Ext.onReady(function() {
 		}),
 		listeners: {
 			itemdblclick: function(grid, record) {
-				//Ext.getCmp('txtKdRef').setValue(record.get('fs_kode_referensi'));
-				//Ext.getCmp('txtNilai1').setValue(record.get('fs_nilai1_referensi'));
-				//Ext.getCmp('txtNilai2').setValue(record.get('fs_nilai2_referensi'));
-				//Ext.getCmp('txtNamaRef').setValue(record.get('fs_nama_referensi'));
+				Ext.getCmp('cboJabatan').setValue(record.get('fs_jabatan_pengurus'));
+				Ext.getCmp('txtNamaPengurus').setValue(record.get('fs_nama_pengurus'));
+				Ext.getCmp('txtAlamatPengurus').setValue(record.get('fs_alamat_pengurus'));
+				Ext.getCmp('cboKodePosPengurus').setValue(record.get('fs_kodepos_pengurus'));
+				Ext.getCmp('txtKotaPengurus').setValue(record.get('fs_kota_pengurus'));
+				Ext.getCmp('txtNoKTPPengurus').setValue(record.get('fs_ktp_pengurus'));
+				Ext.getCmp('txtNoNPWPPengurus').setValue(record.get('fs_npwp_pengurus'));
+				Ext.getCmp('txtSahamPersentase').setValue(record.get('fn_persen_saham'));
+				Ext.getCmp('cboAktif').setValue(record.get('fs_aktif'));
 			}
 		},
 		viewConfig: {
@@ -2090,15 +2313,16 @@ Ext.onReady(function() {
 		name: 'cboTglAPK',
 		maskRe: /[0-9-]/,
 		minValue: Ext.Date.add(new Date(), Ext.Date.YEAR, -75),
-		xtype: 'datefield'
+		xtype: 'datefield',
+		value: new Date()
 	};
 
 	var cboLembaga = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		emptyText: 'Lembaga Keuangan',
-		fieldLabel: 'Lembaga Keuangan',
+		emptyText: 'Lembaga Pembiayaan',
+		fieldLabel: 'Lembaga Pembiayaan',
 		editable: false,
 		id: 'cboLembaga',
 		name: 'cboLembaga',
@@ -2263,6 +2487,13 @@ Ext.onReady(function() {
 		}
 	};
 
+	var txtKdDati = {
+		id: 'txtKdDati',
+		name: 'txtKdDati',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var txtPropinsi = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
@@ -2380,6 +2611,13 @@ Ext.onReady(function() {
 	};
 
 	// COMPONENT FORM DATA BADAN USAHA
+	var txtNoAPKTab3 = {
+		id: 'txtNoAPKTab3',
+		name: 'txtNoAPKTab3',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var txtNoTlpPerusahaan = {
 		anchor: '100%',
 		fieldLabel: 'No. Telepon',
@@ -2750,6 +2988,13 @@ Ext.onReady(function() {
 	};
 
 	// COMPONENT FORM DATA KENDARAAN
+	var txtNoAPKTab4 = {
+		id: 'txtNoAPKTab4',
+		name: 'txtNoAPKTab4',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var cboModelKendaraan = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
@@ -2775,6 +3020,13 @@ Ext.onReady(function() {
 				}
 			}
 		}
+	};
+
+	var txtKdKendaraan = {
+		id: 'txtKdKendaraan',
+		name: 'txtKdKendaraan',
+		xtype: 'textfield',
+		hidden: true
 	};
 
 	var txtJnsKendaraan = {
@@ -3030,6 +3282,13 @@ Ext.onReady(function() {
 	};
 
 	// COMPONENT FORM DATA STRUKTUR KREDIT
+	var txtNoAPKTab5 = {
+		id: 'txtNoAPKTab5',
+		name: 'txtNoAPKTab5',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var cboPolaAngsuran = {
 		anchor: '100%',
 		displayField: 'fs_nama',
@@ -3235,6 +3494,13 @@ Ext.onReady(function() {
 	};
 
 	// COMPONENT FORM DATA PENGURUS
+	var txtNoAPKTab6 = {
+		id: 'txtNoAPKTab6',
+		name: 'txtNoAPKTab6',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var cboJabatan = {
 		anchor: '100%',
 		displayField: 'fs_nama',
@@ -3372,6 +3638,13 @@ Ext.onReady(function() {
 
 
 	// COMPONENT FORM DATA PENCAIRAN
+	var txtNoAPKTab7 = {
+		id: 'txtNoAPKTab7',
+		name: 'txtNoAPKTab7',
+		xtype: 'textfield',
+		hidden: true
+	};
+
 	var cboTglAngsuran = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
@@ -3383,7 +3656,8 @@ Ext.onReady(function() {
 		name: 'cboTglAngsuran',
 		maskRe: /[0-9-]/,
 		minValue: Ext.Date.add(new Date(), Ext.Date.YEAR, -75),
-		xtype: 'datefield'
+		xtype: 'datefield',
+		value: new Date()
 	};
 
 	var txtJatuhTempo = {
@@ -3407,7 +3681,8 @@ Ext.onReady(function() {
 		name: 'cboTglCair',
 		maskRe: /[0-9-]/,
 		minValue: Ext.Date.add(new Date(), Ext.Date.YEAR, -75),
-		xtype: 'datefield'
+		xtype: 'datefield',
+		value: new Date()
 	};
 
 	var cboPencairanKe = {
@@ -3496,6 +3771,7 @@ Ext.onReady(function() {
 		Ext.getCmp('txtNamaBadanUsaha').setValue('');
 		Ext.getCmp('txtAlamatBadanUsaha').setValue('');
 		Ext.getCmp('cboKodePos').setValue('');
+		Ext.getCmp('txtKdDati').setValue('');
 		Ext.getCmp('txtPropinsi').setValue('');
 		Ext.getCmp('txtKota').setValue('');
 		Ext.getCmp('txtKecamatan').setValue('');
@@ -3573,14 +3849,14 @@ Ext.onReady(function() {
 			params: {
 				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
 				'fs_jenis_pembiayaan': 'B',
-				'fs_kode_lokasi': Ext.getCmp('').getValue(),
-				'fs_nomor_dealer': Ext.getCmp('').getValue(),
+				'fs_kode_lokasi': '',
+				'fs_nomor_dealer': '',
 				'fs_fleet': Ext.getCmp('cboFleet').getValue(),
 				'fs_nama_konsumen': Ext.getCmp('txtNamaBadanUsaha').getValue(),
 				'fs_alamat_konsumen': Ext.getCmp('txtAlamatBadanUsaha').getValue(),
 				'fs_kelurahan_konsumen': Ext.getCmp('txtKelurahan').getValue(),
 				'fs_kecamatan_konsumen': Ext.getCmp('txtKecamatan').getValue(),
-				'fs_kode_dati_konsumen': Ext.getCmp('').getValue(),
+				'fs_kode_dati_konsumen': Ext.getCmp('txtKdDati').getValue(),
 				'fs_propinsi_konsumen': Ext.getCmp('txtPropinsi').getValue(),
 				'fs_kota_konsumen': Ext.getCmp('txtKota').getValue(),
 				'fs_kodepos_konsumen': Ext.getCmp('cboKodePos').getValue(),
@@ -3588,7 +3864,7 @@ Ext.onReady(function() {
 				'fs_siup_perusahaan': Ext.getCmp('txtNoSIUP').getValue(),
 				'fs_tdp_perusahaan': Ext.getCmp('txtNoTDP').getValue(),
 				'fs_telepon_konsumen': Ext.getCmp('txtNoTlpBadanUsaha').getValue(),
-				'fs_handphone_konsumen': Ext.getCmp('').getValue(),
+				'fs_handphone_konsumen': '',
 				'fs_email_konsumen': Ext.getCmp('txtEmail').getValue(),
 				'fs_group_perusahaan': Ext.getCmp('txtGroupUsaha').getValue()
 			},
@@ -3620,6 +3896,7 @@ Ext.onReady(function() {
 	// FUNCTIONS TAB DATA BADAN USAHA
 	function fnResetDataBadanUsaha() {
 		// FORM PERUSAHAAN
+		Ext.getCmp('txtNoAPKTab3').setValue('');
 		Ext.getCmp('txtNoTlpPerusahaan').setValue('');
 		Ext.getCmp('cboKategoriUsaha').setValue('');
 		Ext.getCmp('cboSkalaPerusahaan').setValue('');
@@ -3660,7 +3937,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkbadanusaha/ceksavedatabadanusaha',
 				params: {
-					'fn_no_apk':''
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab3').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -3711,21 +3988,21 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkbadanusaha/savedatabadanusaha',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
+				'fn_no_apk': Ext.getCmp('txtNoAPKTab3').getValue(),
 				'fs_telepon_konsumen': Ext.getCmp('txtNoTlpPerusahaan').getValue(),
-				'fs_status_perusahaan': Ext.getCmp('').getValue(),
+				'fs_status_perusahaan':  Ext.getCmp('cboStatusUsaha').getValue(),
 				'fs_bentuk_perusahaan': Ext.getCmp('cboBentukUsaha').getValue(),
 				'fs_tempat_perusahaan': Ext.getCmp('cboStatusTempatUsaha').getValue(),
 				'fs_beroperasi_sejak': Ext.getCmp('txtOperasiSejak').getValue(),
 				'fs_skala_perusahaan_konsumen': Ext.getCmp('cboSkalaPerusahaan').getValue(),
-				'fs_nama_usaha_konsumen': Ext.getCmp('').getValue(),
+				'fs_nama_usaha_konsumen': '',
 				'fs_kategori_usaha_konsumen': Ext.getCmp('cboKategoriUsaha').getValue(),
 				'fn_jumlah_karyawan_perusahaan': Ext.getCmp('txtJumlahKaryawan').getValue(),
 				'fs_keterangan_usaha_konsumen': Ext.getCmp('txtKetUsaha').getValue(),
 				'fn_pendapatan_konsumen': Ext.getCmp('txtOmsetPerBulan').getValue(),
 				'fn_biaya_konsumen': Ext.getCmp('txtBiayaPerBulan').getValue(),
-				'fn_mutasi_debet': Ext.getCmp('').getValue(),
-				'fn_mutasi_kredit': Ext.getCmp('').getValue(),
+				'fn_mutasi_debet': '',
+				'fn_mutasi_kredit': '',
 				'fs_penanggungjawab_perusahaan': Ext.getCmp('txtNamaPenanggungJawab').getValue(),
 				'fs_jabatan_penanggungjawab_perusahaan': Ext.getCmp('txtJabatanPenanggungJawab').getValue(),
 				'fs_ktp_penanggungjawab_perusahaan': Ext.getCmp('txtNoKTPPenanggungJawab').getValue(),
@@ -3769,7 +4046,9 @@ Ext.onReady(function() {
 	// FUNCTIONS TAB DATA KENDARAAN
 	function fnResetDataKendaraan() {
 		// FORM KENDARAAN
+		Ext.getCmp('txtNoAPKTab4').setValue('');
 		Ext.getCmp('cboModelKendaraan').setValue('');
+		Ext.getCmp('txtKdKendaraan').setValue('');
 		Ext.getCmp('txtJnsKendaraan').setValue('');
 		Ext.getCmp('txtSilinder').setValue('');
 		Ext.getCmp('txtTahunKendaraan').setValue('');
@@ -3801,7 +4080,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkbadanusaha/ceksavedatakendaraan',
 				params: {
-					'fn_no_apk': ''
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab4').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -3852,8 +4131,9 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkbadanusaha/savedatakendaraan',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-				'fs_kode_kendaraan': Ext.getCmp('').getValue(),
+				'fn_no_apk': Ext.getCmp('txtNoAPKTab4').getValue(),
+				'fs_model_kendaraan': Ext.getCmp('cboModelKendaraan').getValue(),
+				'fs_kode_kendaraan': Ext.getCmp('txtKdKendaraan').getValue(),
 				'fs_jenis_kendaraan': Ext.getCmp('txtJnsKendaraan').getValue(),
 				'fs_silinder_kendaraan': Ext.getCmp('txtSilinder').getValue(),
 				'fn_tahun_kendaraan': Ext.getCmp('txtTahunKendaraan').getValue(),
@@ -3866,14 +4146,14 @@ Ext.onReady(function() {
 				'fs_alamat_bpkb': Ext.getCmp('txtAlamatBPKP').getValue(),
 				'fs_nomor_bpkb': Ext.getCmp('txtNoBPKP').getValue(),
 				'fs_no_polisi': Ext.getCmp('cboNoPolisi').getValue(),
-				'fs_kode_wilayah_no_polisi': Ext.getCmp('').getValue(),
+				'fs_kode_wilayah_no_polisi': '',
 				'fs_salesman': Ext.getCmp('txtSales').getValue(),
 				'fs_jenis_asuransi': Ext.getCmp('cboJnsAsuransi').getValue(),
-				'fs_kode_asuransi1': Ext.getCmp('').getValue(),
-				'fs_kode_asuransi2': Ext.getCmp('').getValue(),
-				'fn_cabang_dealer': Ext.getCmp('').getValue(),
-				'fs_kode_dealer1': Ext.getCmp('').getValue(),
-				'fs_kode_dealer2': Ext.getCmp('').getValue()
+				'fs_kode_asuransi1': '',
+				'fs_kode_asuransi2': '',
+				'fn_cabang_dealer': '',
+				'fs_kode_dealer1': '',
+				'fs_kode_dealer2': ''
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);
@@ -3906,6 +4186,7 @@ Ext.onReady(function() {
 
 	// FUNCTIONS TAB DATA STRUKTUR KREDIT
 	function fnResetDataStrukturKredit() {
+		Ext.getCmp('txtNoAPKTab5').setValue('');
 		Ext.getCmp('cboPolaAngsuran').setValue('');
 		Ext.getCmp('cboBayarDimuka').setValue('');
 		Ext.getCmp('txtHargaOTR').setValue('');
@@ -3941,7 +4222,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkbadanusaha/ceksavedatastrukturkredit',
 				params: {
-					'fn_no_apk':''
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab5').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -3992,43 +4273,43 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkbadanusaha/savestrukturkredit',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
+				'fn_no_apk': Ext.getCmp('txtNoAPKTab5').getValue(),
 				'fs_pola_angsuran': Ext.getCmp('cboPolaAngsuran').getValue(),
 				'fs_cara_bayar': Ext.getCmp('cboCaraBayar').getValue(),
 				'fs_angsuran_dimuka': Ext.getCmp('cboBayarDimuka').getValue(),
-				'fn_jumlah_angsuran_dimuka': Ext.getCmp('').getValue(),
+				'fn_jumlah_angsuran_dimuka': '',
 				'fn_biaya_tjh': Ext.getCmp('txtBiayaTJH').getValue(),
-				'fn_selisih_dp': Ext.getCmp('').getValue(),
+				'fn_selisih_dp': '',
 				'fs_angsuran_dimuka_potong_pencairan': Ext.getCmp('cboPotongPencairan').getValue(),
-				'fn_dp_bayar': Ext.getCmp('').getValue(),
-				'fs_angsuran_dibayar_dealer': Ext.getCmp('').getValue(),
-				'fn_biaya_adm': Ext.getCmp('').getValue(),
-				'fn_premi_asuransi_gross': Ext.getCmp('').getValue(),
-				'fn_premi_asuransi': Ext.getCmp('').getValue(),
-				'fn_premi_asuransi_gross_perluasan': Ext.getCmp('').getValue(),
-				'fn_premi_asuransi_netto': Ext.getCmp('').getValue(),
-				'fn_denda_perhari': Ext.getCmp('').getValue(),
-				'fn_harga_otr': Ext.getCmp('').getValue(),
-				'fn_uang_muka_dealer': Ext.getCmp('').getValue(),
-				'fn_asuransi_dikredit_dealer': Ext.getCmp('').getValue(),
-				'fn_persen_bunga_flat_dealer': Ext.getCmp('').getValue(),
-				'fn_pokok_pembiayaan_dealer': Ext.getCmp('').getValue(),
-				'fn_persen_bunga_efektif_dealer': Ext.getCmp('').getValue(),
-				'fn_bulan_masa_angsuran_dealer': Ext.getCmp('').getValue(),
-				'fn_kali_masa_angsuran_dealer': Ext.getCmp('').getValue(),
-				'fn_bunga_dealer': Ext.getCmp('').getValue(),
-				'fn_angsuran_dealer': Ext.getCmp('').getValue(),
-				'fn_angsuran_tidak_sama_dealer': Ext.getCmp('').getValue(),
-				'fn_uang_muka_konsumen': Ext.getCmp('').getValue(),
-				'fn_asuransi_dikredit_konsumen': Ext.getCmp('').getValue(),
-				'fn_pokok_pembiayaan_konsumen': Ext.getCmp('').getValue(),
-				'fn_persen_bunga_flat_konsumen': Ext.getCmp('').getValue(),
-				'fn_persen_bunga_efektif_konsumen': Ext.getCmp('').getValue(),
-				'fn_bulan_masa_angsuran_konsumen': Ext.getCmp('').getValue(),
-				'fn_kali_masa_angsuran_konsumen': Ext.getCmp('').getValue(),
-				'fn_bunga_konsumen': Ext.getCmp('').getValue(),
-				'fn_angsuran_konsumen': Ext.getCmp('').getValue(),
-				'fn_angsuran_tidak_sama_konsumen': Ext.getCmp('').getValue()
+				'fn_dp_bayar': '',
+				'fs_angsuran_dibayar_dealer': '',
+				'fn_biaya_adm': '',
+				'fn_premi_asuransi_gross': '',
+				'fn_premi_asuransi': '',
+				'fn_premi_asuransi_gross_perluasan': '',
+				'fn_premi_asuransi_netto': '',
+				'fn_denda_perhari': '',
+				'fn_harga_otr': '',
+				'fn_uang_muka_dealer': '',
+				'fn_asuransi_dikredit_dealer': '',
+				'fn_persen_bunga_flat_dealer': '',
+				'fn_pokok_pembiayaan_dealer': '',
+				'fn_persen_bunga_efektif_dealer': '',
+				'fn_bulan_masa_angsuran_dealer': '',
+				'fn_kali_masa_angsuran_dealer': '',
+				'fn_bunga_dealer': '',
+				'fn_angsuran_dealer': '',
+				'fn_angsuran_tidak_sama_dealer': '',
+				'fn_uang_muka_konsumen': '',
+				'fn_asuransi_dikredit_konsumen': '',
+				'fn_pokok_pembiayaan_konsumen': '',
+				'fn_persen_bunga_flat_konsumen': '',
+				'fn_persen_bunga_efektif_konsumen': '',
+				'fn_bulan_masa_angsuran_konsumen': '',
+				'fn_kali_masa_angsuran_konsumen': '',
+				'fn_bunga_konsumen': '',
+				'fn_angsuran_konsumen': '',
+				'fn_angsuran_tidak_sama_konsumen': ''
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);
@@ -4061,6 +4342,7 @@ Ext.onReady(function() {
 
 	// FUNCTIONS TAB DATA PENGURUS
 	function fnResetDataPengurus() {
+		Ext.getCmp('txtNoAPKTab6').setValue('');
 		Ext.getCmp('cboJabatan').setValue('');
 		Ext.getCmp('txtNamaPengurus').setValue('');
 		Ext.getCmp('txtAlamatPengurus').setValue('');
@@ -4082,7 +4364,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkbadanusaha/ceksavedatapengurus',
 				params: {
-					'fn_no_apk': ''
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab6').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4133,8 +4415,8 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkbadanusaha/savedatapengurus',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-				'fs_kode_jabatan': Ext.getCmp('').getValue(),
+				'fn_no_apk': Ext.getCmp('txtNoAPKTab6').getValue(),
+				'fs_kode_jabatan': '',
 				'fs_nama_pengurus': Ext.getCmp('txtNamaPengurus').getValue(),
 				'fs_alamat_pengurus': Ext.getCmp('txtAlamatPengurus').getValue(),
 				'fs_kodepos_pengurus': Ext.getCmp('cboKodePosPengurus').getValue(),
@@ -4176,6 +4458,7 @@ Ext.onReady(function() {
 	// FUNCTIONS TAB DATA PENCAIRAN
 	function fnResetDataPencairan() {
 		// FORM ANGSURAN
+		Ext.getCmp('txtNoAPKTab7').setValue('');
 		Ext.getCmp('cboTglAngsuran').setValue(new Date());
 		Ext.getCmp('txtJatuhTempo').setValue('');
 		// FORM PENCAIRAN
@@ -4198,7 +4481,7 @@ Ext.onReady(function() {
 				method: 'POST',
 				url: 'apkbadanusaha/ceksavedatapencairan',
 				params: {
-					'fn_no_apk': ''
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab7').getValue()
 				},
 				success: function(response) {
 					var xtext = Ext.decode(response.responseText);
@@ -4249,17 +4532,17 @@ Ext.onReady(function() {
 			method: 'POST',
 			url: 'apkbadanusaha/savedatapencairan',
 			params: {
-				'fn_no_apk': Ext.getCmp('txtNoAPK').getValue(),
-				'fd_tanggal_perjanjian': Ext.getCmp('').getValue(),
+				'fn_no_apk': Ext.getCmp('txtNoAPKTab7').getValue(),
+				'fd_tanggal_perjanjian': '',
 				'fd_tanggal_angsuran_pertama': Ext.getCmp('cboTglAngsuran').getValue(),
-				'fn_tanggal_jatuhtempo_perbulan': Ext.getCmp('').getValue(),
+				'fn_tanggal_jatuhtempo_perbulan': '',
 				'fs_cair_ke': Ext.getCmp('cboPencairanKe').getValue(),
-				'fs_uang_muka_bayar_di': Ext.getCmp('').getValue(),
-				'fs_deposit_potong_pencairan': Ext.getCmp('').getValue(),
+				'fs_uang_muka_bayar_di': '',
+				'fs_deposit_potong_pencairan': '',
 				'fs_atasnama_bank_pencairan': Ext.getCmp('txtNamaRekeningCair').getValue(),
 				'fs_nama_bank_pencairan': Ext.getCmp('txtNamaBank').getValue(),
 				'fs_rekening_bank_pencairan': Ext.getCmp('txtNoRekeningCair').getValue(),
-				'fn_nilai_pencairan': Ext.getCmp('').getValue()
+				'fn_nilai_pencairan': ''
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);
@@ -4390,6 +4673,7 @@ Ext.onReady(function() {
 									txtNamaBadanUsaha,
 									txtAlamatBadanUsaha,
 									cboKodePos,
+									txtKdDati,
 									txtPropinsi,
 									txtKota,
 									txtKecamatan,
@@ -4454,6 +4738,7 @@ Ext.onReady(function() {
 								title: 'Form Perusahaan',
 								xtype: 'fieldset',
 								items: [
+									txtNoAPKTab3,
 									txtNoTlpPerusahaan,
 									cboKategoriUsaha,
 									txtKdKategoriUsaha,
@@ -4556,7 +4841,9 @@ Ext.onReady(function() {
 								title: 'Form Kendaraan',
 								xtype: 'fieldset',
 								items: [
+									txtNoAPKTab4,
 									cboModelKendaraan,
+									txtKdKendaraan,
 									txtJnsKendaraan,
 									txtSilinder,
 									txtTahunKendaraan,
@@ -4649,6 +4936,7 @@ Ext.onReady(function() {
 								title: '',
 								xtype: 'fieldset',
 								items: [
+									txtNoAPKTab5,
 									cboPolaAngsuran,
 									cboBayarDimuka,
 									txtHargaOTR,
@@ -4771,6 +5059,7 @@ Ext.onReady(function() {
 								title: 'Form Pengurus',
 								xtype: 'fieldset',
 								items: [
+									txtNoAPKTab6,
 									cboJabatan,
 									txtNamaPengurus,
 									txtAlamatPengurus,
@@ -4854,6 +5143,7 @@ Ext.onReady(function() {
 								title: 'Form Angsuran',
 								xtype: 'fieldset',
 								items: [
+									txtNoAPKTab7,
 									cboTglAngsuran,
 									txtJatuhTempo
 								]
