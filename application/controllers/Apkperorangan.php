@@ -84,8 +84,12 @@ class Apkperorangan extends CI_Controller {
 					'fn_no_apk' => trim($xRow->fn_no_apk),
 					'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
 					'fs_nama_konsumen' => trim($xRow->fs_nama_konsumen),
+					'fs_nama_lembaga_keuangan' => trim($xRow->fs_nama_lembaga_keuangan),
+					'fs_kode_lokasi' => trim($xRow->fs_kode_lokasi),
+					'fs_nomor_dealer' => trim($xRow->fs_nomor_dealer),
 					'fs_jenis_piutang' => trim($xRow->fs_jenis_piutang),
 					'fs_pola_transaksi' => trim($xRow->fs_pola_transaksi),
+					'fs_jenis_pembiayaan' => trim($xRow->fs_jenis_pembiayaan),
 					'fs_fleet' => trim($xRow->fs_fleet),
 					'fs_alamat_konsumen' => trim($xRow->fs_alamat_konsumen),
 					'fs_kodepos_konsumen' => trim($xRow->fs_kodepos_konsumen),
@@ -105,6 +109,7 @@ class Apkperorangan extends CI_Controller {
 					'fs_alamat_usaha_konsumen' => trim($xRow->fs_alamat_usaha_konsumen),
 					'fs_telfon_usaha_konsumen' => trim($xRow->fs_telfon_usaha_konsumen),
 					'fs_kategori_usaha_konsumen' => trim($xRow->fs_kategori_usaha_konsumen),
+					'fs_nama_usaha_konsumen' => trim($xRow->fs_nama_usaha_konsumen),
 					'fs_skala_perusahaan_konsumen' => trim($xRow->fs_skala_perusahaan_konsumen),
 					'fs_kerja_sejak_konsumen' => trim($xRow->fs_kerja_sejak_konsumen),
 					'fs_usaha_pekerjaan_konsumen' => trim($xRow->fs_usaha_pekerjaan_konsumen),
@@ -125,6 +130,7 @@ class Apkperorangan extends CI_Controller {
 					'fs_tinggal_sejak' => trim($xRow->fs_tinggal_sejak),
 					'fn_tanggungan_konsumen' => trim($xRow->fn_tanggungan_konsumen),
 					'fs_kode_kendaraan' => trim($xRow->fs_kode_kendaraan),
+					'fs_model_kendaraan' => trim($xRow->fs_model_kendaraan),
 					'fs_jenis_kendaraan' => trim($xRow->fs_jenis_kendaraan),
 					'fs_silinder_kendaraan' => trim($xRow->fs_silinder_kendaraan),
 					'fn_tahun_kendaraan' => trim($xRow->fn_tahun_kendaraan),
@@ -142,10 +148,13 @@ class Apkperorangan extends CI_Controller {
 					'fs_kode_akhir_wilayah_no_polisi' => trim($xRow->fs_kode_akhir_wilayah_no_polisi),
 					'fs_salesman' => trim($xRow->fs_salesman),
 					'fs_jenis_asuransi' => trim($xRow->fs_jenis_asuransi),
+					'fs_nama_perusahaan_asuransi' => trim($xRow->fs_nama_perusahaan_asuransi),
 					'fs_kode_asuransi1' => trim($xRow->fs_kode_asuransi1),
 					'fs_kode_asuransi2' => trim($xRow->fs_kode_asuransi2),
+					'fs_nama_dealer' => trim($xRow->fs_nama_dealer),
 					'fs_kode_dealer1' => trim($xRow->fs_kode_dealer1),
 					'fs_kode_dealer2' => trim($xRow->fs_kode_dealer2),
+					'fn_cabang_dealer' => trim($xRow->fn_cabang_dealer),
 					'fs_pertama_kali_kredit' => trim($xRow->fs_pertama_kali_kredit),
 					'fn_jumlah_kali_kredit' => trim($xRow->fn_jumlah_kali_kredit),
 					'fn_mutasi_debet' => trim($xRow->fn_mutasi_debet),
@@ -188,7 +197,11 @@ class Apkperorangan extends CI_Controller {
 					'fn_angsuran_konsumen' => trim($xRow->fn_angsuran_konsumen),
 					'fn_angsuran_tidak_sama_konsumen' => trim($xRow->fn_angsuran_tidak_sama_konsumen),
 					'fs_nama_pasangan' => trim($xRow->fs_nama_pasangan),
+					'fs_alamat_pasangan' => trim($xRow->fs_alamat_pasangan),
+					'fs_kodepos_pasangan' => trim($xRow->fs_kodepos_pasangan),
+					'fs_kota_pasangan' => trim($xRow->fs_kota_pasangan),
 					'fs_handphone_pasangan' => trim($xRow->fs_handphone_pasangan),
+					'fs_nama_usaha_pasangan' => trim($xRow->fs_nama_usaha_pasangan),
 					'fs_usaha_pasangan' => trim($xRow->fs_usaha_pasangan),
 					'fs_keterangan_usaha_pasangan' => trim($xRow->fs_keterangan_usaha_pasangan),
 					'fs_alamat_usaha_pasangan' => trim($xRow->fs_alamat_usaha_pasangan),
@@ -199,6 +212,7 @@ class Apkperorangan extends CI_Controller {
 					'fs_kota_penjamin' => trim($xRow->fs_kota_penjamin),
 					'fs_kodepos_penjamin' => trim($xRow->fs_kodepos_penjamin),
 					'fs_telepon_penjamin' => trim($xRow->fs_telepon_penjamin),
+					'fs_nama_usaha_penjamin' => trim($xRow->fs_nama_usaha_penjamin),
 					'fs_usaha_penjamin' => trim($xRow->fs_usaha_penjamin),
 					'fs_keterangan_usaha_penjamin' => trim($xRow->fs_keterangan_usaha_penjamin),
 					'fs_alamat_usaha_penjamin' => trim($xRow->fs_alamat_usaha_penjamin),
@@ -246,7 +260,7 @@ class Apkperorangan extends CI_Controller {
 				);
 			}
 		}
-		echo json_encode($xArr);
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function gridkodepos() {
@@ -468,9 +482,11 @@ class Apkperorangan extends CI_Controller {
 
 		$tanggal = $this->input->post('fd_tgl_apk');
 		$jenis = $this->input->post('fs_jenis_pembiayaan');
+		$piutang = $this->input->post('fs_jenis_piutang');
 		$pola = $this->input->post('fs_pola_transaksi');
 		$lokasi = $this->input->post('fs_kode_lokasi');
 		$nodealer = $this->input->post('fs_nomor_dealer');
+		$lembaga = $this->input->post('fs_nama_lembaga_keuangan');
 		$nopjj = $this->input->post('fn_nomor_perjanjian');
 		$fleet = $this->input->post('fs_fleet');
 		$nama = $this->input->post('fs_nama_konsumen');
@@ -500,9 +516,11 @@ class Apkperorangan extends CI_Controller {
 		$dt = array(
 			'fd_tgl_apk' => trim($tanggal),
 			'fs_jenis_pembiayaan' => trim($jenis),
+			'fs_jenis_piutang' => trim($piutang),
 			'fs_pola_transaksi' => trim($pola),
 			'fs_kode_lokasi' => trim($lokasi),
 			'fs_nomor_dealer' => trim($nodealer),
+			'fs_nama_lembaga_keuangan' => trim($lembaga),
 			'fs_fleet' => trim($fleet),
 			'fs_nama_konsumen' => trim($nama),
 			'fs_alamat_konsumen' => trim($alamat),
@@ -562,7 +580,7 @@ class Apkperorangan extends CI_Controller {
 
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		}
@@ -600,7 +618,8 @@ class Apkperorangan extends CI_Controller {
 		$perusahaan = $this->input->post('fs_nama_perusahaan_konsumen');
 		$alamat = $this->input->post('fs_alamat_usaha_konsumen');
 		$telephone = $this->input->post('fs_telfon_usaha_konsumen');
-		$kategori = $this->input->post('fs_kategori_usaha_konsumen');
+		$kdkategori = $this->input->post('fs_kategori_usaha_konsumen');
+		$kategori = $this->input->post('fs_nama_usaha_konsumen');
 		$skala = $this->input->post('fs_skala_perusahaan_konsumen');
 		$sejak = $this->input->post('fs_kerja_sejak_konsumen');
 		$pendapatan = $this->input->post('fn_pendapatan_konsumen');
@@ -630,9 +649,11 @@ class Apkperorangan extends CI_Controller {
 			'fs_nama_perusahaan_konsumen' => trim($perusahaan),
 			'fs_alamat_usaha_konsumen' => trim($alamat),
 			'fs_telfon_usaha_konsumen' => trim($telephone),
-			'fs_kategori_usaha_konsumen' => trim($kategori),
+			'fs_kategori_usaha_konsumen' => trim($kdkategori),
+			'fs_nama_usaha_konsumen' => trim($kategori),
 			'fs_skala_perusahaan_konsumen' => trim($skala),
 			'fs_kerja_sejak_konsumen' => trim($sejak),
+			'fn_pendapatan_konsumen' => trim($pendapatan),
 			'fs_usaha_pekerjaan_konsumen' => trim($usaha),
 			'fs_keterangan_usaha_konsumen' => trim($keterangan),
 			'fs_jenis_kelamin_konsumen' => trim($jekel),
@@ -659,7 +680,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		} else {
@@ -701,6 +722,7 @@ class Apkperorangan extends CI_Controller {
 		$noapk = $this->input->post('fn_no_apk');
 
 		$kode = $this->input->post('fs_kode_kendaraan');
+		$model = $this->input->post('fs_model_kendaraan');
 		$jenis = $this->input->post('fs_jenis_kendaraan');
 		$silinder = $this->input->post('fs_silinder_kendaraan');
 		$tahun = $this->input->post('fn_tahun_kendaraan');
@@ -717,11 +739,13 @@ class Apkperorangan extends CI_Controller {
 		$kdakhirwilayah = $this->input->post('fs_kode_akhir_wilayah_no_polisi');
 		$sales = $this->input->post('fs_salesman');
 		$jnsasuransi = $this->input->post('fs_jenis_asuransi');
+		$asuransi = $this->input->post('fs_nama_perusahaan_asuransi');
 		$kdasuransi1 = $this->input->post('fs_kode_asuransi1');
 		$kdasuransi2 = $this->input->post('fs_kode_asuransi2');
-		$cabdealer = $this->input->post('fn_cabang_dealer');
+		$dealer = $this->input->post('fs_nama_dealer');
 		$kddealer1 = $this->input->post('fs_kode_dealer1');
 		$kddealer2 = $this->input->post('fs_kode_dealer2');
+		$cabdealer = $this->input->post('fn_cabang_dealer');
 
 		$update = false;
 		$this->load->model('MApkPerorangan');
@@ -733,6 +757,7 @@ class Apkperorangan extends CI_Controller {
 
 		$dt = array(
 			'fs_kode_kendaraan' => trim($kode),
+			'fs_model_kendaraan' => trim($model),
 			'fs_jenis_kendaraan' => trim($jenis),
 			'fs_silinder_kendaraan' => trim($silinder),
 			'fn_tahun_kendaraan' => trim($tahun),
@@ -749,11 +774,13 @@ class Apkperorangan extends CI_Controller {
 			'fs_kode_akhir_wilayah_no_polisi' => trim($kdakhirwilayah),
 			'fs_salesman' => trim($sales),
 			'fs_jenis_asuransi' => trim($jnsasuransi),
+			'fs_nama_perusahaan_asuransi' => trim($asuransi),
 			'fs_kode_asuransi1' => trim($kdasuransi1),
 			'fs_kode_asuransi2' => trim($kdasuransi2),
-			'fn_cabang_dealer' => trim($cabdealer),
+			'fs_nama_dealer' => trim($dealer),
 			'fs_kode_dealer1' => trim($kddealer1),
-			'fs_kode_dealer2' => trim($kddealer2)
+			'fs_kode_dealer2' => trim($kddealer2),
+			'fn_cabang_dealer' => trim($cabdealer)
 		);
 
 		if ($update == true) {
@@ -767,7 +794,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		} else {
@@ -905,7 +932,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		} else {
@@ -947,9 +974,13 @@ class Apkperorangan extends CI_Controller {
 		$noapk = $this->input->post('fn_no_apk');
 
 		$namapasangan = $this->input->post('fs_nama_pasangan');
-		$alamatusahapasangan = $this->input->post('fs_alamat_usaha_pasangan');
+		$alamatpasangan = $this->input->post('fs_alamat_pasangan');
+		$kodepospasangan = $this->input->post('fs_kodepos_pasangan');
+		$kotapasangan = $this->input->post('fs_kota_pasangan');
 		$handphonepasangan = $this->input->post('fs_handphone_pasangan');
-		$usahapasangan = $this->input->post('fs_usaha_pasangan');
+		$usahapasangan = $this->input->post('fs_nama_usaha_pasangan');
+		$kodeusahapasangan = $this->input->post('fs_usaha_pasangan');
+		$alamatusahapasangan = $this->input->post('fs_alamat_usaha_pasangan');
 		$keteranganusahapasangan = $this->input->post('fs_keterangan_usaha_pasangan');
 		$teleponusahapasangan = $this->input->post('fs_telepon_usaha_pasangan');
 		$pendapatanpasangan = $this->input->post('fn_pendapatan_pasangan');
@@ -958,7 +989,8 @@ class Apkperorangan extends CI_Controller {
 		$kotapenjamin = $this->input->post('fs_kota_penjamin');
 		$kodepospenjamin = $this->input->post('fs_kodepos_penjamin');
 		$teleponpenjamin = $this->input->post('fs_telepon_penjamin');
-		$usahapenjamin = $this->input->post('fs_usaha_penjamin');
+		$usahapenjamin = $this->input->post('fs_nama_usaha_penjamin');
+		$kodeusahapenjamin = $this->input->post('fs_usaha_penjamin');
 		$keteranganusahapenjamin = $this->input->post('fs_keterangan_usaha_penjamin');
 		$alamatusahapenjamin = $this->input->post('fs_alamat_usaha_penjamin');
 		$teleponusahapenjamin = $this->input->post('fs_telepon_usaha_penjamin');
@@ -975,18 +1007,23 @@ class Apkperorangan extends CI_Controller {
 
 		$dt = array(
 			'fs_nama_pasangan' => trim($namapasangan),
+			'fs_alamat_pasangan' => trim($alamatpasangan),
+			'fs_kodepos_pasangan' => trim($kodepospasangan),
+			'fs_kota_pasangan' => trim($kotapasangan),
 			'fs_handphone_pasangan' => trim($handphonepasangan),
-			'fs_usaha_pasangan' => trim($usahapasangan),
+			'fs_nama_usaha_pasangan' => trim($usahapasangan),
+			'fs_usaha_pasangan' => trim($kodeusahapasangan),
 			'fs_keterangan_usaha_pasangan' => trim($keteranganusahapasangan),
 			'fs_alamat_usaha_pasangan' => trim($alamatusahapasangan),
 			'fs_telepon_usaha_pasangan' => trim($teleponusahapasangan),
 			'fn_pendapatan_pasangan' => trim($pendapatanpasangan),
 			'fs_nama_penjamin' => trim($namapenjamin),
 			'fs_alamat_penjamin' => trim($alamatpenjamin),
-			'fs_kota_penjamin' => trim($kotapenjamin),
 			'fs_kodepos_penjamin' => trim($kodepospenjamin),
+			'fs_kota_penjamin' => trim($kotapenjamin),
 			'fs_telepon_penjamin' => trim($teleponpenjamin),
-			'fs_usaha_penjamin' => trim($usahapenjamin),
+			'fs_nama_usaha_penjamin' => trim($usahapenjamin),
+			'fs_usaha_penjamin' => trim($kodeusahapenjamin),
 			'fs_keterangan_usaha_penjamin' => trim($keteranganusahapenjamin),
 			'fs_alamat_usaha_penjamin' => trim($alamatusahapenjamin),
 			'fs_telepon_usaha_penjamin' => trim($teleponusahapenjamin),
@@ -1005,7 +1042,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		} else {
@@ -1075,7 +1112,8 @@ class Apkperorangan extends CI_Controller {
 			'fs_atasnama_bank_pencairan' => trim($atasnamabankpencairan),
 			'fs_nama_bank_pencairan' => trim($namabankpencairan),
 			'fs_rekening_bank_pencairan' => trim($rekeningbankpencairan),
-			'fn_nilai_pencairan' => trim($nilaipencairan)
+			'fn_nilai_pencairan' => trim($nilaipencairan),
+			'fs_flag_apk' => '1'
 		);
 
 		if ($update == true) {
@@ -1089,7 +1127,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
-						'hasil' => 'Update Data APK, Sukses!!'
+						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
 		} else {

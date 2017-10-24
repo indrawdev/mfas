@@ -26,7 +26,7 @@ class MApkPerorangan extends CI_Model {
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
-			WHERE fs_jenis_pembiayaan = 'P'
+			WHERE fs_jenis_pembiayaan <> 'B'
 		");
 
 		if (!empty($sCari)) {
@@ -45,7 +45,7 @@ class MApkPerorangan extends CI_Model {
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
-			WHERE fs_jenis_pembiayaan = 'P'
+			WHERE fs_jenis_pembiayaan <> 'B'
 		");
 
 		if (!empty($sCari)) {

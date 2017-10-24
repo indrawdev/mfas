@@ -76,20 +76,22 @@ class MApkBadanUsaha extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPengurusAll($sCari)
+	public function listPengurusAll($nApk, $sCari)
 	{
 		$xSQL = ("
-			SELECT a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
+			SELECT a.fn_no_apk, a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
 				a.fs_kodepos_pengurus, a.fs_kota_pengurus, a.fs_ktp_pengurus,
-				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, b.fs_nama_referensi
+				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, 
+				b.fs_nama_referensi as fs_nama_jabatan
 			FROM tx_apk_pengurus a
 			LEFT JOIN tm_referensi b ON b.fs_kode_referensi = 'jabatan_pengurus' 
 			AND  b.fs_nilai1_referensi = a.fs_kode_jabatan
+			WHERE a.fn_no_apk = '".trim($nApk)."'
 		");
 
 		if (!empty($sCari)) {
 			$xSQL = $xSQL.("
-				WHERE a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
+				AND a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
 			");
 		}
 
@@ -97,20 +99,22 @@ class MApkBadanUsaha extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPengurus($sCari, $nStart, $nLimit)
+	public function listPengurus($nApk, $sCari, $nStart, $nLimit)
 	{
 		$xSQL = ("
-			SELECT a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
+			SELECT a.fn_no_apk, a.fs_kode_jabatan, a.fs_nama_pengurus, a.fs_alamat_pengurus,
 				a.fs_kodepos_pengurus, a.fs_kota_pengurus, a.fs_ktp_pengurus,
-				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, b.fs_nama_referensi
+				a.fs_npwp_pengurus, a.fn_persen_saham, a.fs_aktif, 
+				b.fs_nama_referensi as fs_nama_jabatan
 			FROM tx_apk_pengurus a
 			LEFT JOIN tm_referensi b ON b.fs_kode_referensi = 'jabatan_pengurus' 
 			AND  b.fs_nilai1_referensi = a.fs_kode_jabatan
+			WHERE a.fn_no_apk = '".trim($nApk)."'
 		");
 
 		if (!empty($sCari)) {
 			$xSQL = $xSQL.("
-				WHERE a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
+				AND a.fs_nama_pengurus LIKE '%".trim($sCari)."%'
 			");
 		}
 
