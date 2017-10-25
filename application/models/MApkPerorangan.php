@@ -21,12 +21,13 @@ class MApkPerorangan extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPeroranganAll($sCari)
+	public function listPeroranganAll($sKdCab, $sCari)
 	{
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
 			WHERE fs_jenis_pembiayaan <> 'B'
+			AND fs_kode_cabang = '".trim($sKdCab)."'
 		");
 
 		if (!empty($sCari)) {
@@ -40,12 +41,13 @@ class MApkPerorangan extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listPerorangan($sCari, $nStart, $nLimit)
+	public function listPerorangan($sKdCab, $sCari, $nStart, $nLimit)
 	{
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
 			WHERE fs_jenis_pembiayaan <> 'B'
+			AND fs_kode_cabang = '".trim($sKdCab)."'
 		");
 
 		if (!empty($sCari)) {

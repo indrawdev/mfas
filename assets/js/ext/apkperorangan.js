@@ -199,7 +199,7 @@ Ext.onReady(function() {
 			{text: 'Nama BPKB', dataIndex: 'fs_nama_bpkb', menuDisabled: true, hidden: true},
 			{text: 'Alamat BPKB', dataIndex: 'fs_alamat_bpkb', menuDisabled: true, hidden: true},
 			{text: 'Kota BPKB', dataIndex: 'fs_kota_bpkb', menuDisabled: true, hidden: true},
-			{text: 'No. Plat', dataIndex: 'fs_no_polisi', menuDisabled: true, hidden: true},
+			{text: 'No. Polisi', dataIndex: 'fs_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Wilayah No. Plat', dataIndex: 'fs_kode_wilayah_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Wilayah Akhir No. Plat', dataIndex: 'fs_kode_akhir_wilayah_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Sales', dataIndex: 'fs_salesman', menuDisabled: true, hidden: true},
@@ -382,15 +382,16 @@ Ext.onReady(function() {
 				Ext.getCmp('txtNoRangka').setValue(record.get('fs_no_rangka'));
 				Ext.getCmp('txtNoMesin').setValue(record.get('fs_no_mesin'));
 				Ext.getCmp('cboKomersil').setValue(record.get('fs_komersial'));
-				Ext.getCmp('cboPerusahaanAsuransi').setValue(record.get('fs_nama_perusahaan_asuransi'));
-				Ext.getCmp('txtKdAsuransi1').setValue(record.get('fs_kode_asuransi1'));
-				Ext.getCmp('txtKdAsuransi2').setValue(record.get('fs_kode_asuransi2'));
-				Ext.getCmp('cboKomersil').setValue(record.get('fs_komersial'));
 				Ext.getCmp('cboSesuaiKontrak').setValue(record.get('fs_nama_sesuai_kontrak'));
 				Ext.getCmp('txtNamaBPKP').setValue(record.get('fs_nama_bpkb'));
 				Ext.getCmp('txtAlamatBPKP').setValue(record.get('fs_alamat_bpkb'));
 				Ext.getCmp('txtNoBPKP').setValue(record.get('fs_nomor_bpkb'));
-				Ext.getCmp('cboNoPolisi').setValue(record.get('fs_no_polisi'));
+				Ext.getCmp('txtNomorPolisi').setValue(record.get('fs_no_polisi'));
+				Ext.getCmp('cboNoPolisi').setValue(record.get('fs_kode_wilayah_no_polisi'));
+				Ext.getCmp('txtNoBlkPolisi').setValue(record.get('fs_kode_akhir_wilayah_no_polisi'));
+				Ext.getCmp('cboPerusahaanAsuransi').setValue(record.get('fs_nama_perusahaan_asuransi'));
+				Ext.getCmp('txtKdAsuransi1').setValue(record.get('fs_kode_asuransi1'));
+				Ext.getCmp('txtKdAsuransi2').setValue(record.get('fs_kode_asuransi2'));
 				Ext.getCmp('cboDealer').setValue(record.get('fs_nama_dealer'));
 				Ext.getCmp('txtKdDealer1').setValue(record.get('fs_kode_dealer1'));
 				Ext.getCmp('txtKdDealer2').setValue(record.get('fs_kode_dealer2'));
@@ -443,11 +444,16 @@ Ext.onReady(function() {
 				Ext.getCmp('txtNamaBank').setValue(record.get('fs_nama_bank_pencairan'));
 				Ext.getCmp('txtNoRekeningCair').setValue(record.get('fs_rekening_bank_pencairan'));				
 
+				// SET ENABLED TABPANEL
+				Ext.getCmp('tab3').setDisabled(false);
+				Ext.getCmp('tab4').setDisabled(false);
+				Ext.getCmp('tab5').setDisabled(false);
+				Ext.getCmp('tab6').setDisabled(false);
+				Ext.getCmp('tab7').setDisabled(false);
+
 				// CHANGE TAB
 				var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 				tabPanel.setActiveTab('tab2');
-
-				// SET ENABLED TABPANEL
 			}
 		},
 		viewConfig: {
@@ -551,14 +557,7 @@ Ext.onReady(function() {
 				type: 'json'
 			},
 			type: 'ajax',
-			url: 'apkperorangan/select'
-		},
-		listeners: {
-			beforeload: function(store) {
-				Ext.apply(store.getProxy().extraParams, {
-					'fs_kode_referensi': 'pola_transaksi'
-				});
-			}
+			url: 'apkperorangan/pola'
 		}
 	});
 
@@ -1036,6 +1035,30 @@ Ext.onReady(function() {
 			},
 			type: 'ajax',
 			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupPerluasan = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridperluasan'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab5').getValue()
+				});
+			}
 		}
 	});
 
@@ -2061,8 +2084,85 @@ Ext.onReady(function() {
 		}
 	});
 
+	// POPUP TAB FORM DATA STRUKTUR KREDIT
+	var winGrid11 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: '',
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Jenis Perluasan", dataIndex: 'fs_jenis_perluasan', menuDisabled: true, flex: 1},
+			{text: "Tenor", dataIndex: 'fn_tenor', menuDisabled: true, flex: 1},
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: '',
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari11.hide();
+				}
+			}]
+		}),
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari11 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Perluasan Asuransi',
+		items: [
+			winGrid11
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+
+				vMask.show();
+			}
+		}
+	});
+
 	// POPUP TAB FORM DATA TAMBAHAN
-	var winGrid11= Ext.create('Ext.grid.Panel', {
+	var winGrid13 = Ext.create('Ext.grid.Panel', {
 		anchor: '100%',
 		autoDestroy: true,
 		height: 450,
@@ -2116,7 +2216,7 @@ Ext.onReady(function() {
 				'-', {
 				text: 'Exit',
 				handler: function() {
-					winCari11.hide();
+					winCari13.hide();
 				}
 			}]
 		}),
@@ -2124,194 +2224,6 @@ Ext.onReady(function() {
 			itemdblclick: function(grid, record) {
 				Ext.getCmp('cboKodePosPasangan').setValue(record.get('fs_kodepos'));
 				Ext.getCmp('txtKotaPasangan').setValue(record.get('fs_nama_dati'));
-				winCari11.hide();
-			}
-		},
-		viewConfig: {
-			getRowClass: function() {
-				return 'rowwrap';
-			},
-			markDirty: false
-		}
-	});
-
-	var winCari11 = Ext.create('Ext.window.Window', {
-		border: false,
-		closable: false,
-		draggable: true,
-		frame: false,
-		layout: 'fit',
-		plain: true,
-		resizable: false,
-		title: 'Searching...',
-		items: [
-			winGrid11
-		],
-		listeners: {
-			beforehide: function() {
-				vMask.hide();
-			},
-			beforeshow: function() {
-				grupKodePos.load();
-				vMask.show();
-			}
-		}
-	});
-
-	var winGrid12 = Ext.create('Ext.grid.Panel', {
-		anchor: '100%',
-		autoDestroy: true,
-		height: 450,
-		width: 550,
-		sortableColumns: false,
-		store: grupKategoriUsaha,
-		columns: [
-			{xtype: 'rownumberer', width: 45},
-			{text: "Kode Kategori Usaha", dataIndex: 'fs_kode_sektor_ekonomi', menuDisabled: true, hidden: true},
-			{text: "Nama Kategori Usaha", dataIndex: 'fs_nama_sektor_ekonomi', menuDisabled: true, flex: 2}
-		],
-		tbar: [{
-			flex: 1,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '98%',
-				emptyText: 'Nama Kategori Usaha',
-				id: 'txtCariUsahaPasangan',
-				name: 'txtCariUsahaPasangan',
-				xtype: 'textfield'
-			}]
-		},{
-			flex: 0.2,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '100%',
-				text: 'Search',
-				xtype: 'button',
-				handler: function() {
-					grupKategoriUsaha.load();
-				}
-			}]
-		},{
-			flex: 0.5,
-			layout: 'anchor',
-			xtype: 'container',
-			items: []
-		}],
-		bbar: Ext.create('Ext.PagingToolbar', {
-			displayInfo: true,
-			pageSize: 25,
-			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
-			store: grupKategoriUsaha,
-			items:[
-				'-', {
-				text: 'Exit',
-				handler: function() {
-					winCari12.hide();
-				}
-			}]
-		}),
-		listeners: {
-			itemdblclick: function(grid, record) {
-				Ext.getCmp('cboUsahaPasangan').setValue(record.get('fs_nama_sektor_ekonomi'));
-				Ext.getCmp('txtKdUsahaPasangan').setValue(record.get('fs_kode_sektor_ekonomi'));
-				winCari12.hide();
-			}
-		},
-		viewConfig: {
-			getRowClass: function() {
-				return 'rowwrap';
-			},
-			markDirty: false
-		}
-	});
-
-	var winCari12 = Ext.create('Ext.window.Window', {
-		border: false,
-		closable: false,
-		draggable: true,
-		frame: false,
-		layout: 'fit',
-		plain: true,
-		resizable: false,
-		title: 'Searching...',
-		items: [
-			winGrid12
-		],
-		listeners: {
-			beforehide: function() {
-				vMask.hide();
-			},
-			beforeshow: function() {
-				grupKategoriUsaha.load();
-				vMask.show();
-			}
-		}
-	});
-
-	var winGrid13 = Ext.create('Ext.grid.Panel', {
-		anchor: '100%',
-		autoDestroy: true,
-		height: 450,
-		width: 750,
-		sortableColumns: false,
-		store: grupKodePos,
-		columns: [
-			{xtype: 'rownumberer', width: 45},
-			{text: "Kode Pos", dataIndex: 'fs_kodepos', menuDisabled: true, flex: 0.5},
-			{text: "Kelurahan", dataIndex: 'fs_kelurahan', menuDisabled: true, flex: 1},
-			{text: "Kecamatan", dataIndex: 'fs_kecamatan', menuDisabled: true, flex: 1},
-			{text: "Kota", dataIndex: 'fs_nama_dati', menuDisabled: true, flex: 1},
-			{text: "Propinsi", dataIndex: 'fs_propinsi', menuDisabled: true, flex: 1.3},
-			{text: "Kode Dati", dataIndex: 'fs_kode_dati', menuDisabled: true, hidden: true}
-		],
-		tbar: [{
-			flex: 1,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '98%',
-				emptyText: 'Kode Pos / Kelurahan / Kecamatan / Kota / Propinsi',
-				id: 'txtCariKodePosPenjamin',
-				name: 'txtCariKodePosPenjamin',
-				xtype: 'textfield'
-			}]
-		},{
-			flex: 0.2,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '100%',
-				text: 'Search',
-				xtype: 'button',
-				handler: function() {
-					grupKodePos.load();
-				}
-			}]
-		},{
-			flex: 0.5,
-			layout: 'anchor',
-			xtype: 'container',
-			items: []
-		}],
-		bbar: Ext.create('Ext.PagingToolbar', {
-			displayInfo: true,
-			pageSize: 25,
-			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
-			store: grupKodePos,
-			items:[
-				'-', {
-				text: 'Exit',
-				handler: function() {
-					winCari13.hide();
-				}
-			}]
-		}),
-		listeners: {
-			itemdblclick: function(grid, record) {
-				Ext.getCmp('cboKodePosPenjamin').setValue(record.get('fs_kodepos'));
-				Ext.getCmp('txtKotaPenjamin').setValue(record.get('fs_nama_dati'));
 				winCari13.hide();
 			}
 		},
@@ -2365,8 +2277,8 @@ Ext.onReady(function() {
 			items: [{
 				anchor: '98%',
 				emptyText: 'Nama Kategori Usaha',
-				id: 'txtCariUsahaPenjamin',
-				name: 'txtCariUsahaPenjamin',
+				id: 'txtCariUsahaPasangan',
+				name: 'txtCariUsahaPasangan',
 				xtype: 'textfield'
 			}]
 		},{
@@ -2402,8 +2314,8 @@ Ext.onReady(function() {
 		}),
 		listeners: {
 			itemdblclick: function(grid, record) {
-				Ext.getCmp('cboUsahaPenjamin').setValue(record.get('fs_nama_sektor_ekonomi'));
-				Ext.getCmp('txtKdUsahaPenjamin').setValue(record.get('fs_kode_sektor_ekonomi'));
+				Ext.getCmp('cboUsahaPasangan').setValue(record.get('fs_nama_sektor_ekonomi'));
+				Ext.getCmp('txtKdUsahaPasangan').setValue(record.get('fs_kode_sektor_ekonomi'));
 				winCari14.hide();
 			}
 		},
@@ -2426,6 +2338,194 @@ Ext.onReady(function() {
 		title: 'Searching...',
 		items: [
 			winGrid14
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupKategoriUsaha.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid15 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 750,
+		sortableColumns: false,
+		store: grupKodePos,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Pos", dataIndex: 'fs_kodepos', menuDisabled: true, flex: 0.5},
+			{text: "Kelurahan", dataIndex: 'fs_kelurahan', menuDisabled: true, flex: 1},
+			{text: "Kecamatan", dataIndex: 'fs_kecamatan', menuDisabled: true, flex: 1},
+			{text: "Kota", dataIndex: 'fs_nama_dati', menuDisabled: true, flex: 1},
+			{text: "Propinsi", dataIndex: 'fs_propinsi', menuDisabled: true, flex: 1.3},
+			{text: "Kode Dati", dataIndex: 'fs_kode_dati', menuDisabled: true, hidden: true}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Kode Pos / Kelurahan / Kecamatan / Kota / Propinsi',
+				id: 'txtCariKodePosPenjamin',
+				name: 'txtCariKodePosPenjamin',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupKodePos.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupKodePos,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari15.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboKodePosPenjamin').setValue(record.get('fs_kodepos'));
+				Ext.getCmp('txtKotaPenjamin').setValue(record.get('fs_nama_dati'));
+				winCari15.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari15 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid15
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupKodePos.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid16 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupKategoriUsaha,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Kategori Usaha", dataIndex: 'fs_kode_sektor_ekonomi', menuDisabled: true, hidden: true},
+			{text: "Nama Kategori Usaha", dataIndex: 'fs_nama_sektor_ekonomi', menuDisabled: true, flex: 2}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Kategori Usaha',
+				id: 'txtCariUsahaPenjamin',
+				name: 'txtCariUsahaPenjamin',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupKategoriUsaha.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupKategoriUsaha,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari16.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboUsahaPenjamin').setValue(record.get('fs_nama_sektor_ekonomi'));
+				Ext.getCmp('txtKdUsahaPenjamin').setValue(record.get('fs_kode_sektor_ekonomi'));
+				winCari16.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari16 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid16
 		],
 		listeners: {
 			beforehide: function() {
@@ -3041,7 +3141,17 @@ Ext.onReady(function() {
 		name: 'cboStatusPerkawinan',
 		store: grupStatus,
 		valueField: 'fs_kode',
-		xtype: 'combobox'
+		xtype: 'combobox',
+		listeners: {
+			select: function(combo, record, index) {
+				if (combo.getValue() == 'K') {
+					// CALL BACK
+					fnDisablePenjamin();
+				} else {
+					fnDisablePasangan();
+				}
+			}
+		}
 	};
 
 	var cboStatusRumah = {
@@ -3374,7 +3484,7 @@ Ext.onReady(function() {
 	};
 
 	var cboNoPolisi = {
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'No. Polisi',
 		editable: false,
 		id: 'cboNoPolisi',
@@ -3395,6 +3505,29 @@ Ext.onReady(function() {
 				}
 			}
 		}
+	};
+
+	var txtNomorPolisi = {
+		anchor: '95%',
+		fieldStyle: 'text-transform: uppercase;',
+		emptyText: '4 ANGKA',
+		id: 'txtNomorPolisi',
+		name: 'txtNomorPolisi',
+		maxLength: 4,
+		xtype: 'numberfield',
+		enforceMaxLength: true
+	};
+
+	var txtNoBlkPolisi = {
+		anchor: '95%',
+		fieldStyle: 'text-transform: uppercase;',
+		emptyText: '3 HURUF',
+		id: 'txtNoBlkPolisi',
+		name: 'txtNoBlkPolisi',
+		maskRe: /[a-z,A-Z]/,
+		maxLength: 3,
+		xtype: 'textfield',
+		enforceMaxLength: true
 	};
 
 	var cboDealer = {
@@ -3556,8 +3689,24 @@ Ext.onReady(function() {
 		xtype: 'textfield'
 	};
 
-	var checkTJH = {
+	var btnPerluasan = {
+		anchor: '100%',
+		id: 'btnPerluasan',
+		name: 'btnPerluasan',
+		text: 'Tambah Perluasan Asuransi',
+		xtype: 'button',
+		handler: fnShowPerluasan
+	};
 
+	var checkTJH = {
+		boxLabel: 'TJH (Ya/Tidak)',
+		checked: false,
+		id: 'checkTJH',
+		name: 'checkTJH',
+		xtype: 'checkboxfield',
+		listeners : {
+
+		}
 	};
 
 	var txtTotalDP = {
@@ -3584,7 +3733,7 @@ Ext.onReady(function() {
 
 	var txtBiayaADM = {
 		anchor: '100%',
-		fieldLabel: 'Biaya ADM',
+		fieldLabel: 'Biaya Administrasi',
 		fieldStyle: 'text-transform: uppercase;',
 		emptyText: '',
 		id: 'txtBiayaADM',
@@ -3642,6 +3791,25 @@ Ext.onReady(function() {
 		xtype: 'textfield'
 	};
 
+	var btnTambahTransaksi = {
+		anchor: '100%',
+		id: 'btnTambahTransaksi',
+		name: 'btnTambahTransaksi',
+		text: 'Tambah Kode Transaksi',
+		xtype: 'button',
+		handler: ''
+	};
+
+	var txtSelisihTotalDP = {
+		anchor: '100%',
+		fieldLabel: 'SELISIH TOTAL DP',
+		fieldStyle: 'text-transform: uppercase;',
+		labelAlign: 'top',
+		id: 'txtSelisihTotalDP',
+		name: 'txtSelisihTotalDP',
+		xtype: 'textfield'
+	};
+
 	var txtUangMuka = {
 		anchor: '100%',
 		fieldLabel: 'Uang Muka',
@@ -3678,10 +3846,9 @@ Ext.onReady(function() {
 	var txtHargaOTRDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Harga OTR',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly:true,
 		hideTrigger: true,
 		id: 'txtHargaOTRDealer',
@@ -3702,9 +3869,8 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Harga OTR',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtHargaOTRKonsumen',
@@ -3724,10 +3890,9 @@ Ext.onReady(function() {
 	var txtUangMukaDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Uang Muka',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtUangMukaDealer',
@@ -3748,9 +3913,8 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Uang Muka',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtUangMukaKonsumen',
@@ -3770,10 +3934,9 @@ Ext.onReady(function() {
 	var txtAsuransiDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Asuransi',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtAsuransiDealer',
@@ -3794,7 +3957,7 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Asuransi',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
 		labelWidth: 100,
 		readOnly: true,
@@ -3816,10 +3979,9 @@ Ext.onReady(function() {
 	var txtPokokPembiayaanDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Pokok Pembiayaan',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtPokokPembiayaanDealer',
@@ -3840,9 +4002,8 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Pokok Pembiayaan',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtPokokPembiayaanKonsumen',
@@ -3859,21 +4020,232 @@ Ext.onReady(function() {
 		xtype: 'numericfield'
 	};
 
-	var txtBungaDealer = {
+	var txtBungaFlatDealer = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '95%',
+		fieldLabel: 'Bunga (%Flat/Efektif)',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaFlatDealer',
+		name: 'txtBungaFlatDealer',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
 
+	var txtBungaEfektifDealer = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '85%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaEfektifDealer',
+		name: 'txtBungaEfektifDealer',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtBungaFlatKonsumen = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '95%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaFlatKonsumen',
+		name: 'txtBungaFlatKonsumen',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtBungaEfektifKonsumen = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '100%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaEfektifKonsumen',
+		name: 'txtBungaEfektifKonsumen',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtTenorBulanDealer = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '95%',
+		fieldLabel: 'Tenor (bln/kali)',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtTenorBulanDealer',
+		name: 'txtTenorBulanDealer',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtTenorKaliDealer = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '85%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtTenorKaliDealer',
+		name: 'txtTenorKaliDealer',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtTenorBulanKonsumen = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '95%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtTenorBulanKonsumen',
+		name: 'txtTenorBulanKonsumen',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtTenorKaliKonsumen = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '100%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtTenorKaliKonsumen',
+		name: 'txtTenorKaliKonsumen',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
+	};
+
+	var txtBungaDealer = {
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '95%',
+		fieldLabel: 'Bunga',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaDealer',
+		name: 'txtBungaDealer',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
 	};
 
 	var txtBungaKonsumen = {
-
+		afterLabelTextTpl: required,
+		allowBlank: false,
+		anchor: '100%',
+		fieldLabel: '',
+		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
+		readOnly: true,
+		hideTrigger: true,
+		id: 'txtBungaKonsumen',
+		name: 'txtBungaKonsumen',
+		alwaysDisplayDecimals: true,
+		currencySymbol: null,
+		decimalPrecision: 2,
+		decimalSeparator: '.',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
+		value: 0,
+		xtype: 'numericfield'
 	};
 
 	var txtAngsuranDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Angsuran /Bulan',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtAngsuranDealer',
@@ -3894,9 +4266,8 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Angsuran /Bulan',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtAngsuranKonsumen',
@@ -3916,10 +4287,9 @@ Ext.onReady(function() {
 	var txtPiutangDealer = {
 		afterLabelTextTpl: required,
 		allowBlank: false,
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'Piutang Pembiayaan',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtPiutangDealer',
@@ -3940,9 +4310,8 @@ Ext.onReady(function() {
 		afterLabelTextTpl: required,
 		allowBlank: false,
 		anchor: '100%',
-		fieldLabel: 'Piutang Pembiayaan',
+		fieldLabel: '',
 		fieldStyle: 'text-align:right; background-color: #eee; background-image: none;',
-		labelWidth: 100,
 		readOnly: true,
 		hideTrigger: true,
 		id: 'txtPiutangKonsumen',
@@ -4014,8 +4383,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-					winCari11.show();
-					winCari11.center();
+					winCari13.show();
+					winCari13.center();
 				}
 			}
 		}
@@ -4066,8 +4435,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-					winCari12.show();
-					winCari12.center();
+					winCari14.show();
+					winCari14.center();
 				}
 			}
 		}
@@ -4177,8 +4546,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-					winCari13.show();
-					winCari13.center();
+					winCari15.show();
+					winCari15.center();
 				}
 			}
 		}
@@ -4229,8 +4598,8 @@ Ext.onReady(function() {
 			cari: {
 				cls: 'x-form-search-trigger',
 				handler: function() {
-					winCari14.show();
-					winCari14.center();
+					winCari16.show();
+					winCari16.center();
 				}
 			}
 		}
@@ -4433,6 +4802,66 @@ Ext.onReady(function() {
         xtype: 'displayfield'
 	};
 
+	// FUNCTIONS PERHITUNGAN STRUKTUR KREDIT
+
+
+
+	// FUNCTION BUTTON POPUP
+	function fnShowPerluasan() {
+		winCari11.show();
+		winCari11.center();
+	}
+
+	// FUNCTIONS FIELD DISABLED
+	function fnDisablePasangan() {
+		// FIELDSET PASANGAN DISABLE
+		Ext.getCmp('txtNamaPasangan').setDisabled(true);
+		Ext.getCmp('txtAlamatPasangan').setDisabled(true);
+		Ext.getCmp('cboKodePosPasangan').setDisabled(true);
+		Ext.getCmp('txtKotaPasangan').setDisabled(true);
+		Ext.getCmp('txtNoHpPasangan').setDisabled(true);
+		Ext.getCmp('cboUsahaPasangan').setDisabled(true);
+		Ext.getCmp('txtKetUsahaPasangan').setDisabled(true);
+		Ext.getCmp('txtAlamatUsahaPasangan').setDisabled(true);
+		Ext.getCmp('txtNoTlpUsahaPasangan').setDisabled(true);
+		Ext.getCmp('txtPendapatanPasangan').setDisabled(true);
+		// FIELDSET PENJAMIN ENABLE
+		Ext.getCmp('txtNamaPenjamin').setDisabled(false);
+		Ext.getCmp('txtAlamatPenjamin').setDisabled(false);
+		Ext.getCmp('cboKodePosPenjamin').setDisabled(false);
+		Ext.getCmp('txtKotaPenjamin').setDisabled(false);
+		Ext.getCmp('txtNoTlpPenjamin').setDisabled(false);
+		Ext.getCmp('cboUsahaPenjamin').setDisabled(false);
+		Ext.getCmp('txtKetUsahaPenjamin').setDisabled(false);
+		Ext.getCmp('txtAlamatUsahaPenjamin').setDisabled(false);
+		Ext.getCmp('txtPendapatanPenjamin').setDisabled(false);
+		Ext.getCmp('txtStatusPenjamin').setDisabled(false);
+	}
+
+	function fnDisablePenjamin() {
+		// FIELDSET PASANGAN ENABLE
+		Ext.getCmp('txtNamaPasangan').setDisabled(false);
+		Ext.getCmp('txtAlamatPasangan').setDisabled(false);
+		Ext.getCmp('cboKodePosPasangan').setDisabled(false);
+		Ext.getCmp('txtKotaPasangan').setDisabled(false);
+		Ext.getCmp('txtNoHpPasangan').setDisabled(false);
+		Ext.getCmp('cboUsahaPasangan').setDisabled(false);
+		Ext.getCmp('txtKetUsahaPasangan').setDisabled(false);
+		Ext.getCmp('txtAlamatUsahaPasangan').setDisabled(false);
+		Ext.getCmp('txtNoTlpUsahaPasangan').setDisabled(false);
+		Ext.getCmp('txtPendapatanPasangan').setDisabled(false);
+		// FIELDSET PENJAMIN DISABLE
+		Ext.getCmp('txtNamaPenjamin').setDisabled(true);
+		Ext.getCmp('txtAlamatPenjamin').setDisabled(true);
+		Ext.getCmp('cboKodePosPenjamin').setDisabled(true);
+		Ext.getCmp('txtKotaPenjamin').setDisabled(true);
+		Ext.getCmp('txtNoTlpPenjamin').setDisabled(true);
+		Ext.getCmp('cboUsahaPenjamin').setDisabled(true);
+		Ext.getCmp('txtKetUsahaPenjamin').setDisabled(true);
+		Ext.getCmp('txtAlamatUsahaPenjamin').setDisabled(true);
+		Ext.getCmp('txtPendapatanPenjamin').setDisabled(true);
+		Ext.getCmp('txtStatusPenjamin').setDisabled(true);
+	}
 
 	// FUNCTIONS TAB DATA UTAMA
 	function fnResetDataUtama() {
@@ -4564,6 +4993,20 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET NO APK & NO PJJ
+					Ext.getCmp('txtNoAPK').setValue(xtext.noapk);
+					Ext.getCmp('txtNoPJJ').setValue(xtext.nopjj);
+
+					// SET NO APK IN ALL TABPANEL
+					Ext.getCmp('txtNoAPKTab3').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab4').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab5').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab6').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab7').setValue(xtext.noapk);
+
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab3').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab3');
@@ -4707,6 +5150,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab4').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab4');
@@ -4747,6 +5193,8 @@ Ext.onReady(function() {
 		Ext.getCmp('txtAlamatBPKP').setValue('');
 		Ext.getCmp('txtNoBPKP').setValue('');
 		Ext.getCmp('cboNoPolisi').setValue('');
+		Ext.getCmp('txtNomorPolisi').setValue('');
+		Ext.getCmp('txtNoBlkPolisi').setValue('');
 		// FORM DEALER
 		Ext.getCmp('cboDealer').setValue('');
 		Ext.getCmp('txtKdDealer1').setValue('');
@@ -4830,9 +5278,9 @@ Ext.onReady(function() {
 				'fs_nama_bpkb': Ext.getCmp('txtNamaBPKP').getValue(),
 				'fs_alamat_bpkb': Ext.getCmp('txtAlamatBPKP').getValue(),
 				'fs_nomor_bpkb': Ext.getCmp('txtNoBPKP').getValue(),
-				'fs_no_polisi': Ext.getCmp('cboNoPolisi').getValue(),
-				'fs_kode_wilayah_no_polisi': '',
-				'fs_kode_akhir_wilayah_no_polisi': '',
+				'fs_no_polisi': Ext.getCmp('txtNomorPolisi').getValue(),
+				'fs_kode_wilayah_no_polisi': Ext.getCmp('cboNoPolisi').getValue(),
+				'fs_kode_akhir_wilayah_no_polisi': Ext.getCmp('txtNoBlkPolisi').getValue(),
 				'fs_jenis_asuransi': Ext.getCmp('cboJnsAsuransi').getValue(),
 				'fs_nama_perusahaan_asuransi': Ext.getCmp('cboPerusahaanAsuransi').getValue(),
 				'fs_kode_asuransi1': Ext.getCmp('txtKdAsuransi1').getValue(),
@@ -4853,6 +5301,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab5').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab5');
@@ -5007,6 +5458,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab6').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab6');
@@ -5151,6 +5605,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab7').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab7');
@@ -5430,6 +5887,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Konsumen',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5530,6 +5988,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Kendaraan',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5592,7 +6051,33 @@ Ext.onReady(function() {
 									txtNamaBPKP,
 									txtAlamatBPKP,
 									txtNoBPKP,
-									cboNoPolisi
+									{
+										anchor: '100%',
+										layout: 'hbox',
+										xtype: 'container',
+										items: [{
+											flex: 1,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												cboNoPolisi
+											]
+										},{
+											flex: 0.5,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												txtNomorPolisi
+											]
+										},{
+											flex: 0.5,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												txtNoBlkPolisi
+											]
+										}]
+									}
 								]
 							},{
 								anchor: '98%',
@@ -5630,6 +6115,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Struktur Kredit',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5671,6 +6157,7 @@ Ext.onReady(function() {
 								xtype: 'fieldset',
 								items: [
 									cboCaraBayar,
+									txtKali,
 									txtTenor,
 									txtAngsuran
 								]
@@ -5685,7 +6172,9 @@ Ext.onReady(function() {
 								xtype: 'fieldset',
 								items: [
 									txtTdkAngsuran,
-									cboPotongPencairan
+									cboPotongPencairan,
+									btnPerluasan,
+									checkTJH
 								]
 							}]
 						}]
@@ -5708,7 +6197,44 @@ Ext.onReady(function() {
 									txtPremiPerluasan,
 									txtBiayaTJH,
 									txtPremiAssGross,
+									txtAngsuranDimuka,
+									{
+										anchor: '100%',
+										layout: 'hbox',
+										xtype: 'container',
+										items: [{
+											flex: 1,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [{
+												anchor: '100%',
+												style: 'padding: 5px;',
+												xtype: 'fieldset',
+												items: [
+													btnTambahTransaksi
+												]
+											}]
+										}]
+									},
 									txtUangMuka,
+									{
+										anchor: '100%',
+										layout: 'hbox',
+										xtype: 'container',
+										items: [{
+											flex: 1,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [{
+												anchor: '100%',
+												style: 'padding: 5px;',
+												xtype: 'fieldset',
+												items: [
+													txtSelisihTotalDP
+												]
+											}]
+										}]
+									},
 									txtPremiAssNet,
 									cboAngsDibayarDealer
 								]
@@ -5720,46 +6246,206 @@ Ext.onReady(function() {
 							items: [{
 								anchor: '98%',
 								style: 'padding: 5px;',
-								title: 'Hasil Perhitungan',
+								title: 'Hasil Perhitungan Dealer & Konsumen',
 								xtype: 'fieldset',
 								items: [{
 									anchor: '100%',
 									layout: 'hbox',
 									xtype: 'container',
 									items: [{
-										flex: 1,
+										flex: 1.7,
 										layout: 'anchor',
 										xtype: 'container',
-										items: [{
-											anchor: '98%',
-											title: 'DEALER',
-											style: 'padding: 5px;',
-											xtype: 'fieldset',
-											items: [
-												txtHargaOTRDealer,
-												txtUangMukaDealer,
-												txtAsuransiDealer,
-												txtAngsuranDealer,
-												txtPiutangDealer
-											]
-										}]
+										items: [
+											txtHargaOTRDealer
+										]
 									},{
 										flex: 1,
 										layout: 'anchor',
 										xtype: 'container',
-										items: [{
-											anchor: '98%',
-											title: 'KONSUMEN',
-											style: 'padding: 5px;',
-											xtype: 'fieldset',
-											items: [
-												txtHargaOTRKonsumen,
-												txtUangMukaKonsumen,
-												txtAsuransiKonsumen,
-												txtAngsuranKonsumen,
-												txtPiutangKonsumen
-											]
-										}]
+										items: [
+											txtHargaOTRKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtUangMukaDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtUangMukaKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtAsuransiDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtAsuransiKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtPokokPembiayaanDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtPokokPembiayaanKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 2,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaFlatDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaEfektifDealer
+										]
+									},{
+										flex: 0.9,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaFlatKonsumen
+										]
+									},{
+										flex: 0.9,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaEfektifKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 2,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtTenorBulanDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtTenorKaliDealer
+										]
+									},{
+										flex: 0.9,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtTenorBulanKonsumen
+										]
+									},{
+										flex: 0.9,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtTenorKaliKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtBungaKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtAngsuranDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtAngsuranKonsumen
+										]
+									}]
+								},{
+									anchor: '100%',
+									layout: 'hbox',
+									xtype: 'container',
+									items: [{
+										flex: 1.7,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtPiutangDealer
+										]
+									},{
+										flex: 1,
+										layout: 'anchor',
+										xtype: 'container',
+										items: [
+											txtPiutangKonsumen
+										]
 									}]
 								}]
 							}]
@@ -5786,6 +6472,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Tambahan',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5873,6 +6560,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Pencairan',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',

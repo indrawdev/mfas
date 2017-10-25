@@ -399,6 +399,70 @@ class MSearch extends CI_Model {
 		return $sSQL;
 	}
 
+	public function listPerluasanAll($sKdCab, $nApk)
+	{
+		$xSQL = ("
+			SELECT fs_jenis_perluasan, fn_tahun_ke
+			FROM tx_apk_perluasan
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+			AND fn_no_apk = '".trim($nApk)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPerluasan($sKdCab, $nApk, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_jenis_perluasan, fn_tahun_ke
+			FROM tx_apk_perluasan
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+			AND fn_no_apk = '".trim($nApk)."'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fd_tanggal_buat DESC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listTransaksiAll($sKdCab, $nApk)
+	{
+		$xSQL = ("
+			SELECT fs_kode_transaksi, fs_nama_transaksi, 
+				fs_persentase_nilai_transaksi, fn_nilai_transaksi, 
+				fs_tagih_ke_konsumen, fs_cair_ke_dealer
+			FROM tx_apk_detailtransaksi
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+			AND fn_no_apk = '".trim($nApk)."'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listTransaksi($sKdCab, $nApk, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_kode_transaksi, fs_nama_transaksi, 
+				fs_persentase_nilai_transaksi, fn_nilai_transaksi, 
+				fs_tagih_ke_konsumen, fs_cair_ke_dealer
+			FROM tx_apk_detailtransaksi
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+			AND fn_no_apk = '".trim($nApk)."'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fd_tanggal_buat DESC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function getReferensi($sKode) 
 	{
 		$xSQL = ("
@@ -409,6 +473,22 @@ class MSearch extends CI_Model {
 
 		$xSQL = $xSQL.("
 			ORDER BY fs_nilai1_referensi ASC
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function getProduk($sKdCab)
+	{
+		$xSQL = ("
+			SELECT fs_nilai_1, fs_nilai_2, fs_nama_produk
+			FROM tm_produk
+			WHERE fs_kode_cabang = '".trim($sKdCab)."'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fs_nilai_1 ASC
 		");
 
 		$sSQL = $this->db->query($xSQL);

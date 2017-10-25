@@ -39,6 +39,25 @@ class Apkperorangan extends CI_Controller {
 		$out = array_values($array);
 		echo json_encode($out);
 	}
+	
+	// SELECT POLA TRANSAKSI
+	public function pola() {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->getProduk($cabang);
+		$this->db->trans_complete();
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+						'fs_kode' => trim($xRow->fs_nilai_1),
+						'fs_nama' => trim($xRow->fs_nilai_1)
+					);
+			}
+		}
+		echo json_encode($xArr);
+	}
 
 	public function setapk($newapk) {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
@@ -65,15 +84,17 @@ class Apkperorangan extends CI_Controller {
 	}
 
 	public function gridperorangan() {
+		$sCabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
 		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
 		$this->load->model('MApkPerorangan');
-		$sSQL = $this->MApkPerorangan->listPeroranganAll($sCari);
+		$sSQL = $this->MApkPerorangan->listPeroranganAll($sCabang, $sCari);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MApkPerorangan->listPerorangan($sCari, $nStart, $nLimit);
+		$sSQL = $this->MApkPerorangan->listPerorangan($sCabang, $sCari, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
@@ -451,6 +472,52 @@ class Apkperorangan extends CI_Controller {
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
+	public function gridperluasan() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listPerluasanAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listPerluasan($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fn_no_apk' => trim($xRow->fn_no_apk),
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
+	public function gridtransaksi() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listTransaksiAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listTransaksi($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fn_no_apk' => trim($xRow->fn_no_apk),
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
 	// TAB DATA UTAMA
 	public function ceksavedatautama() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
@@ -564,6 +631,8 @@ class Apkperorangan extends CI_Controller {
 
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($newapk),
+						'nopjj' => trim($newpjj),
 						'hasil' => 'Simpan Data APK Baru, Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -580,6 +649,8 @@ class Apkperorangan extends CI_Controller {
 
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
+						'nopjj' => trim($nopjj),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -680,6 +751,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -794,6 +866,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -932,6 +1005,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -1042,6 +1116,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);
@@ -1127,6 +1202,7 @@ class Apkperorangan extends CI_Controller {
 			$this->db->update('tx_apk', $data);
 			$hasil = array(
 						'sukses' => true,
+						'noapk' => trim($noapk),
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
 					);
 			echo json_encode($hasil);

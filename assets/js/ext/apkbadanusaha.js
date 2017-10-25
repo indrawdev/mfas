@@ -215,7 +215,7 @@ Ext.onReady(function() {
 			{text: 'Alamat BPKB', dataIndex: 'fs_alamat_bpkb', menuDisabled: true, hidden: true},
 			{text: 'Kota BPKB', dataIndex: 'fs_kota_bpkb', menuDisabled: true, hidden: true},
 			{text: 'Nomor BPKB', dataIndex: 'fs_nomor_bpkb', menuDisabled: true, hidden: true},
-			{text: 'No. Plat', dataIndex: 'fs_no_polisi', menuDisabled: true, hidden: true},
+			{text: 'No. Polisi', dataIndex: 'fs_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Wilayah No. Plat', dataIndex: 'fs_kode_wilayah_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Wilayah Akhir No. Plat', dataIndex: 'fs_kode_akhir_wilayah_no_polisi', menuDisabled: true, hidden: true},
 			{text: 'Sales', dataIndex: 'fs_salesman', menuDisabled: true, hidden: true},
@@ -382,7 +382,9 @@ Ext.onReady(function() {
 				Ext.getCmp('txtNamaBPKP').setValue(record.get('fs_nama_bpkb'));
 				Ext.getCmp('txtAlamatBPKP').setValue(record.get('fs_alamat_bpkb'));
 				Ext.getCmp('txtNoBPKP').setValue(record.get('fs_nomor_bpkb'));
-				Ext.getCmp('cboNoPolisi').setValue(record.get('fs_no_polisi'));
+				Ext.getCmp('txtNomorPolisi').setValue(record.get('fs_no_polisi'));
+				Ext.getCmp('cboNoPolisi').setValue(record.get('fs_kode_wilayah_no_polisi'));
+				Ext.getCmp('txtNoBlkPolisi').setValue(record.get('fs_kode_akhir_wilayah_no_polisi'));
 				Ext.getCmp('cboPerusahaanAsuransi').setValue(record.get('fs_nama_perusahaan_asuransi'));
 				Ext.getCmp('txtKdAsuransi1').setValue(record.get('fs_kode_asuransi1'));
 				Ext.getCmp('txtKdAsuransi2').setValue(record.get('fs_kode_asuransi2'));
@@ -417,11 +419,16 @@ Ext.onReady(function() {
 				Ext.getCmp('txtNamaBank').setValue(record.get('fs_nama_bank_pencairan'));
 				Ext.getCmp('txtNoRekeningCair').setValue(record.get('fs_rekening_bank_pencairan'));
 
+				// SET ENABLED TABPANEL
+				Ext.getCmp('tab3').setDisabled(false);
+				Ext.getCmp('tab4').setDisabled(false);
+				Ext.getCmp('tab5').setDisabled(false);
+				Ext.getCmp('tab6').setDisabled(false);
+				Ext.getCmp('tab7').setDisabled(false);
+
 				// CHANGE TAB
 				var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 				tabPanel.setActiveTab('tab2');
-
-				// SET ENABLED TABPANEL
 			}
 		},
 		viewConfig: {
@@ -476,14 +483,7 @@ Ext.onReady(function() {
 				type: 'json'
 			},
 			type: 'ajax',
-			url: 'apkbadanusaha/select'
-		},
-		listeners: {
-			beforeload: function(store) {
-				Ext.apply(store.getProxy().extraParams, {
-					'fs_kode_referensi': 'pola_transaksi'
-				});
-			}
+			url: 'apkbadanusaha/pola'
 		}
 	});
 
@@ -3257,7 +3257,7 @@ Ext.onReady(function() {
 	};
 
 	var cboNoPolisi = {
-		anchor: '100%',
+		anchor: '95%',
 		fieldLabel: 'No. Polisi',
 		editable: false,
 		id: 'cboNoPolisi',
@@ -3278,6 +3278,29 @@ Ext.onReady(function() {
 				}
 			}
 		}
+	};
+
+	var txtNomorPolisi = {
+		anchor: '95%',
+		fieldStyle: 'text-transform: uppercase;',
+		emptyText: '4 ANGKA',
+		id: 'txtNomorPolisi',
+		name: 'txtNomorPolisi',
+		maxLength: 4,
+		xtype: 'numberfield',
+		enforceMaxLength: true
+	};
+
+	var txtNoBlkPolisi = {
+		anchor: '95%',
+		fieldStyle: 'text-transform: uppercase;',
+		emptyText: '3 HURUF',
+		id: 'txtNoBlkPolisi',
+		name: 'txtNoBlkPolisi',
+		maskRe: /[a-z,A-Z]/,
+		maxLength: 3,
+		xtype: 'textfield',
+		enforceMaxLength: true
 	};
 
 	var cboJnsAsuransi = {
@@ -3892,6 +3915,8 @@ Ext.onReady(function() {
 
 	};
 
+	// FUNCTIONS PERHITUNGAN STRUKTUR KREDIT
+
 	// FUNCTIONS TAB DATA UTAMA
 	function fnResetDataUtama() {
 		// FORM APK
@@ -4019,6 +4044,20 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET NO APK & NO PJJ
+					Ext.getCmp('txtNoAPK').setValue(xtext.noapk);
+					Ext.getCmp('txtNoPJJ').setValue(xtext.nopjj);
+
+					// SET NO APK IN ALL TABPANEL
+					Ext.getCmp('txtNoAPKTab3').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab4').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab5').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab6').setValue(xtext.noapk);
+					Ext.getCmp('txtNoAPKTab7').setValue(xtext.noapk);
+
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab3').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab3');
@@ -4173,7 +4212,14 @@ Ext.onReady(function() {
 					msg: xtext.hasil,
 					title: 'MFAS'
 				});
+				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab4').setDisabled(false);
 
+					// CHANGE TAB
+					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
+					tabPanel.setActiveTab('tab4');
+				}
 			},
 			failure: function(response) {
 				var xtext = Ext.decode(response.responseText);
@@ -4208,6 +4254,8 @@ Ext.onReady(function() {
 		Ext.getCmp('txtAlamatBPKP').setValue('');
 		Ext.getCmp('txtNoBPKP').setValue('');
 		Ext.getCmp('cboNoPolisi').setValue('');
+		Ext.getCmp('txtNomorPolisi').setValue('');
+		Ext.getCmp('txtNoBlkPolisi').setValue('');
 		// FORM ASURANSI
 		Ext.getCmp('cboJnsAsuransi').setValue('');
 		Ext.getCmp('cboPerusahaanAsuransi').setValue('');
@@ -4296,8 +4344,9 @@ Ext.onReady(function() {
 				'fs_nama_bpkb': Ext.getCmp('txtNamaBPKP').getValue(),
 				'fs_alamat_bpkb': Ext.getCmp('txtAlamatBPKP').getValue(),
 				'fs_nomor_bpkb': Ext.getCmp('txtNoBPKP').getValue(),
-				'fs_no_polisi': Ext.getCmp('cboNoPolisi').getValue(),
-				'fs_kode_wilayah_no_polisi': '',
+				'fs_no_polisi': Ext.getCmp('txtNomorPolisi').getValue(),
+				'fs_kode_wilayah_no_polisi': Ext.getCmp('cboNoPolisi').getValue(),
+				'fs_kode_akhir_wilayah_no_polisi': Ext.getCmp('txtNoBlkPolisi').getValue(),
 				'fs_salesman': Ext.getCmp('txtSales').getValue(),
 				'fs_jenis_asuransi': Ext.getCmp('cboJnsAsuransi').getValue(),
 				'fs_nama_perusahaan_asuransi': Ext.getCmp('cboPerusahaanAsuransi').getValue(),
@@ -4318,6 +4367,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab5').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab5');
@@ -4474,6 +4526,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab6').setDisabled(false);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab6');
@@ -4588,6 +4643,9 @@ Ext.onReady(function() {
 					title: 'MFAS'
 				});
 				if (xtext.sukses === true) {
+					// SET ENABLED TABPANEL
+					Ext.getCmp('tab7').setDisabled(false);
+
 					// RESET & RELOAD DATA
 					fnResetDataPengurus();
 					grupPengurus.load();
@@ -4705,7 +4763,18 @@ Ext.onReady(function() {
 					msg: xtext.hasil,
 					title: 'MFAS'
 				});
+
 				if (xtext.sukses === true) {
+					// SET RESET ALL
+					fnResetAll();
+
+					// SET DISABLED TABPANEL
+					Ext.getCmp('tab3').setDisabled(true);
+					Ext.getCmp('tab4').setDisabled(true);
+					Ext.getCmp('tab5').setDisabled(true);
+					Ext.getCmp('tab6').setDisabled(true);
+					Ext.getCmp('tab7').setDisabled(true);
+
 					// CHANGE TAB
 					var tabPanel = Ext.ComponentQuery.query('tabpanel')[0];
 					tabPanel.setActiveTab('tab1');
@@ -4876,6 +4945,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Badan Usaha',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -4979,6 +5049,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Kendaraan',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5041,7 +5112,33 @@ Ext.onReady(function() {
 									txtNamaBPKP,
 									txtAlamatBPKP,
 									txtNoBPKP,
-									cboNoPolisi
+									{
+										anchor: '100%',
+										layout: 'hbox',
+										xtype: 'container',
+										items: [{
+											flex: 1,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												cboNoPolisi
+											]
+										},{
+											flex: 0.5,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												txtNomorPolisi
+											]
+										},{
+											flex: 0.5,
+											layout: 'anchor',
+											xtype: 'container',
+											items: [
+												txtNoBlkPolisi
+											]
+										}]
+									}
 								]
 							},{
 								anchor: '98%',
@@ -5079,6 +5176,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Struktur Kredit',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5202,6 +5300,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Pengurus',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',
@@ -5286,6 +5385,7 @@ Ext.onReady(function() {
 				frame: false,
 				title: 'Data Pencairan',
 				xtype: 'form',
+				disabled: true,
 				items: [{
 					fieldDefaults: {
 						labelAlign: 'right',

@@ -34,12 +34,13 @@ class MApkBadanUsaha extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listBadanUsahaAll($sCari)
+	public function listBadanUsahaAll($sKdCab, $sCari)
 	{
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
-			WHERE fs_jenis_pembiayaan = 'B'
+			WHERE fs_jenis_pembiayaan = 'B' 
+			AND fs_kode_cabang = '".trim($sKdCab)."'
 		");
 
 		if (!empty($sCari)) {
@@ -53,12 +54,13 @@ class MApkBadanUsaha extends CI_Model {
 		return $sSQL;
 	}
 
-	public function listBadanUsaha($sCari, $nStart, $nLimit)
+	public function listBadanUsaha($sKdCab, $sCari, $nStart, $nLimit)
 	{
 		$xSQL = ("
 			SELECT *
 			FROM tx_apk
-			WHERE fs_jenis_pembiayaan = 'B'
+			WHERE fs_jenis_pembiayaan = 'B' 
+			AND fs_kode_cabang = '".trim($sKdCab)."'
 		");
 
 		if (!empty($sCari)) {
