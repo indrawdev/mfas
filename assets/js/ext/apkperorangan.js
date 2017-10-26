@@ -108,6 +108,40 @@ Ext.onReady(function() {
 		]
 	});
 
+	Ext.define('DataGridPerluasan', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_cabang', type: 'string'},
+			{name: 'fn_no_apk', type: 'string'},
+			{name: 'fn_tahun_ke', type: 'string'},
+			{name: 'fs_jenis_perluasan', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridMasterTrans', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_transaksi', type: 'string'},
+			{name: 'fs_nama_transaksi', type: 'string'},
+			{name: 'fs_kode_perkiraan', type: 'string'},
+			{name: 'fs_penjelasan_transaksi', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridTransaksi', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_cabang', type: 'string'},
+			{name: 'fn_no_apk', type: 'string'},
+			{name: 'fs_kode_transaksi', type: 'string'},
+			{name: 'fs_nama_transaksi', type: 'string'},
+			{name: 'fn_persentase_nilai_transaksi', type: 'string'},
+			{name: 'fn_nilai_transaksi', type: 'string'},
+			{name: 'fs_tagih_ke_konsumen', type: 'string'},
+			{name: 'fs_cair_ke_dealer', type: 'string'}
+		]
+	});
+
 	var grupPerorangan = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		model: 'DataGridPerorangan',
@@ -464,7 +498,6 @@ Ext.onReady(function() {
 			stripeRows: true
 		}
 	});
-
 
 	// GROUP SELECT 'TM_LEMBAGAKEUANGAN'
 	var grupLembaga = Ext.create('Ext.data.Store', {
@@ -1038,7 +1071,98 @@ Ext.onReady(function() {
 		}
 	});
 
+	var grupJenisPerluasan = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'perluasan_asuransi'
+				});
+			}
+		}
+	});
+
 	var grupPerluasan = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridPerluasan',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridperluasan'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab5').getValue()
+				});
+			}
+		}
+	});
+
+	var grupMasterTrans = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridMasterTrans',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridmastertrans'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_cari': Ext.getCmp('txtCariMasterTrans').getValue()
+				});
+			}
+		}
+	});
+
+	var grupTagihKonsumen = Ext.create('Ext.data.Store', {
+		autoLoad: true,
+		fields: [
+			'fs_kode','fs_nama'
+		],
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/combo'
+		}
+	});
+
+	var grupCairDealer = Ext.create('Ext.data.Store', {
 		autoLoad: false,
 		fields: [
 			'fs_kode','fs_nama'
@@ -1051,7 +1175,32 @@ Ext.onReady(function() {
 				type: 'json'
 			},
 			type: 'ajax',
-			url: 'apkperorangan/gridperluasan'
+			url: 'apkperorangan/select'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_referensi': 'cairke_dealer'
+				});
+			}
+		}
+	});
+
+	var grupTransaksi = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridTransaksi',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/gridtransaksi'
 		},
 		listeners: {
 			beforeload: function(store) {
@@ -1225,95 +1374,11 @@ Ext.onReady(function() {
 	});
 
 	var winGrid2 = Ext.create('Ext.grid.Panel', {
-		anchor: '100%',
-		autoDestroy: true,
-		height: 450,
-		width: 550,
-		sortableColumns: false,
-		store: grupPolaTrans,
-		columns: [
-			{xtype: 'rownumberer', width: 45},
-			{text: "Kode Pola", dataIndex: 'fs_kode_pola', menuDisabled: true, flex: 1},
-			{text: "Nama Pola Transaksi", dataIndex: 'fs_nama_pola', menuDisabled: true, flex: 2}
-		],
-		tbar: [{
-			flex: 1,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '98%',
-				emptyText: 'Nama Pola Transaksi',
-				id: 'txtCariPolaTrans',
-				name: 'txtCariPolaTrans',
-				xtype: 'textfield'
-			}]
-		},{
-			flex: 0.2,
-			layout: 'anchor',
-			xtype: 'container',
-			items: [{
-				anchor: '100%',
-				text: 'Search',
-				xtype: 'button',
-				handler: function() {
-					grupPolaTrans.load();
-				}
-			}]
-		},{
-			flex: 0.5,
-			layout: 'anchor',
-			xtype: 'container',
-			items: []
-		}],
-		bbar: Ext.create('Ext.PagingToolbar', {
-			displayInfo: true,
-			pageSize: 25,
-			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
-			store: grupPolaTrans,
-			items:[
-				'-', {
-				text: 'Exit',
-				handler: function() {
-					winCari2.hide();
-				}
-			}]
-		}),
-		listeners: {
-			itemdblclick: function(grid, record) {
-				//Ext.getCmp('cboLembaga').setValue(record.get('fs_nama_lembaga_keuangan'));
-				//Ext.getCmp('txtKdLembaga1').setValue(record.get('fs_kode_lembaga_keuangan1'));
-				winCari2.hide();
-			}
-		},
-		viewConfig: {
-			getRowClass: function() {
-				return 'rowwrap';
-			},
-			markDirty: false
-		}
+		// KOSONG
 	});
 
 	var winCari2 = Ext.create('Ext.window.Window', {
-		border: false,
-		closable: false,
-		draggable: true,
-		frame: false,
-		layout: 'fit',
-		plain: true,
-		resizable: false,
-		title: 'Searching...',
-		items: [
-			winGrid2
-		],
-		listeners: {
-			beforehide: function() {
-				vMask.hide();
-			},
-			beforeshow: function() {
-				grupPolaTrans .load();
-				vMask.show();
-			}
-		}
+		// KOSONG
 	});
 
 	var winGrid3 = Ext.create('Ext.grid.Panel', {
@@ -2085,31 +2150,42 @@ Ext.onReady(function() {
 	});
 
 	// POPUP TAB FORM DATA STRUKTUR KREDIT
-	var winGrid11 = Ext.create('Ext.grid.Panel', {
+	var winGridMTrans = Ext.create('Ext.grid.Panel', {
 		anchor: '100%',
 		autoDestroy: true,
 		height: 450,
 		width: 550,
 		sortableColumns: false,
-		store: '',
+		store: grupMasterTrans,
 		columns: [
 			{xtype: 'rownumberer', width: 45},
-			{text: "Jenis Perluasan", dataIndex: 'fs_jenis_perluasan', menuDisabled: true, flex: 1},
-			{text: "Tenor", dataIndex: 'fn_tenor', menuDisabled: true, flex: 1},
+			{text: "Kode", dataIndex: 'fs_kode_transaksi', menuDisabled: true, flex: 1},
+			{text: "Nama Transaksi", dataIndex: 'fs_nama_transaksi', menuDisabled: true, flex: 2},
+			{text: "Perkiraan", dataIndex: 'fs_kode_perkiraan', menuDisabled: true, hidden: true},
+			{text: "Penjelasan", dataIndex: 'fs_penjelasan_transaksi', menuDisabled: true, hidden: true}
 		],
 		tbar: [{
 			flex: 1,
 			layout: 'anchor',
 			xtype: 'container',
 			items: [{
-				
+				anchor: '98%',
+				emptyText: 'Nama Transaksi',
+				id: 'txtCariMasterTrans',
+				name: 'txtCariMasterTrans',
+				xtype: 'textfield'
 			}]
 		},{
 			flex: 0.2,
 			layout: 'anchor',
 			xtype: 'container',
 			items: [{
-
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupMasterTrans.load();
+				}
 			}]
 		},{
 			flex: 0.5,
@@ -2121,7 +2197,170 @@ Ext.onReady(function() {
 			displayInfo: true,
 			pageSize: 25,
 			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
-			store: '',
+			store: grupMasterTrans,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCariMTrans.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				Ext.getCmp('cboKodeTransaksi').setValue(record.get('fs_kode_transaksi'));
+				Ext.getCmp('txtNamaTransaksi').setValue(record.get('fs_nama_transaksi'));
+				winCariMTrans.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCariMTrans = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGridMTrans
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupMasterTrans.load();
+				vMask.show();
+			}
+		}
+	});
+
+	var winGrid11 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupPerluasan,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Jenis Perluasan", dataIndex: 'fs_jenis_perluasan', menuDisabled: true, flex: 1},
+			{text: "Tenor", dataIndex: 'fn_tahun_ke', menuDisabled: true, flex: 1},
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				displayField: 'fs_nama',
+				editable: false,
+				fieldLabel: 'Jenis Perluasan',
+				id: 'cboJnsPerluasan',
+				name: 'cboJnsPerluasan',
+				labelAlign: 'top',
+				store: grupJenisPerluasan,
+				valueField: 'fs_kode',
+				xtype: 'combobox'
+			}]
+		},{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				emptyText: 'Tenor',
+				fieldLabel: 'Tenor',
+				fieldStyle: 'text-transform: uppercase;',
+				id: 'txtTenorPerluasan',
+				name: 'txtTenorPerluasan',
+				labelAlign: 'top',
+				xtype: 'textfield',
+				listeners: {
+					change: function(field, newValue) {
+						field.setValue(newValue.toUpperCase());
+					}
+				}
+			}]
+		},{
+			xtype: 'buttongroup',
+			columns: 1,
+			defaults: {
+				scale: 'small'
+			},
+			items: [{
+				iconCls: 'icon-add',
+				text: 'Add',
+				handler: function() {
+					var total = grupPerluasan.getCount();
+
+					var data = Ext.create('DataGridPerluasan', {
+						fs_jenis_perluasan: Ext.getCmp('cboJnsPerluasan').getValue(),
+						fn_tahun_ke: Ext.getCmp('txtTenorPerluasan').getValue(),
+					});
+
+					var fs_jenis_perluasan = Ext.getCmp('cboJnsPerluasan').getValue();
+					if (fs_jenis_perluasan === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Jenis Perluasan, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fn_tahun_ke = Ext.getCmp('txtTenorPerluasan').getValue();
+					if (fn_tahun_ke === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Tenor, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					grupPerluasan.insert(total, data);
+
+					Ext.getCmp('cboJnsPerluasan').setValue('');
+					Ext.getCmp('txtTenorPerluasan').setValue('');
+
+					total = grupPerluasan.getCount() - 1;
+					winGrid11.getSelectionModel().select(total);
+				}
+			},{
+				iconCls: 'icon-delete',
+				itemId: 'removeData',
+				text: 'Delete',
+				handler: function() {
+					var sm = winGrid11.getSelectionModel();
+					grupPerluasan.remove(sm.getSelection());
+					winGrid11.getView().refresh();
+
+					if (grupPerluasan.getCount() > 0) {
+						sm.select(0);
+					}
+				},
+				disabled: true
+			}]
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupPerluasan,
 			items:[
 				'-', {
 				text: 'Exit',
@@ -2130,6 +2369,11 @@ Ext.onReady(function() {
 				}
 			}]
 		}),
+		listeners: {
+			selectionchange: function(view, records) {
+				winGrid11.down('#removeData').setDisabled(!records.length);
+			}
+		},
 		viewConfig: {
 			getRowClass: function() {
 				return 'rowwrap';
@@ -2155,7 +2399,311 @@ Ext.onReady(function() {
 				vMask.hide();
 			},
 			beforeshow: function() {
+				grupPerluasan.load();
+				vMask.show();
+			}
+		}
+	});
 
+	var winGrid12 = Ext.create('Ext.grid.Panel', {
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 750,
+		sortableColumns: false,
+		store: grupTransaksi,
+		columns: [
+			{xtype: 'rownumberer', width: 25},
+			{text: "Kode", dataIndex: 'fs_kode_transaksi', menuDisabled: true, flex: 0.5},
+			{text: "Nama Transaksi", dataIndex: 'fs_nama_transaksi', menuDisabled: true, flex: 2},
+			{text: "Persentase", dataIndex: 'fn_persentase_nilai_transaksi', menuDisabled: true, flex: 1},
+			{text: "Nilai Transaksi", dataIndex: 'fn_nilai_transaksi', menuDisabled: true, flex: 1},
+			{text: "Ditagih Konsumen", dataIndex: 'fs_tagih_ke_konsumen', menuDisabled: true, flex: 1},
+			{text: "Cair ke Dealer", dataIndex: 'fs_cair_ke_dealer', menuDisabled: true, flex: 1},
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				emptyText: 'Kode',
+				fieldLabel: 'Kode',
+				editable: false,
+				id: 'cboKodeTransaksi',
+				name: 'cboKodeTransaksi',
+				labelAlign: 'top',
+				xtype: 'textfield',
+				triggers: {
+					reset: {
+						cls: 'x-form-clear-trigger',
+						handler: function(field) {
+							field.setValue('');
+						}
+					},
+					cari: {
+						cls: 'x-form-search-trigger',
+						handler: function() {
+							winCariMTrans.show();
+							winCariMTrans.center();
+						}
+					}
+				}
+			}]
+		},{
+			flex: 2.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				emptyText: '',
+				fieldLabel: 'Nama Transaksi',
+				fieldStyle: 'text-transform: uppercase;',
+				id: 'txtNamaTransaksi',
+				name: 'txtNamaTransaksi',
+				labelAlign: 'top',
+				xtype: 'textfield',
+				listeners: {
+					change: function(field, newValue) {
+						field.setValue(newValue.toUpperCase());
+					}
+				}
+			}]
+		},{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				emptyText: '',
+				fieldLabel: 'Persentase',
+				fieldStyle: 'text-transform: uppercase;',
+				id: 'txtPersentase',
+				name: 'txtPersentase',
+				labelAlign: 'top',
+				xtype: 'textfield',
+				listeners: {
+					change: function(field, newValue) {
+						field.setValue(newValue.toUpperCase());
+					}
+				}
+			}]
+		},{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				emptyText: '',
+				fieldLabel: 'Nilai Transaksi',
+				fieldStyle: 'text-transform: uppercase;',
+				id: 'txtNilaiTransaksi',
+				name: 'txtNilaiTransaksi',
+				labelAlign: 'top',
+				xtype: 'textfield',
+				listeners: {
+					change: function(field, newValue) {
+						field.setValue(newValue.toUpperCase());
+					}
+				}
+			}]
+		},{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				displayField: 'fs_nama',
+				editable: false,
+				fieldLabel: 'Termasuk DP',
+				id: 'cboDitagihKonsumen',
+				name: 'cboDitagihKonsumen',
+				labelAlign: 'top',
+				store: grupTagihKonsumen,
+				valueField: 'fs_kode',
+				xtype: 'combobox'
+			}]
+		},{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '95%',
+				displayField: 'fs_nama',
+				editable: false,
+				fieldLabel: 'Tambah Cair',
+				id: 'cboCairKeDealer',
+				name: 'cboCairKeDealer',
+				labelAlign: 'top',
+				store: grupCairDealer,
+				valueField: 'fs_kode',
+				xtype: 'combobox'
+			}]
+		},{
+			xtype: 'buttongroup',
+			columns: 1,
+			defaults: {
+				scale: 'small'
+			},
+			items: [{
+				iconCls: 'icon-add',
+				text: 'Add',
+				handler: function() {
+					var total = grupTransaksi.getCount();
+
+					var data = Ext.create('DataGridTransaksi', {
+						fs_kode_transaksi: Ext.getCmp('cboKodeTransaksi').getValue(),
+						fs_nama_transaksi: Ext.getCmp('txtNamaTransaksi').getValue(),
+						fn_persentase_nilai_transaksi: Ext.getCmp('txtPersentase').getValue(),
+						fn_nilai_transaksi: Ext.getCmp('txtNilaiTransaksi').getValue(),
+						fs_tagih_ke_konsumen: Ext.getCmp('cboDitagihKonsumen').getValue(),
+						fs_cair_ke_dealer: Ext.getCmp('cboCairKeDealer').getValue()
+					});
+
+					var fs_kode_transaksi = Ext.getCmp('cboKodeTransaksi').getValue();
+					if (fs_kode_transaksi === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Kode Transaksi, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fs_nama_transaksi = Ext.getCmp('txtNamaTransaksi').getValue();
+					if (fs_nama_transaksi === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Nama Transaksi, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fn_persentase_nilai_transaksi = Ext.getCmp('txtPersentase').getValue();
+					if (fn_persentase_nilai_transaksi === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Persentase, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fn_nilai_transaksi = Ext.getCmp('txtNilaiTransaksi').getValue();
+					if (fn_nilai_transaksi === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Nilai Transaksi, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fs_tagih_ke_konsumen = Ext.getCmp('cboDitagihKonsumen').getValue();
+					if (fs_tagih_ke_konsumen === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Termasuk DP, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var fs_cair_ke_dealer = Ext.getCmp('cboCairKeDealer').getValue();
+					if (fs_cair_ke_dealer === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Tambah Cair, belum diisi!',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					grupTransaksi.insert(total, data);
+
+					Ext.getCmp('cboKodeTransaksi').setValue('');
+					Ext.getCmp('txtNamaTransaksi').setValue('');
+					Ext.getCmp('txtPersentase').setValue('');
+					Ext.getCmp('txtNilaiTransaksi').setValue('');
+					Ext.getCmp('cboDitagihKonsumen').setValue('');
+					Ext.getCmp('cboCairKeDealer').setValue('');
+
+					total = grupTransaksi.getCount() - 1;
+					winGrid12.getSelectionModel().select(total);
+				}
+			},{
+				iconCls: 'icon-delete',
+				itemId: 'removeData',
+				text: 'Delete',
+				handler: function() {
+					var sm = winGrid12.getSelectionModel();
+					grupTransaksi.remove(sm.getSelection());
+					winGrid12.getView().refresh();
+
+					if (grupTransaksi.getCount() > 0) {
+						sm.select(0);
+					}
+				},
+				disabled: true
+			}]
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupTransaksi,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari12.hide();
+				}
+			}]
+		}),
+		listeners: {
+			selectionchange: function(view, records) {
+				winGrid12.down('#removeData').setDisabled(!records.length);
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
+	});
+
+	var winCari12 = Ext.create('Ext.window.Window', {
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Penambahan Kode Transaksi',
+		items: [
+			winGrid12
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupTransaksi.load();
 				vMask.show();
 			}
 		}
@@ -3797,7 +4345,7 @@ Ext.onReady(function() {
 		name: 'btnTambahTransaksi',
 		text: 'Tambah Kode Transaksi',
 		xtype: 'button',
-		handler: ''
+		handler: fnShowTransaksi
 	};
 
 	var txtSelisihTotalDP = {
@@ -4812,6 +5360,11 @@ Ext.onReady(function() {
 		winCari11.center();
 	}
 
+	function fnShowTransaksi() {
+		winCari12.show();
+		winCari12.center();
+	}
+
 	// FUNCTIONS FIELD DISABLED
 	function fnDisablePasangan() {
 		// FIELDSET PASANGAN DISABLE
@@ -5401,6 +5954,32 @@ Ext.onReady(function() {
 	}
 
 	function fnSaveDataStrukturKredit() {
+		var xjenis_perluasan = '';
+		var xtahun_ke = '';
+		var xkode_transaksi = '';
+		var xnama_transaksi = '';
+		var xpersentase_nilai_transaksi = '';
+		var xnilai_transaksi = '';
+		var xtagih_ke_konsumen = '';
+		var xcair_ke_dealer = '';
+
+		var store = winGrid11.getStore();
+		store.each(function(record, idx) {
+			xjenis_perluasan = xjenis_perluasan +'|'+ record.get('fs_jenis_perluasan');
+			xtahun_ke = xtahun_ke +'|'+ record.get('fn_tahun_ke');
+		});
+
+		store = winGrid12.getStore();
+		store.each(function(record, idx) {
+			xkode_transaksi = xkode_transaksi +'|'+ record.get('fs_kode_transaksi');
+			xnama_transaksi = xnama_transaksi +'|'+ record.get('fs_nama_transaksi');
+			xpersentase_nilai_transaksi = xpersentase_nilai_transaksi +'|'+ record.get('fn_persentase_nilai_transaksi');
+			xnilai_transaksi = xnilai_transaksi +'|'+ record.get('fn_nilai_transaksi');
+			xtagih_ke_konsumen = xtagih_ke_konsumen +'|'+ record.get('fs_tagih_ke_konsumen');
+			xcair_ke_dealer = xcair_ke_dealer +'|'+ record.get('fs_cair_ke_dealer');
+		});
+
+		Ext.Ajax.setTimeout(60000);
 		Ext.Ajax.on('beforerequest', fnMaskShow);
 		Ext.Ajax.on('requestcomplete', fnMaskHide);
 		Ext.Ajax.on('requestexception', fnMaskHide);
@@ -5446,7 +6025,17 @@ Ext.onReady(function() {
 				'fn_kali_masa_angsuran_konsumen': '',
 				'fn_bunga_konsumen': '',
 				'fn_angsuran_konsumen': '',
-				'fn_angsuran_tidak_sama_konsumen': ''
+				'fn_angsuran_tidak_sama_konsumen': '',
+				// FIELD PERLUASAN
+				'fs_jenis_perluasan': xjenis_perluasan,
+				'fn_tahun_ke': xtahun_ke,
+				// FIELD DETAIL TRANSAKSI
+				'fs_kode_transaksi': xkode_transaksi,
+				'fs_nama_transaksi': xnama_transaksi,
+				'fn_persentase_nilai_transaksi': xpersentase_nilai_transaksi,
+				'fn_nilai_transaksi': xnilai_transaksi,
+				'fs_tagih_ke_konsumen': xtagih_ke_konsumen,
+				'fs_cair_ke_dealer': xcair_ke_dealer
 			},
 			success: function(response) {
 				var xtext = Ext.decode(response.responseText);

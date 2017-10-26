@@ -429,6 +429,36 @@ class MSearch extends CI_Model {
 		return $sSQL;
 	}
 
+	public function listMasterTransAll($sCari)
+	{
+		$xSQL = ("
+			SELECT fs_kode_transaksi, fs_nama_transaksi, 
+				fs_kode_perkiraan, fs_penjelasan_transaksi 
+			FROM tm_detailtransaksi
+			WHERE fs_aktif = '1'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listMasterTrans($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_kode_transaksi, fs_nama_transaksi, 
+				fs_kode_perkiraan, fs_penjelasan_transaksi 
+			FROM tm_detailtransaksi
+			WHERE fs_aktif = '1'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fs_kode_transaksi ASC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function listTransaksiAll($sKdCab, $nApk)
 	{
 		$xSQL = ("

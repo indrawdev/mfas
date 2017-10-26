@@ -455,6 +455,86 @@ class Apkbadanusaha extends CI_Controller {
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
+	public function gridperluasan() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listPerluasanAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listPerluasan($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fn_no_apk' => trim($xRow->fn_no_apk),
+					'fs_jenis_perluasan' => trim($xRow->fs_jenis_perluasan),
+					'fn_tahun_ke' => trim($xRow->fn_tahun_ke)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
+	public function gridmastertrans() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listMasterTransAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listMasterTrans($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fs_kode_transaksi' => trim($xRow->fs_kode_transaksi),
+					'fs_nama_transaksi' => trim($xRow->fs_nama_transaksi),
+					'fs_kode_perkiraan' => trim($xRow->fs_kode_perkiraan),
+					'fs_penjelasan_transaksi' => trim($xRow->fs_penjelasan_transaksi)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
+	public function gridtransaksi() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listTransaksiAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listTransaksi($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fn_no_apk' => trim($xRow->fn_no_apk),
+					'fs_kode_transaksi' => trim($xRow->fs_kode_transaksi),
+					'fs_nama_transaksi' => trim($xRow->fs_nama_transaksi),
+					'fs_persentase_nilai_transaksi' => trim($xRow->fs_persentase_nilai_transaksi),
+					'fn_nilai_transaksi' => trim($xRow->fn_nilai_transaksi),
+					'fs_tagih_ke_konsumen' => trim($xRow->fs_tagih_ke_konsumen),
+					'fs_cair_ke_dealer' => trim($xRow->fs_cair_ke_dealer)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
 	// TAB DATA UTAMA
 	public function ceksavedatautama() {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
@@ -893,6 +973,18 @@ class Apkbadanusaha extends CI_Controller {
 		$angsurankonsumen = $this->input->post('fn_angsuran_konsumen');
 		$angsurantidaksamakonsumen = $this->input->post('fn_angsuran_tidak_sama_konsumen');
 
+		// detail perluasan
+		$tahunke = explode('|', $this->input->post('fn_tahun_ke'));
+		$jenisperluasan = explode('|', $this->input->post('fs_jenis_perluasan'));
+		
+		// detail transaksi
+		$kodetransaksi = explode('|', $this->input->post('fs_kode_transaksi'));
+		$namatransaksi = explode('|', $this->input->post('fs_nama_transaksi'));
+		$persentasenilaitransaksi = explode('|', $this->input->post('fn_persentase_nilai_transaksi'));
+		$nilaitransaksi = explode('|', $this->input->post('fn_nilai_transaksi'));
+		$tagihkekonsumen = explode('|', $this->input->post('fs_tagih_ke_konsumen'));
+		$cairkedealer = explode('|', $this->input->post('fs_cair_ke_dealer'));
+
 		$update = false;
 		$this->load->model('MApkBadanUsaha');
 		$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
@@ -942,14 +1034,62 @@ class Apkbadanusaha extends CI_Controller {
 		);
 
 		if ($update == true) {
+
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+
+			// hapus detail perluasan
+			$this->db->where($where);
+			$this->db->delete('tx_apk_perluasan');
+
+			// hapus detail transaksi
+			$this->db->where($where);
+			$this->db->delete('tx_apk_detailtransaksi');
+
+			// update data struktur kredit 
 			$dt1 = array(
 				'fs_user_edit' => trim($user),
 				'fd_tanggal_edit' => date('Y-m-d H:i:s')
 			);
 			$data = array_merge($dt, $dt1);
-			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
 			$this->db->where($where);
 			$this->db->update('tx_apk', $data);
+
+			// simpan detail perluasan
+			$jml1 = count($jenisperluasan) - 1;
+			if ($jml1 <> 0) {
+				for ($i=1; $i<=$jml1; $i++) {
+					$data = array(
+						'fs_kode_cabang' => trim($cabang),
+						'fn_no_apk' => trim($noapk),
+						'fn_tahun_ke' => trim($tahunke[$i]),
+						'fs_jenis_perluasan' => trim($jenisperluasan[$i]),
+						'fs_user_buat' => trim($user),
+						'fd_tanggal_buat' => date('Y-m-d H:i:s')
+					);
+					$this->db->insert('tx_apk_perluasan', $data);
+				}
+			}
+
+			// simpan detail transaksi
+			$jml2 = count($kodetransaksi) - 1;
+			if ($jml2 <> 0) {
+				for ($i=1; $i<=$jml2; $i++) {
+					$data = array(
+						'fs_kode_cabang' => trim($cabang),
+						'fn_no_apk' => trim($noapk),
+						'fs_kode_transaksi' => trim($kodetransaksi[$i]),
+						'fs_nama_transaksi' => trim($namatransaksi[$i]),
+						'fn_persentase_nilai_transaksi' => trim($persentasenilaitransaksi[$i]),
+						'fn_nilai_transaksi' => trim($nilaitransaksi[$i]),
+						'fs_tagih_ke_konsumen' => trim($tagihkekonsumen[$i]),
+						'fs_cair_ke_dealer' => trim($cairkedealer[$i]),
+						'fs_user_buat' => trim($user),
+						'fd_tanggal_buat' => date('Y-m-d H:i:s')
+					);
+					$this->db->insert('tx_apk_detailtransaksi', $data);
+				}
+			}
+
 			$hasil = array(
 						'sukses' => true,
 						'hasil' => 'Update Data APK '.trim($noapk).', Sukses!!'
