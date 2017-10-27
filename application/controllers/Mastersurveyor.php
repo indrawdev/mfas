@@ -15,7 +15,21 @@ class Mastersurveyor extends CI_Controller {
 	}
 
 	public function grid() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$this->db->trans_start();
+		$this->load->model('MMasterSurveyor');
+		$sSQL = $this->MMasterSurveyor->listSurveyorAll($sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MMasterSurveyor->listSurveyor($sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			
+		}
 	}
 
 	public function ceksave() {

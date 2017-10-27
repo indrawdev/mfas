@@ -456,22 +456,23 @@ class Apkbadanusaha extends CI_Controller {
 	}
 
 	public function gridperluasan() {
-		$sCari = trim($this->input->post('fs_cari'));
+		$sKdCab = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$nApk = $this->input->post('fn_no_apk');
+
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
 		$this->load->model('MSearch');
-		$sSQL = $this->MSearch->listPerluasanAll($sCari);
+		$sSQL = $this->MSearch->listPerluasanAll($sKdCab, $nApk);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MSearch->listPerluasan($sCari, $nStart, $nLimit);
+		$sSQL = $this->MSearch->listPerluasan($sKdCab, $nApk, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-					'fn_no_apk' => trim($xRow->fn_no_apk),
 					'fs_jenis_perluasan' => trim($xRow->fs_jenis_perluasan),
 					'fn_tahun_ke' => trim($xRow->fn_tahun_ke)
 				);
@@ -507,25 +508,26 @@ class Apkbadanusaha extends CI_Controller {
 	}
 
 	public function gridtransaksi() {
-		$sCari = trim($this->input->post('fs_cari'));
+		$sKdCab = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$nApk = $this->input->post('fn_no_apk');
+
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
 		$this->load->model('MSearch');
-		$sSQL = $this->MSearch->listTransaksiAll($sCari);
+		$sSQL = $this->MSearch->listTransaksiAll($sKdCab, $nApk);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MSearch->listTransaksi($sCari, $nStart, $nLimit);
+		$sSQL = $this->MSearch->listTransaksi($sKdCab, $nApk, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-					'fn_no_apk' => trim($xRow->fn_no_apk),
 					'fs_kode_transaksi' => trim($xRow->fs_kode_transaksi),
 					'fs_nama_transaksi' => trim($xRow->fs_nama_transaksi),
-					'fs_persentase_nilai_transaksi' => trim($xRow->fs_persentase_nilai_transaksi),
+					'fn_persentase_nilai_transaksi' => trim($xRow->fn_persentase_nilai_transaksi),
 					'fn_nilai_transaksi' => trim($xRow->fn_nilai_transaksi),
 					'fs_tagih_ke_konsumen' => trim($xRow->fs_tagih_ke_konsumen),
 					'fs_cair_ke_dealer' => trim($xRow->fs_cair_ke_dealer)
@@ -533,6 +535,72 @@ class Apkbadanusaha extends CI_Controller {
 			}
 		}
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
+	// SHOW PREVIEW APK
+	public function preview($cabang, $noapk) {
+		$this->load->library('Pdf');
+		$this->load->model('MReport');
+
+		$data['user'] = $this->encryption->decrypt($this->session->userdata('username'));
+		$data['cabang'] = $this->MReport->cabang($cabang, $noapk);
+		$data['detail'] = $this->MReport->detail($cabang, $noapk);
+		$data['pjj'] = $this->MReport->pjj($cabang, $noapk);
+
+		// referensi
+		$data['jenis_piutang'] = $this->MReport->ref_jenis_piutang($cabang, $noapk);
+		$data['pola_transaksi'] = $this->MReport->ref_pola_transaksi($cabang, $noapk);
+		$data['pola_angsuran'] = $this->MReport->ref_pola_angsuran($cabang, $noapk);
+		$data['agama'] = $this->MReport->ref_agama($cabang, $noapk);
+		$data['pendidikan'] = $this->MReport->ref_pendidikan($cabang, $noapk);
+		$data['cara_bayar'] = $this->MReport->ref_cara_bayar($cabang, $noapk);
+		$data['status_konsumen'] = $this->MReport->ref_status_konsumen($cabang, $noapk);
+		$data['status_rumah'] = $this->MReport->ref_status_rumah($cabang, $noapk);
+		$data['skala_perusahaan'] = $this->MReport->ref_skala_perusahaan($cabang, $noapk);
+		$data['kondisi_lingkungan'] = $this->MReport->ref_kondisi_lingkungan($cabang, $noapk);
+		$data['kondisi_kantor'] = $this->MReport->ref_kondisi_kantor($cabang, $noapk);
+		$data['jenis_asuransi'] = $this->MReport->ref_jenis_asuransi($cabang, $noapk);
+		$data['keputusan_kredit'] = $this->MReport->ref_keputusan_kredit($cabang, $noapk);
+
+		// bidang usaha
+		$data['lembaga_keuangan'] = $this->MReport->lembaga_keuangan($cabang, $noapk);
+		$data['dealer'] = $this->MReport->dealer($cabang, $noapk);
+		$data['dati'] = $this->MReport->dati($cabang, $noapk);
+		$data['kategori_usaha'] = $this->MReport->kategori_usaha($cabang, $noapk);
+		$data['usaha_konsumen'] = $this->MReport->usaha_konsumen($cabang, $noapk);
+		$data['usaha_pasangan'] = $this->MReport->usaha_pasangan($cabang, $noapk);
+		$data['usaha_penjamin'] = $this->MReport->usaha_penjamin($cabang, $noapk);
+		$data['kendaraan'] = $this->MReport->kendaraan($cabang, $noapk);
+		$data['denda_perhari'] = $this->MReport->denda_perhari();
+		$data['detailltransaksi'] = $this->MReport->detailltransaksi($cabang, $noapk);
+		$data['asuransi'] = $this->MReport->asuransi($cabang, $noapk);
+		$data['pengurus'] = $this->MReport->pengurus($cabang, $noapk);
+		$data['data_asuransi'] = $this->MReport->data_asuransi($cabang, $noapk);
+		$data['data_asuransi_notmix'] = $this->MReport->data_asuransi_notmix($cabang, $noapk);
+		$data['data_perluasan'] = $this->MReport->data_perluasan($cabang, $noapk);
+		$data['internal_checking'] = $this->MReport->internal_checking($cabang, $noapk);
+		$data['reject_checking'] = $this->MReport->reject_checking($cabang, $noapk);
+		$data['family_checking'] = $this->MReport->family_checking($cabang, $noapk);
+		$data['tanggal_cetak_spk'] = $this->MReport->tanggal_cetak_spk($cabang, $noapk);
+		$data['tanggal_cetak_spo'] = $this->MReport->tanggal_cetak_spo($cabang, $noapk);
+
+		$html = $this->load->view('print/vbadanusaha', $data, true);
+		$pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+		$pdf->SetTitle('DAFTAR PEMERIKSAAN APK');
+		$pdf->SetPrintHeader(false);
+		$pdf->SetPrintFooter(false);
+		$pdf->SetAutoPageBreak(True, PDF_MARGIN_FOOTER);
+		$pdf->SetAuthor('MFAS');
+		$pdf->SetDisplayMode('real', 'default');
+		$pdf->SetFont('', '', 7.4, '', false);
+		$pdf->AddPage('P', 'A4');
+		$pdf->writeHTML($html, true, false, true, false, '');
+		$pdf->lastPage();
+		$pdf->Output('daftar-fpd-cabang.pdf', 'I');
+	}
+
+	public function duplikasi() {
+		
 	}
 
 	// TAB DATA UTAMA
@@ -973,18 +1041,6 @@ class Apkbadanusaha extends CI_Controller {
 		$angsurankonsumen = $this->input->post('fn_angsuran_konsumen');
 		$angsurantidaksamakonsumen = $this->input->post('fn_angsuran_tidak_sama_konsumen');
 
-		// detail perluasan
-		$tahunke = explode('|', $this->input->post('fn_tahun_ke'));
-		$jenisperluasan = explode('|', $this->input->post('fs_jenis_perluasan'));
-		
-		// detail transaksi
-		$kodetransaksi = explode('|', $this->input->post('fs_kode_transaksi'));
-		$namatransaksi = explode('|', $this->input->post('fs_nama_transaksi'));
-		$persentasenilaitransaksi = explode('|', $this->input->post('fn_persentase_nilai_transaksi'));
-		$nilaitransaksi = explode('|', $this->input->post('fn_nilai_transaksi'));
-		$tagihkekonsumen = explode('|', $this->input->post('fs_tagih_ke_konsumen'));
-		$cairkedealer = explode('|', $this->input->post('fs_cair_ke_dealer'));
-
 		$update = false;
 		$this->load->model('MApkBadanUsaha');
 		$sSQL = $this->MApkBadanUsaha->checkAPK($cabang, $noapk);
@@ -1036,15 +1092,6 @@ class Apkbadanusaha extends CI_Controller {
 		if ($update == true) {
 
 			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
-
-			// hapus detail perluasan
-			$this->db->where($where);
-			$this->db->delete('tx_apk_perluasan');
-
-			// hapus detail transaksi
-			$this->db->where($where);
-			$this->db->delete('tx_apk_detailtransaksi');
-
 			// update data struktur kredit 
 			$dt1 = array(
 				'fs_user_edit' => trim($user),
@@ -1054,41 +1101,6 @@ class Apkbadanusaha extends CI_Controller {
 			$this->db->where($where);
 			$this->db->update('tx_apk', $data);
 
-			// simpan detail perluasan
-			$jml1 = count($jenisperluasan) - 1;
-			if ($jml1 <> 0) {
-				for ($i=1; $i<=$jml1; $i++) {
-					$data = array(
-						'fs_kode_cabang' => trim($cabang),
-						'fn_no_apk' => trim($noapk),
-						'fn_tahun_ke' => trim($tahunke[$i]),
-						'fs_jenis_perluasan' => trim($jenisperluasan[$i]),
-						'fs_user_buat' => trim($user),
-						'fd_tanggal_buat' => date('Y-m-d H:i:s')
-					);
-					$this->db->insert('tx_apk_perluasan', $data);
-				}
-			}
-
-			// simpan detail transaksi
-			$jml2 = count($kodetransaksi) - 1;
-			if ($jml2 <> 0) {
-				for ($i=1; $i<=$jml2; $i++) {
-					$data = array(
-						'fs_kode_cabang' => trim($cabang),
-						'fn_no_apk' => trim($noapk),
-						'fs_kode_transaksi' => trim($kodetransaksi[$i]),
-						'fs_nama_transaksi' => trim($namatransaksi[$i]),
-						'fn_persentase_nilai_transaksi' => trim($persentasenilaitransaksi[$i]),
-						'fn_nilai_transaksi' => trim($nilaitransaksi[$i]),
-						'fs_tagih_ke_konsumen' => trim($tagihkekonsumen[$i]),
-						'fs_cair_ke_dealer' => trim($cairkedealer[$i]),
-						'fs_user_buat' => trim($user),
-						'fd_tanggal_buat' => date('Y-m-d H:i:s')
-					);
-					$this->db->insert('tx_apk_detailtransaksi', $data);
-				}
-			}
 
 			$hasil = array(
 						'sukses' => true,
@@ -1102,6 +1114,150 @@ class Apkbadanusaha extends CI_Controller {
 					);
 			echo json_encode($hasil);
 		}
+	}
+
+	// POPUP DATA PERLUASAN
+	public function ceksavedataperluasan() {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkPerorangan');
+			$sSQL = $this->MApkPerorangan->checkPerluasan($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			} else {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin tambah baru?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, Data Perluasan Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
+	}
+
+	public function savedataperluasan() {
+		$user = $this->encryption->decrypt($this->session->userdata('username'));
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$noapk = $this->input->post('fn_no_apk');
+
+		// detail perluasan
+		$tahunke = explode('|', $this->input->post('fn_tahun_ke'));
+		$jenisperluasan = explode('|', $this->input->post('fs_jenis_perluasan'));
+
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			
+		// hapus detail perluasan
+		$this->db->where($where);
+		$this->db->delete('tx_apk_perluasan');
+
+		// simpan detail perluasan
+		$jml = count($jenisperluasan) - 1;
+		if ($jml <> 0) {
+			for ($i=1; $i<=$jml; $i++) {
+				$data = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($noapk),
+					'fn_tahun_ke' => trim($tahunke[$i]),
+					'fs_jenis_perluasan' => trim($jenisperluasan[$i]),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_perluasan', $data);
+			}
+		}
+
+		$hasil = array(
+					'sukses' => true,
+					'hasil' => 'Update Data Perluasan, Sukses!!'
+				);
+		echo json_encode($hasil);
+	}
+
+	// POPUP DATA TRANSAKSI
+	public function ceksavedatatransaksi() {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$noapk = $this->input->post('fn_no_apk');
+
+		if (!empty($cabang) && !empty($noapk)) {
+			$this->load->model('MApkPerorangan');
+			$sSQL = $this->MApkPerorangan->checkTransaksi($cabang, $noapk);
+			if ($sSQL->num_rows() > 0) {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin meng-update?'
+					);
+				echo json_encode($hasil);
+			} else {
+				$hasil = array(
+						'sukses' => true,
+						'hasil' => 'Apakah Anda ingin tambah baru?'
+					);
+				echo json_encode($hasil);
+			}
+		} else {
+			$hasil = array(
+					'sukses' => false,
+					'hasil' => 'Gagal Simpan, Detail Transaksi Tidak ada...'
+				);
+			echo json_encode($hasil);
+		}
+	}
+
+	public function savedatatransaksi() {
+		$user = $this->encryption->decrypt($this->session->userdata('username'));
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		$noapk = $this->input->post('fn_no_apk');
+
+		// detail transaksi
+		$kodetransaksi = explode('|', $this->input->post('fs_kode_transaksi'));
+		$namatransaksi = explode('|', $this->input->post('fs_nama_transaksi'));
+		$persentasenilaitransaksi = explode('|', $this->input->post('fn_persentase_nilai_transaksi'));
+		$nilaitransaksi = explode('|', $this->input->post('fn_nilai_transaksi'));
+		$tagihkekonsumen = explode('|', $this->input->post('fs_tagih_ke_konsumen'));
+		$cairkedealer = explode('|', $this->input->post('fs_cair_ke_dealer'));
+
+		$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			
+		// hapus detail transaksi
+		$this->db->where($where);
+		$this->db->delete('tx_apk_detailtransaksi');
+
+		// simpan detail transaksi
+		$jml = count($kodetransaksi) - 1;
+		if ($jml <> 0) {
+			for ($i=1; $i<=$jml; $i++) {
+				$data = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($noapk),
+					'fs_kode_transaksi' => trim($kodetransaksi[$i]),
+					'fs_nama_transaksi' => trim($namatransaksi[$i]),
+					'fn_persentase_nilai_transaksi' => trim($persentasenilaitransaksi[$i]),
+					'fn_nilai_transaksi' => trim($nilaitransaksi[$i]),
+					'fs_tagih_ke_konsumen' => trim($tagihkekonsumen[$i]),
+					'fs_cair_ke_dealer' => trim($cairkedealer[$i]),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_detailtransaksi', $data);
+			}
+		}
+
+		$hasil = array(
+					'sukses' => true,
+					'hasil' => 'Update Data Transaksi, Sukses!!'
+				);
+		echo json_encode($hasil);
 	}
 
 	// TAB DATA PENGURUS

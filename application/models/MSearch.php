@@ -463,7 +463,7 @@ class MSearch extends CI_Model {
 	{
 		$xSQL = ("
 			SELECT fs_kode_transaksi, fs_nama_transaksi, 
-				fs_persentase_nilai_transaksi, fn_nilai_transaksi, 
+				fn_persentase_nilai_transaksi, fn_nilai_transaksi, 
 				fs_tagih_ke_konsumen, fs_cair_ke_dealer
 			FROM tx_apk_detailtransaksi
 			WHERE fs_kode_cabang = '".trim($sKdCab)."'
@@ -478,7 +478,7 @@ class MSearch extends CI_Model {
 	{
 		$xSQL = ("
 			SELECT fs_kode_transaksi, fs_nama_transaksi, 
-				fs_persentase_nilai_transaksi, fn_nilai_transaksi, 
+				fn_persentase_nilai_transaksi, fn_nilai_transaksi, 
 				fs_tagih_ke_konsumen, fs_cair_ke_dealer
 			FROM tx_apk_detailtransaksi
 			WHERE fs_kode_cabang = '".trim($sKdCab)."'

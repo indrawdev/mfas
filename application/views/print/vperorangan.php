@@ -106,7 +106,7 @@
 			<td width="16%" align="left">Tempat/Tgl.Lahir</td>
 			<td width="1%">:</td>
 			<td width="30%" align="left">
-			<?php echo $detail->fs_tempat_lahir_konsumen; ?>, <?php if (!empty($detail->fd_tanggal_lahir_konsumen)) { echo tanggal_indo($detail->fd_tanggal_lahir_konsumen); } else { echo '-'; } ?>
+			<?php echo $detail->fs_tempat_lahir_konsumen; ?>, <?php if (!empty($detail->fd_tanggal_lahir_konsumen)) { echo $detail->fd_tanggal_lahir_konsumen; } else { echo '-'; } ?>
 			</td>
 			<td width="10%" align="left">Agama</td>
 			<td width="1%">:</td>
@@ -562,7 +562,7 @@
 			<td width="1%">:</td>
 			<td width="15%" align="left" style="border-right: 1px solid black;"><?php echo number_format($detail->fn_jumlah_angsuran_dimuka); ?></td>
 			<td width="2%"></td>
-			<td width="13%" align="left">U. Muka (<?php echo substr($detail->fs_uang_muka_dealer,0,2)?>%-<?php echo substr($detail->fs_uang_muka_dealer,0,2)?>%)</td>
+			<td width="13%" align="left">U. Muka (<?php echo substr($detail->fn_uang_muka_dealer,0,2)?>%-<?php echo substr($detail->fn_uang_muka_dealer,0,2)?>%)</td>
 			<td width="1%">:</td>
 			<td width="14%" align="right"><?php echo number_format($detail->fn_uang_muka_dealer); ?></td>
 			<td width="2%" style="border-right: 1px solid black;"></td>
@@ -800,7 +800,7 @@
 			<td width="2%"></td>
 			<td width="10%" align="left">Tanggal Cair</td>
 			<td width="1%">:</td>
-			<td width="10%" align="left"><?php echo tanggal_indo($detail->fd_tanggal_perjanjian); ?></td>
+			<td width="10%" align="left"><?php echo $detail->fd_tanggal_perjanjian; ?></td>
 			<td width="5%"></td>
 			<td width="5%" align="left">A/N</td>
 			<td width="1%">:</td>
@@ -860,7 +860,7 @@
 			<td width="2%"></td>
 			<td width="15%" align="left">Tanggal Angsuran I</td>
 			<td width="1%">:</td>
-			<td width="20%" align="left"><?php echo tanggal_indo($detail->fd_tanggal_angsuran_pertama); ?></td>
+			<td width="20%" align="left"><?php echo $detail->fd_tanggal_angsuran_pertama; ?></td>
 		</tr>
 		<tr>
 			<td width="2%"></td>
@@ -886,7 +886,7 @@
 		<tr>
 			<td width="2%"></td>
 			<td width="30%" align="left"><?php echo $key->fs_kode_transaksi ." - ". $key->fs_nama_transaksi; ?></td>
-			<td width="7%" align="left"><?php echo substr($key->fs_persentase_nilai_transaksi, 0, -3) . '%'; ?></td>
+			<td width="7%" align="left"><?php echo substr($key->fn_persentase_nilai_transaksi, 0, -3) . '%'; ?></td>
 			<td width="1%">:</td>
 			<td width="10%" align="right"><?php echo number_format($key->fn_nilai_transaksi); ?></td>
 			<td width="1%"></td>
