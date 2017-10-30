@@ -18,6 +18,10 @@ Ext.onReady(function() {
 
 	var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
 
+	var frmMasterReferensi = Ext.create('Ext.form.Panel', {
+
+	});
+	
 	var vMask = new Ext.LoadMask({
 		msg: 'Please wait...',
 		target: frmMasterReferensi

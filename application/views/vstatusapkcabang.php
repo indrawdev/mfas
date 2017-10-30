@@ -17,7 +17,7 @@
 		var gBasePanel = '<?php echo config_item('base_panel');?>';
 
 	</script>
-	<script type="text/javascript" src="<?php echo config_item('base_js');?>statusapk.js?cb=<?php echo time()?>"></script>
+	<script type="text/javascript" src="<?php echo config_item('base_js');?>statusapkcabang.js?cb=<?php echo time()?>"></script>
 </head>
 <body>
 </body>
