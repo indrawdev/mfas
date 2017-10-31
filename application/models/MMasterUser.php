@@ -81,11 +81,11 @@ class MMasterUser extends CI_Model
 		return $sSQL;
 	}
 
-	public function listLokasiAll($sCari)
+	public function listCabangAll($sCari)
 	{
 		$xSQL = ("
-			SELECT fs_kode_lokasi, fs_nama_lokasi
-			FROM tm_lokasi
+			SELECT fs_kode_cabang, fs_nama_cabang
+			FROM tm_cabang
 			WHERE fs_aktif = '1'
 		");
 
@@ -93,16 +93,16 @@ class MMasterUser extends CI_Model
 		return $sSQL;
 	}
 
-	public function listLokasi($sCari, $nStart, $nLimit)
+	public function listCabang($sCari, $nStart, $nLimit)
 	{
 		$xSQL = ("
-			SELECT fs_kode_lokasi, fs_nama_lokasi
-			FROM tm_lokasi
+			SELECT fs_kode_cabang, fs_nama_cabang
+			FROM tm_cabang
 			WHERE fs_aktif = '1'
 		");
 
 		$xSQL = $xSQL.("
-			ORDER BY fs_nama_lokasi ASC LIMIT ".$nStart.",".$nLimit."
+			ORDER BY fs_nama_cabang ASC LIMIT ".$nStart.",".$nLimit."
 		");
 
 		$sSQL = $this->db->query($xSQL);
@@ -176,12 +176,12 @@ class MMasterUser extends CI_Model
 		return $sSQL;
 	}
 
-	public function listAksesLokasiAll($sUser)
+	public function listAksesCabangAll($sUser)
 	{
 		$xSQL = ("
-			SELECT a.fs_kode_lokasi, b.fs_nama_lokasi
-			FROM tm_akses_lokasi a
-			LEFT JOIN tm_lokasi b ON b.fs_kode_lokasi = a.fs_kode_lokasi
+			SELECT a.fs_kode_cabang, b.fs_nama_cabang
+			FROM tm_akses_cabang a
+			LEFT JOIN tm_cabang b ON b.fs_kode_cabang = a.fs_kode_cabang
 			WHERE a.fs_username = '".trim($sUser)."' AND b.fs_aktif = '1'
 		");
 
@@ -189,13 +189,45 @@ class MMasterUser extends CI_Model
 		return $sSQL;
 	}
 
-	public function listAksesLokasi($sUser, $nStart, $nLimit)
+	public function listAksesCabang($sUser, $nStart, $nLimit)
 	{
 		$xSQL = ("
-			SELECT a.fs_kode_lokasi, b.fs_nama_lokasi
-			FROM tm_akses_lokasi a
-			LEFT JOIN tm_lokasi b ON b.fs_kode_lokasi = a.fs_kode_lokasi
+			SELECT a.fs_kode_cabang, b.fs_nama_cabang
+			FROM tm_akses_cabang a
+			LEFT JOIN tm_cabang b ON b.fs_kode_cabang = a.fs_kode_cabang
 			WHERE a.fs_username = '".trim($sUser)."' AND b.fs_aktif = '1'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY a.fs_kode_cabang ASC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listUserAll($sCari)
+	{
+		$xSQL = ("
+			SELECT fs_username, fs_level_user, fd_tanggal_buat 
+			FROM tm_user
+			WHERE fs_aktif = '1'
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listUser($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_username, fs_level_user, fd_tanggal_buat 
+			FROM tm_user
+			WHERE fs_aktif = '1'
+		");
+
+		$xSQL = $xSQL.("
+			ORDER BY fd_tanggal_buat DESC LIMIT ".$nStart.",".$nLimit."
 		");
 
 		$sSQL = $this->db->query($xSQL);
@@ -210,6 +242,7 @@ class MMasterUser extends CI_Model
 			AND	h.fs_kd_child = a.fs_kd_child AND h.fs_index = '1' AND	h.fs_level = '".trim($sLevel)."'), '') WHEN '' THEN 'false' ELSE 'true' END fb_tambah FROM tg_menu a
 			ORDER BY a.fs_kd_parent, a.fs_kd_child
 		");
+
 		$sSQL = $this->db->query($xSQL);
 		return $sSQL;
 	}

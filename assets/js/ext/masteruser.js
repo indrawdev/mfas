@@ -19,6 +19,45 @@ Ext.onReady(function() {
 	var vLevel = '';
 	var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
 
+	Ext.define('DataGridAksesCabang', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_cabang', type: 'string'},
+			{name: 'fs_nama_cabang', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridLevelMenu', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_nm_menu', type: 'string'},
+			{name: 'fs_kd_induk', type: 'string'},
+			{name: 'fs_kd_menu', type: 'string'},
+			{name: 'fb_tambah', type: 'bool'}
+		]
+	});
+
+	Ext.define('DataGridActivity', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fd_time', type: 'string'},
+			{name: 'fs_log', type: 'string'},
+			{name: 'fs_user', type: 'string'},
+			{name: 'fs_message', type: 'string'}
+		]
+	});
+
+	Ext.define('DataGridUser', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fn_nik', type: 'string'},
+			{name: 'fs_username', type: 'string'},
+			{name: 'fs_level_user', type: 'string'},
+			{name: 'fs_user_buat', type: 'string'},
+			{name: 'fs_aktif', type: 'string'}
+		]
+	});
+
 	// COMPONENT FORM SETUP USER
 	var grupKaryawan = Ext.create('Ext.data.Store', {
 		autoLoad: false,
@@ -315,17 +354,9 @@ Ext.onReady(function() {
 		}
 	});
 
-	Ext.define('DatagridAksesCabang', {
-		extend: 'Ext.data.Model',
-		fields: [
-			{name: 'fs_kode_cabang', type: 'string'},
-			{name: 'fs_nama_cabang', type: 'string'}
-		]
-	});
-
 	var grupAksesCabang = Ext.create('Ext.data.Store', {
 		autoLoad: false,
-		model: 'DatagridAksesCabang',
+		model: 'DataGridAksesCabang',
 		pageSize: 25,
 		proxy: {
 			actionMethods: {
@@ -337,7 +368,7 @@ Ext.onReady(function() {
 				type: 'json'
 			},
 			type: 'ajax',
-			url: 'masteruser/gridAksesCabang'
+			url: 'masteruser/gridaksescabang'
 		},
 		listeners: {
 			beforeload: function(store) {
@@ -437,10 +468,34 @@ Ext.onReady(function() {
 				handler: function() {
 					var total = grupAksesCabang.getCount();
 
-					var data = Ext.create('DatagridAksesCabang', {
+					var data = Ext.create('DataGridAksesCabang', {
 						fs_kode_cabang: Ext.getCmp('cboKodeCabang').getValue(),
 						fs_nama_cabang: Ext.getCmp('txtNamaCabang').getValue()
 					});
+
+					var kode_cabang = Ext.getCmp('cboKodeCabang').getValue();
+					if (kode_cabang === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Kode Cabang, belum diisi',
+							title: 'MFAS'
+						});
+						return;
+					}
+
+					var nama_cabang = Ext.getCmp('txtNamaCabang').getValue();
+					if (nama_cabang === '') {
+						Ext.MessageBox.show({
+							buttons: Ext.MessageBox.OK,
+							closable: false,
+							icon: Ext.Msg.WARNING,
+							msg: 'Nama Cabang, belum diisi',
+							title: 'MFAS'
+						});
+						return;
+					}
 
 					grupAksesCabang.insert(total, data);
 
@@ -628,16 +683,6 @@ Ext.onReady(function() {
 	};
 
 	// COMPONENT FORM SETUP LEVEL
-	Ext.define('DataGridLevelMenu', {
-		extend: 'Ext.data.Model',
-		fields: [
-			{name: 'fs_nm_menu', type: 'string'},
-			{name: 'fs_kd_induk', type: 'string'},
-			{name: 'fs_kd_menu', type: 'string'},
-			{name: 'fb_tambah', type: 'bool'}
-		]
-	});
-
 	var grupLevelMenu = Ext.create('Ext.data.TreeStore', {
 		autoLoad: true,
 		model: 'DataGridLevelMenu',
@@ -1469,17 +1514,6 @@ Ext.onReady(function() {
 	});
 
 	// COMPONENT FORM DAFTAR USER
-	Ext.define('DataGridUser', {
-		extend: 'Ext.data.Model',
-		fields: [
-			{name: 'fn_nik', type: 'string'},
-			{name: 'fs_username', type: 'string'},
-			{name: 'fs_level_user', type: 'string'},
-			{name: 'fs_user_buat', type: 'string'},
-			{name: 'fs_aktif', type: 'string'}
-		]
-	});
-
 	var grupUser = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		model: 'DataGridUser',
@@ -1600,16 +1634,6 @@ Ext.onReady(function() {
 	});
 
 	// COMPONENT FORM USER ACTIVITY
-	Ext.define('DataGridActivity', {
-		extend: 'Ext.data.Model',
-		fields: [
-			{name: 'fd_time', type: 'string'},
-			{name: 'fs_log', type: 'string'},
-			{name: 'fs_user', type: 'string'},
-			{name: 'fs_message', type: 'string'}
-		]
-	});
-
 	var grupActivity = Ext.create('Ext.data.Store', {
 		autoLoad: true,
 		model: 'DataGridActivity',

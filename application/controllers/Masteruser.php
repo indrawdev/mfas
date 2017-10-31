@@ -39,48 +39,48 @@ class Masteruser extends CI_Controller {
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
-	public function gridlokasi() {
+	public function gridcabang() {
 		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
 		$this->load->model('MMasterUser');
-		$sSQL = $this->MMasterUser->listLokasiAll($sCari);
+		$sSQL = $this->MMasterUser->listCabangAll($sCari);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MMasterUser->listLokasi($sCari, $nStart, $nLimit);
+		$sSQL = $this->MMasterUser->listCabang($sCari, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-					'fs_kode_lokasi' => trim($xRow->fs_kode_lokasi),
-					'fs_nama_lokasi' => trim($xRow->fs_nama_lokasi)
+					'fs_kode_cabang' => trim($xRow->fs_kode_cabang),
+					'fs_nama_cabang' => trim($xRow->fs_nama_cabang)
 				);
 			}
 		}
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
-	public function gridakseslokasi() {
+	public function gridaksescabang() {
 		$sUser = trim($this->input->post('fs_username'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
 		$this->load->model('MMasterUser');
-		$sSQL = $this->MMasterUser->listAksesLokasiAll($sUser);
+		$sSQL = $this->MMasterUser->listAksesCabangAll($sUser);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MMasterUser->listAksesLokasi($sUser, $nStart, $nLimit);
+		$sSQL = $this->MMasterUser->listAksesCabang($sUser, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
 		if ($sSQL->num_rows() > 0)  {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-						'fs_kode_lokasi' => trim($xRow->fs_kode_lokasi),
-						'fs_nama_lokasi' => trim($xRow->fs_nama_lokasi)
+						'fs_kode_cabang' => trim($xRow->fs_kode_cabang),
+						'fs_nama_cabang' => trim($xRow->fs_nama_cabang)
 					);
 			}
 		}
@@ -121,18 +121,16 @@ class Masteruser extends CI_Controller {
 		$nLimit = trim($this->input->post('limit'));
 
 		$this->db->trans_start();
-		$this->load->model('MSearch');
-		$sSQL = $this->MSearch->listUserAll($sCari);
+		$this->load->model('MMasterUser');
+		$sSQL = $this->MMasterUser->listUserAll($sCari);
 		$xTotal = $sSQL->num_rows();
-		$sSQL = $this->MSearch->listUser($sCari, $nStart, $nLimit);
+		$sSQL = $this->MMasterUser->listUser($sCari, $nStart, $nLimit);
 		$this->db->trans_complete();
 
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-						'fn_nik' => trim($xRow->fn_nik),
-						'fs_nama_karyawan' => trim($xRow->fs_nama_karyawan),
 						'fs_username' => trim($xRow->fs_username),
 						'fs_level_user' => trim($xRow->fs_level_user),
 						'fd_tanggal_buat' => trim($xRow->fd_tanggal_buat)
