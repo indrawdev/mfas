@@ -339,35 +339,207 @@ class Analisa extends CI_Controller {
 	}
 
 	public function checkinternal() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$kdcabang = $this->input->post('fs_kode_cabang');
+		$noapk = $this->input->post('fn_no_apk');
+
+		$this->load->model('MAnalisa');
+		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+		
+		foreach ($AllAPK->result() as $row) {
+			$this->db->trans_start();
+			$sSQL = $this->MAnalisa->checkInternalAll($row->fs_ktp_konsumen, $sCari);
+			$xTotal = $sSQL->num_rows();
+			$sSQL = $this->MAnalisa->checkInternal($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$this->db->trans_complete();
+			$xArr = array();
+			
+			if ($sSQL->num_rows() > 0) {
+				foreach ($sSQL->result() as $xRow) {
+					$xArr[] = array(
+						'fn_no_apk' => trim($xRow->fn_no_apk),
+						'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
+						'fs_nama_konsumen' => trim($xRow->fs_nama_konsumen),
+						'fs_status_blacklist' => trim($xRow->fs_status_blacklist),
+					);
+				}
+			}
+		}
+
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function checkreject() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$kdcabang = $this->input->post('fs_kode_cabang');
+		$noapk = $this->input->post('fn_no_apk');
+
+		$this->load->model('MAnalisa');
+		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+
+		foreach ($AllAPK->result() as $row) {
+			$this->db->trans_start();
+			$sSQL = $this->MAnalisa->checkRejectAll($row->fs_ktp_konsumen, $sCari);
+			$xTotal = $sSQL->num_rows();
+			$sSQL = $this->MAnalisa->checkReject($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$this->db->trans_complete();
+			$xArr = array();
+
+			if ($sSQL->num_rows() > 0) {
+				foreach ($sSQL->result() as $xRow) {
+					$xArr[] = array(
+						'fn_no_apk' => trim($xRow->fn_no_apk),
+						'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
+						'fs_nama_konsumen' => trim($xRow->fs_nama_konsumen),
+						'fs_status_blacklist' => trim($xRow->fs_status_blacklist)
+					);
+				}
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function checkfamily() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$kdcabang = $this->input->post('fs_kode_cabang');
+		$noapk = $this->input->post('fn_no_apk');
+
+		$this->load->model('MAnalisa');
+		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+
+		foreach ($AllAPK->result() as $row) {
+			$this->db->trans_start();
+			$sSQL = $this->MAnalisa->checkFamilyAll($row->fs_ktp_konsumen, $sCari);
+			$xTotal = $sSQL->num_rows();
+			$sSQL = $this->MAnalisa->checkFamily($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$this->db->trans_complete();
+			$xArr = array();
+
+			if ($sSQL->num_rows() > 0) {
+				foreach ($sSQL->result() as $xRow) {
+					$xArr[] = array(
+						'fn_no_apk' => trim($xRow->fn_no_apk),
+						'fd_tgl_apk' => trim($xRow->fd_tgl_apk),
+						'fs_nama_konsumen' => trim($xRow->fs_nama_konsumen),
+						'fs_status_family' => trim($xRow->fs_status_family)
+					);
+				}
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function detailchecking() {
-
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 	}
 
-	public function cekprint() {
-
-	}
-
-	public function print() {
-
+	public function preview() {
+		$jenis = $this->input->post('fs_jenis_pembiayaan');
+		if ($jenis <> 'B') {
+			$hasil = array(
+				'sukses' => true,
+				'url' => 'report/previewperorangan/'
+			);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+				'sukses' => true,
+				'url' => 'report/previewbadanusaha/'
+			);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function predatapendukung() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$sKdCab = $this->input->post('fs_kode_cabang');
+		$nApk = $this->input->post('fn_no_apk');
+		$nBatch = $this->input->post('fn_no_batch');
+
+		if (!empty($nApk)) {
+			$this->db->trans_start();
+			$this->load->model('MAnalisa');
+			$sSQL = $this->MAnalisa->dataPendukungAll($sKdCab, $nApk, $sCari);
+			$xTotal = $sSQL->num_rows();
+			$sSQL = $this->MAnalisa->dataPendukung($sKdCab, $nApk, $sCari, $nStart, $nLimit);
+			$this->db->trans_complete();
+
+			$xArr = array();
+			if ($sSQL->num_rows() > 0) {
+				foreach ($sSQL->result() as $xRow) {
+					$xArr[] = array(
+						'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen),
+						'fs_nama_dokumen' => trim($xRow->fs_nama_dokumen),
+						'fs_dokumen_upload' => trim($xRow->fs_dokumen_upload),
+						'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen)
+					);
+				}
+			}
+		} else {
+			$AllAPK = $this->MAnalisa->detail($sKdCab, $nBatch);
+			foreach ($AllAPK->result() as $row) {
+				$this->db->trans_start();
+				$this->load->model('MAnalisa');
+				$sSQL = $this->MAnalisa->dataPendukungAll($sKdCab, $row->fn_no_apk, $sCari);
+				$xTotal = $sSQL->num_rows();
+				$sSQL = $this->MAnalisa->dataPendukung($sKdCab, $row->fn_no_apk, $sCari, $nStart, $nLimit);
+				$this->db->trans_complete();
+
+				$xArr = array();
+				if ($sSQL->num_rows() > 0) {
+					foreach ($sSQL->result() as $xRow) {
+						$xArr[] = array(
+							'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen),
+							'fs_nama_dokumen' => trim($xRow->fs_nama_dokumen),
+							'fs_dokumen_upload' => trim($xRow->fs_dokumen_upload),
+							'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen)
+						);
+					}
+				}
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function detailgrid() {
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
 
+		$sKdCab = $this->input->post('fs_kode_cabang');
+		$nBatch = trim($this->input->post('fn_no_batch'));
+
+		$this->db->trans_start();
+		$this->load->model('MAnalisa');
+		$sSQL = $this->MAnalisa->listdetailAll($sKdCab, $nBatch);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MAnalisa->listdetail($sKdCab, $nBatch, $nStart, $nLimit);
+		$this->db->trans_complete();
+
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen),
+					'fs_nama_dokumen' => trim($xRow->fs_nama_dokumen),
+					'fs_dokumen_upload' => trim($xRow->fs_dokumen_upload),
+					'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	// FUNCTION CABANG

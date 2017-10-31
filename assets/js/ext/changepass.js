@@ -142,7 +142,7 @@ Ext.onReady(function() {
 							closable: false,
 							icon: Ext.MessageBox.INFO,
 							msg: xtext.hasil,
-							title: 'HRD'
+							title: 'MFAS'
 						});
 					} else {
 						Ext.MessageBox.show({
@@ -150,7 +150,7 @@ Ext.onReady(function() {
 							closable: false,
 							icon: Ext.Msg.QUESTION,
 							msg: xtext.hasil,
-							title: 'HRD',
+							title: 'MFAS',
 							fn: function(btn) {
 								if (btn == 'yes') {
 									fnSave();
@@ -166,7 +166,7 @@ Ext.onReady(function() {
 						closable: false,
 						icon: Ext.MessageBox.INFO,
 						msg: 'Saving Failed, Connection Failed!!',
-						title: 'HRD'
+						title: 'MFAS'
 					});
 					fnMaskHide();
 				}
@@ -194,7 +194,7 @@ Ext.onReady(function() {
 					closable: false,
 					icon: Ext.MessageBox.INFO,
 					msg: xtext.hasil,
-					title: 'HRD'
+					title: 'MFAS'
 				});
 				fnReset();
 			},
@@ -205,7 +205,7 @@ Ext.onReady(function() {
 					closable: false,
 					icon: Ext.MessageBox.INFO,
 					msg: 'Saving Failed, Connection Failed!!',
-					title: 'HRD'
+					title: 'MFAS'
 				});
 				fnMaskHide();
 			}
