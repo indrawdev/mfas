@@ -11,8 +11,9 @@ class Analisa extends CI_Controller {
 	}
 
 	public function index() {
-		if ($this->session->userdata('kdcabang') <> '00') {
-			$this->load->view('vanalisapusat');
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+		if ($cabang <> '00') {
+			$this->load->view('vanalisacabang');
 		} else {
 			$this->load->view('vanalisapusat');
 		}
@@ -343,11 +344,11 @@ class Analisa extends CI_Controller {
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
-		$kdcabang = $this->input->post('fs_kode_cabang');
+		$cabang = $this->input->post('fs_kode_cabang');
 		$noapk = $this->input->post('fn_no_apk');
 
 		$this->load->model('MAnalisa');
-		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+		$AllAPK = $this->MAnalisa->node($cabang, $noapk);
 		
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
@@ -377,11 +378,11 @@ class Analisa extends CI_Controller {
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
-		$kdcabang = $this->input->post('fs_kode_cabang');
+		$cabang = $this->input->post('fs_kode_cabang');
 		$noapk = $this->input->post('fn_no_apk');
 
 		$this->load->model('MAnalisa');
-		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+		$AllAPK = $this->MAnalisa->node($cabang, $noapk);
 
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
@@ -410,11 +411,11 @@ class Analisa extends CI_Controller {
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
-		$kdcabang = $this->input->post('fs_kode_cabang');
+		$cabang = $this->input->post('fs_kode_cabang');
 		$noapk = $this->input->post('fn_no_apk');
 
 		$this->load->model('MAnalisa');
-		$AllAPK = $this->MAnalisa->node($noapk, $kdcabang);
+		$AllAPK = $this->MAnalisa->node($cabang, $noapk);
 
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
@@ -667,11 +668,115 @@ class Analisa extends CI_Controller {
 	}
 
 	public function ceksavebatalcabang() {
+		$noapk = $this->input->post('fn_no_apk');
+		$nobatch = $this->input->post('fn_no_batch');
 
+		if (!empty($noapk) || !empty($nobatch)) {
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'lanjut'
+			);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Gagal Simpan!!'
+			);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savebatalcabang() {
-		
+		$user = $this->encryption->decrypt($this->session->userdata('username'));
+
+		$cabang = $this->input->post('fs_kode_cabang');
+		$noapk = $this->input->post('fn_no_apk');
+		$nobatch = $this->input->post('fn_no_batch');
+		$catatan_batal = $this->input->post('fs_catatan_batal_keputusan');
+
+		$data = array(
+			'fs_flag_keputusan' => '0',
+			'fs_keputusan_kredit' => '',
+			'fs_catatan_analisa' => ''
+		);
+
+		// LOAD MODEL
+		$this->load->model('MAnalisa');
+		if (!empty($noapk) && empty($nobatch)) {
+			// jika retail (hanya insert 1 record)
+			$AllAPK = $this->MAnalisa->node($cabang, $noapk);
+			foreach ($AllAPK->result() as $row) {
+				$insert = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($noapk),
+					'fn_no_batch' => trim($nobatch),
+					'fs_kode_lokasi' => trim($row->fs_kode_lokasi),
+					'fs_nomor_dealer' => trim($row->fs_nomor_dealer),
+					'fs_jenis_piutang' => trim($row->fs_jenis_piutang),
+					'fs_pola_transaksi' => trim($row->fs_pola_transaksi),
+					'fn_nomor_perjanjian' => trim($row->fn_nomor_perjanjian),
+					'fs_score' => trim($row->fs_score),
+					'fs_grade' => trim($row->fs_grade),
+					'fs_keputusan_kredit' => trim($row->fs_keputusan_kredit),
+					'fs_catatan_analisa' => trim($row->fs_catatan_analisa),
+					'fs_catatan_batal_keputusan' => trim($row->fs_catatan_batal_keputusan),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_batal_keputusan', $insert);
+			}
+
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Simpan Data, Sukses!!'
+			);
+			echo json_encode($hasil);
+		}
+		else if (!empty($nobatch) && !empty($noapk)) {
+			// jika fleet kemudian (looping)
+			$AllAPK = $this->MAnalisa->detail($cabang, $nobatch);
+			foreach ($AllAPK->result() as $row) {
+				$insert = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($row->fn_no_apk),
+					'fn_no_batch' => trim($row->fn_no_batch),
+					'fs_kode_lokasi' => trim($row->fs_kode_lokasi),
+					'fs_nomor_dealer' => trim($row->fs_nomor_dealer),
+					'fs_jenis_piutang' => trim($row->fs_jenis_piutang),
+					'fs_pola_transaksi' => trim($row->fs_pola_transaksi),
+					'fn_nomor_perjanjian' => trim($row->fn_nomor_perjanjian),
+					'fs_score' => trim($row->fs_score),
+					'fs_grade' => trim($row->fs_grade),
+					'fs_keputusan_kredit' => trim($row->fs_keputusan_kredit),
+					'fs_catatan_analisa' => trim($row->fs_catatan_analisa),
+					'fs_catatan_batal_keputusan' => trim($catatan_batal),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_batal_keputusan', $insert);
+			}
+
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_batch = '".trim($nobatch)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Simpan Data, Sukses!!'
+			);
+			echo json_encode($hasil);
+		}
+		else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Gagal Simpan!!'
+			);
+			echo json_encode($hasil);
+		}
 	}
 
 	// FUNCTION PUSAT
@@ -761,10 +866,120 @@ class Analisa extends CI_Controller {
 	}
 
 	public function ceksavebatalpusat() {
+		$nApk = $this->input->post('fn_no_apk');
+		$nBatch = $this->input->post('fn_no_batch');
 
+		if (!empty($nApk) || !empty($nBatch)) {
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'lanjut'
+			);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Gagal Simpan!!'
+			);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function savebatalpusat() {
+		$user = $this->encryption->decrypt($this->session->userdata('username'));
 
+		$cabang = $this->input->post('fs_kode_cabang');
+		$noapk = $this->input->post('fn_no_apk');
+		$nobatch = $this->input->post('fn_no_batch');
+		$catatan_batal = $this->input->post('fs_catatan_batal_keputusan');
+
+		$data = array(
+			'fs_flag_keputusan' => '0',
+			'fs_flag_keputusan_pusat' => '0',
+			'fs_keputusan_kredit' => '',
+			'fs_keputusan_kredit_pusat' => '',
+			'fs_catatan_analisa' => '',
+			'fs_catatan_analisa_pusat' => ''
+		);
+		// LOAD MODEL
+		$this->load->model('MAnalisa');
+		if (!empty($noapk) && empty($nobatch)) {
+			// jika retail (hanya insert 1 record)
+			$AllAPK = $this->MAnalisa->node($cabang, $noapk);
+			foreach ($AllAPK->result() as $row) {
+				$insert = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($noapk),
+					'fn_no_batch' => trim($row->fn_no_batch),
+					'fs_kode_lokasi' => trim($row->fs_kode_lokasi),
+					'fs_nomor_dealer' => trim($row->fs_nomor_dealer),
+					'fs_jenis_piutang' => trim($row->fs_jenis_piutang),
+					'fs_pola_transaksi' => trim($row->fs_pola_transaksi),
+					'fn_nomor_perjanjian' => trim($row->fn_nomor_perjanjian),
+					'fs_score' => trim($row->fs_score),
+					'fs_grade' => trim($row->fs_grade),
+					'fs_keputusan_kredit' => trim($row->fs_keputusan_kredit),
+					'fs_catatan_analisa' => trim($row->fs_catatan_analisa),
+					'fs_keputusan_kredit_pusat' => trim($row->fs_keputusan_kredit_pusat),
+					'fs_catatan_analisa_pusat' => trim($row->fs_catatan_analisa_pusat),
+					'fs_catatan_batal_keputusan' => trim($row->fs_catatan_batal_keputusan),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_batal_keputusan', $insert);
+			}
+
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_apk = '".trim($noapk)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Simpan Data, Sukses!!'
+			);
+			echo json_encode($hasil);
+		}
+		else if (!empty($nobatch) && !empty($noapk)) {
+			// jika fleet kemudian (looping)
+			$AllAPK = $this->MAnalisa->detail($cabang, $noapk);
+			foreach ($AllAPK->result() as $row) {
+				$insert = array(
+					'fs_kode_cabang' => trim($cabang),
+					'fn_no_apk' => trim($row->fn_no_apk),
+					'fn_no_batch' => trim($row->fn_no_batch),
+					'fs_kode_lokasi' => trim($row->fs_kode_lokasi),
+					'fs_nomor_dealer' => trim($row->fs_nomor_dealer),
+					'fs_jenis_piutang' => trim($row->fs_jenis_piutang),
+					'fs_pola_transaksi' => trim($row->fs_pola_transaksi),
+					'fn_nomor_perjanjian' => trim($row->fn_nomor_perjanjian),
+					'fs_score' => trim($row->fs_score),
+					'fs_grade' => trim($row->fs_grade),
+					'fs_keputusan_kredit' => trim($row->fs_keputusan_kredit),
+					'fs_catatan_analisa' => trim($row->fs_catatan_analisa),
+					'fs_keputusan_kredit_pusat' => trim($row->fs_keputusan_kredit_pusat),
+					'fs_catatan_analisa_pusat' => trim($row->fs_catatan_analisa_pusat),
+					'fs_catatan_batal_keputusan' => trim($catatan_batal),
+					'fs_user_buat' => trim($user),
+					'fd_tanggal_buat' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('tx_apk_batal_keputusan', $insert);
+			}
+
+			$where = "fs_kode_cabang = '".trim($cabang)."' AND fn_no_batch = '".trim($nobatch)."'";
+			$this->db->where($where);
+			$this->db->update('tx_apk', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Simpan Data, Sukses!!'
+			);
+			echo json_encode($hasil);
+		}
+		else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Gagal Simpan!!'
+			);
+			echo json_encode($hasil);
+		}
 	}
 }

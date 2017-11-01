@@ -37,7 +37,17 @@ class Dashboard extends CI_Controller {
 
 		$sSQL = $this->MDashboard->statusDitolak();
 		$xTotal = $sSQL->num_rows();
+		$xArr = array();
 
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'name' => trim(substr($xRow->bulan, 0, 3)),
+					'value' => trim($xRow->jumlah)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function proses() {
@@ -45,6 +55,17 @@ class Dashboard extends CI_Controller {
 
 		$sSQL = $this->MDashboard->statusDiproses();
 		$xTotal = $sSQL->num_rows();
+		$xArr = array();
+
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'name' => trim(substr($xRow->bulan, 0, 3)),
+					'value' => trim($xRow->jumlah)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function batal() {
@@ -52,6 +73,17 @@ class Dashboard extends CI_Controller {
 
 		$sSQL = $this->MDashboard->statusDibatal();
 		$xTotal = $sSQL->num_rows();
+		$xArr = array();
+
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'name' => trim(substr($xRow->bulan, 0, 3)),
+					'value' => trim($xRow->jumlah)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function monthgrade() {
@@ -59,6 +91,17 @@ class Dashboard extends CI_Controller {
 
 		$sSQL = $this->MDashboard->gradeMonthly();
 		$xTotal = $sSQL->num_rows();
+		$xArr = array();
+
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'name' => trim('Grade ' . $xRow->grade),
+					'value' => trim($xRow->jumlah)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	public function yeargrade() {
@@ -66,5 +109,17 @@ class Dashboard extends CI_Controller {
 
 		$sSQL = $this->MDashboard->gradeYearly();
 		$xTotal = $sSQL->num_rows();
+		$xArr = array();
+
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'name' => trim('Grade ' . $xRow->grade),
+					'value' => trim($xRow->jumlah)
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
+
 }

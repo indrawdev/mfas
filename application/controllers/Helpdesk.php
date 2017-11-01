@@ -14,4 +14,24 @@ class Helpdesk extends CI_Controller {
 		$this->load->view('vhelpdesk');
 	}
 
+	public function select() {
+
+	}
+
+	public function combo() {
+
+	}
+
+	public function grid() {
+
+	}
+
+	public function ceksave() {
+
+	}
+
+	public function save() {
+		
+	}
+
 }

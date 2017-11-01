@@ -59,6 +59,22 @@ class Apkbadanusaha extends CI_Controller {
 		echo json_encode($xArr);
 	}
 
+	public function getapk() {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$this->load->model('MSearch');
+		$counterapk = $this->MSearch->getCounter($cabang, 'APK', 0);
+		return $counterapk->fn_counter;
+	}
+
+	public function getpjj($pola) {
+		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
+
+		$this->load->model('MSearch');
+		$counterpjj = $this->MSearch->getCounter($cabang, 'PJJ', $pola);
+		return $counterpjj->fn_counter;
+	}
+
 	public function setapk($newapk) {
 		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 
@@ -691,11 +707,8 @@ class Apkbadanusaha extends CI_Controller {
 
 		if ($update == false) {
 			// GET COUNTER
-			$this->load->model('MSearch');
-			$counterapk = $this->MSearch->getCounter($cabang, 'APK', 0);
-			$counterpjj = $this->MSearch->getCounter($cabang, 'PJJ', $pola);
-			$newapk = $counterapk->fn_counter;
-			$newpjj = $counterpjj->fn_counter;
+			$newapk = $this->getapk();
+			$newpjj = $this->getpjj($pola);
 
 			$dt1 = array(
 				'fs_kode_cabang' => trim($cabang),
