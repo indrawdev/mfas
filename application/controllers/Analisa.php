@@ -340,7 +340,6 @@ class Analisa extends CI_Controller {
 	}
 
 	public function checkinternal() {
-		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
@@ -352,9 +351,9 @@ class Analisa extends CI_Controller {
 		
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
-			$sSQL = $this->MAnalisa->checkInternalAll($row->fs_ktp_konsumen, $sCari);
+			$sSQL = $this->MAnalisa->checkInternalAll($row->fs_ktp_konsumen);
 			$xTotal = $sSQL->num_rows();
-			$sSQL = $this->MAnalisa->checkInternal($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$sSQL = $this->MAnalisa->checkInternal($row->fs_ktp_konsumen, $nStart, $nLimit);
 			$this->db->trans_complete();
 			$xArr = array();
 			
@@ -374,7 +373,6 @@ class Analisa extends CI_Controller {
 	}
 
 	public function checkreject() {
-		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
@@ -386,9 +384,9 @@ class Analisa extends CI_Controller {
 
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
-			$sSQL = $this->MAnalisa->checkRejectAll($row->fs_ktp_konsumen, $sCari);
+			$sSQL = $this->MAnalisa->checkRejectAll($row->fs_ktp_konsumen);
 			$xTotal = $sSQL->num_rows();
-			$sSQL = $this->MAnalisa->checkReject($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$sSQL = $this->MAnalisa->checkReject($row->fs_ktp_konsumen, $nStart, $nLimit);
 			$this->db->trans_complete();
 			$xArr = array();
 
@@ -407,7 +405,6 @@ class Analisa extends CI_Controller {
 	}
 
 	public function checkfamily() {
-		$sCari = trim($this->input->post('fs_cari'));
 		$nStart = trim($this->input->post('start'));
 		$nLimit = trim($this->input->post('limit'));
 
@@ -419,9 +416,9 @@ class Analisa extends CI_Controller {
 
 		foreach ($AllAPK->result() as $row) {
 			$this->db->trans_start();
-			$sSQL = $this->MAnalisa->checkFamilyAll($row->fs_ktp_konsumen, $sCari);
+			$sSQL = $this->MAnalisa->checkFamilyAll($row->fs_ktp_konsumen);
 			$xTotal = $sSQL->num_rows();
-			$sSQL = $this->MAnalisa->checkFamily($row->fs_ktp_konsumen, $sCari, $nStart, $nLimit);
+			$sSQL = $this->MAnalisa->checkFamily($row->fs_ktp_konsumen, $nStart, $nLimit);
 			$this->db->trans_complete();
 			$xArr = array();
 

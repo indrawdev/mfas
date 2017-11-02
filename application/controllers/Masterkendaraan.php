@@ -96,10 +96,64 @@ class Masterkendaraan extends CI_Controller {
 
 	public function savekendaraan() {
 		$user = $this->encryption->decrypt($this->session->userdata('username'));
+
+		$kendaraan = $this->input->post('fs_kode_kendaraan');
+		$kodelama = $this->input->post('fs_kode_kendaraan_lama');
+		$model = $this->input->post('fs_model_kendaraan');
+		$jenis = $this->input->post('fs_jenis_kendaraan');
+		$merek = $this->input->post('fs_merek_kendaraan');
+		$silinder = $this->input->post('fs_silinder_kendaraan');
+
+		$update = false;
+		$this->load->model('MMasterKendaraan');
+		$sSQL = $this->MMasterKendaraan->checkKendaraan($kendaraan);
+
+		if ($sSQL->num_rows() > 0) {
+			$update = true;
+		}
+
+		$dt = array(
+			'fs_kode_kendaraan' => trim($kendaraan),
+			'fs_kode_kendaraan_lama' => trim($kodelama),
+			'fs_model_kendaraan' => trim($model),
+			'fs_jenis_kendaraan' => trim($jenis),
+			'fs_merek_kendaraan' => trim($merek),
+			'fs_silinder_kendaraan' => trim($silinder)
+		);
+
+		if ($update == false) {
+			$dt1 = array(
+				'fs_user_buat' => trim($user),
+				'fd_tanggal_buat' => date('Y-m-d H:i:s')
+			);
+			$data = array_merge($dt, $dt1);
+			$this->db->insert('tm_kendaraan', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Simpan Data Kendaraan, Sukses!!'
+			);
+			echo json_encode($hasil);
+		} else {
+			$dt2 = array(
+				'fs_user_edit' => trim($user),
+				'fd_tanggal_edit' => date('Y-m-d H:i:s')
+			);
+			$data = array_merge($dt, $dt2);
+			$where = "fs_kode_kendaraan = '".trim($kendaraan)."'";
+			$this->db->where($where);
+			$this->db->update('tm_kendaraan', $data);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Update Data Kendaraan, Sukses!!'
+			);
+			echo json_encode($hasil);
+		}
 	}
 
 	public function ceksavemerk() {
-
+		$kendaraan = $this->input->post('fs_kode_kendaraan');
 	}
 
 	public function savemerk() {
