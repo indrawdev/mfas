@@ -15,11 +15,9 @@ class Helpdesk extends CI_Controller {
 	}
 
 	public function username() {
-		$cabang = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 		$user = $this->encryption->decrypt($this->session->userdata('username'));
 		$hasil = array(
 			'sukses' => true,
-			'fs_kode_cabang' => trim($cabang),
 			'fs_username' => trim($user)
 		);
 		echo json_encode($hasil);
@@ -59,7 +57,9 @@ class Helpdesk extends CI_Controller {
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
 
+				);
 			}
 		}
 	}
@@ -69,7 +69,17 @@ class Helpdesk extends CI_Controller {
 	}
 
 	public function save() {
-		
+
+		$dt = array(
+			'fs_kode_cabang' => '',
+			'fs_username' => '',
+			'fs_kategori' => '',
+			'fs_judul' => '',
+			'fs_pesan' => '',
+			'fs_flag_status' => ''
+		);
+
+
 	}
 
 	// SENDER EMAIL

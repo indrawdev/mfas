@@ -19,32 +19,28 @@ class Analisa extends CI_Controller {
 		}
 	}
 
-	public function cb_keputusan() {
-		$sCari = trim($this->input->post('fs_cari'));
-
+	public function select() {
+		$kode = trim($this->input->post('fs_kode_referensi'));
 		$this->db->trans_start();
-		$this->load->model('MAnalisa');
-		$sSQL = $this->MAnalisa->getReferensi($sCari);
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->getReferensi($kode);
 		$this->db->trans_complete();
-
 		$xArr = array();
 		if ($sSQL->num_rows() > 0) {
 			foreach ($sSQL->result() as $xRow) {
 				$xArr[] = array(
-					'fs_kd_strx' => trim($xRow->fs_nilai1_referensi),
-					'fs_nm_strx' => trim($xRow->fs_nama_referensi)
-				);
+						'fs_kode' => trim($xRow->fs_nilai1_referensi),
+						'fs_nama' => trim($xRow->fs_nama_referensi)
+					);
 			}
 		}
 		echo json_encode($xArr);
 	}
 
-	public function cb_batal() {
-		$arr = array(
-				2 => array('Y','YA'),
-				4 => array('N','TIDAK')
-			);
-		$out = array_values($arr);
+	public function combo() {
+		// NON AKTIF
+		$array = array(1 => array('Y','YA'), 2 => array('N','TIDAK'));
+		$out = array_values($array);
 		echo json_encode($out);
 	}
 

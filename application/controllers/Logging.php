@@ -14,4 +14,16 @@ class Logging extends CI_Controller {
 		$this->load->view('vlogging');
 	}
 
+	public function gridapk() {
+
+	}
+
+	public function gridlogin() {
+
+	}
+
+	public function gridlogout() {
+
+	}
+
 }
