@@ -49,6 +49,113 @@ class MSearch extends CI_Model {
 		return $sSQL;
 	}
 
+	public function listPendukungApkAll($sCari)
+	{
+		$xSQL = ("
+			SELECT fs_kode_dokumen, fs_jenis_pembiayaan, fs_jenis_dokumen
+				fs_nama_dokumen, fs_wajib
+			FROM tm_data_pendukung
+			WHERE fs_jenis_dokumen = 'APK'
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_kode_dokumen LIKE '%".trim($sCari)."%'
+					OR fs_nama_dokumen LIKE '%".trim($sCari)."%')
+			");
+		}
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPendukungApk($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_kode_dokumen, fs_jenis_pembiayaan, fs_jenis_dokumen
+				fs_nama_dokumen, fs_wajib
+			FROM tm_data_pendukung
+			WHERE fs_jenis_dokumen = 'APK'
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_kode_dokumen LIKE '%".trim($sCari)."%'
+					OR fs_nama_dokumen LIKE '%".trim($sCari)."%')
+			");
+		}
+
+		$xSQL = $xSQL.("
+			ORDER BY fs_kode_dokumen ASC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPendukungSurveyAll($sCari)
+	{
+		$xSQL = ("
+			SELECT fs_kode_dokumen, fs_jenis_pembiayaan, fs_jenis_dokumen
+				fs_nama_dokumen, fs_wajib
+			FROM tm_data_pendukung
+			WHERE fs_jenis_dokumen = 'SURVEY'
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_kode_dokumen LIKE '%".trim($sCari)."%'
+					OR fs_nama_dokumen LIKE '%".trim($sCari)."%')
+			");
+		}
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listPendukungSurvey($sCari, $nStart, $nLimit)
+	{
+		$xSQL = ("
+			SELECT fs_kode_dokumen, fs_jenis_pembiayaan, fs_jenis_dokumen
+				fs_nama_dokumen, fs_wajib
+			FROM tm_data_pendukung
+			WHERE fs_jenis_dokumen = 'SURVEY'
+		");
+
+		if (!empty($sCari)) {
+			$xSQL = $xSQL.("
+				AND (fs_kode_dokumen LIKE '%".trim($sCari)."%'
+					OR fs_nama_dokumen LIKE '%".trim($sCari)."%')
+			");
+		}
+
+		$xSQL = $xSQL.("
+			ORDER BY fs_kode_dokumen ASC LIMIT ".$nStart.",".$nLimit."
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listDataPendukungAll($sKdCab, $nNoApk, $sCari)
+	{
+		$xSQL = ("
+			SELECT fs_kode_dokumen, fs_jenis_pembiayaan, fs_jenis_dokumen
+				fs_nama_dokumen, fs_wajib
+			FROM tm_data_pendukung
+			WHERE fs_jenis_dokumen = 'SURVEY'
+		");
+		
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
+	public function listDataPendukung($sKdCab, $nNoApk, $sCari, $nStart, $nLimit)
+	{
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
+	}
+
 	public function listLembagaAll($sKode, $sCari)
 	{
 		$xSQL = ("
@@ -537,6 +644,32 @@ class MSearch extends CI_Model {
 
 		$sSQL = $this->db->query($xSQL);
 		return $sSQL->row();
+	}
+
+	public function setDuplicate($sKdCab, $nNoApk, $nNewApk)
+	{
+		$xSQL = ("
+			CREATE TEMPORARY TABLE tmp_tx_apk AS (
+			SELECT * FROM tx_apk
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' 
+			AND fn_no_apk = '".trim($nNoApk)."');
+		");
+
+		$xSQL = ("
+			UPDATE tmp_tx_apk SET fn_no_apk = '".trim($nNewApk)."' 
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' 
+			AND fn_no_apk = '".trim($nNoApk)."';
+		");
+
+		$xSQL = ("
+			INSERT INTO tx_apk 
+			SELECT * FROM tmp_tx_apk 
+			WHERE fs_kode_cabang = '".trim($sKdCab)."' 
+			AND fn_no_apk = '".trim($nNewApk)."';
+		");
+
+		$sSQL = $this->db->query($xSQL);
+		return $sSQL;
 	}
 
 }

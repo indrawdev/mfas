@@ -273,6 +273,33 @@ class Apkperorangan extends CI_Controller {
 		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
+	public function gridpendukung() {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listPendukungApkAll($sCabang, $sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listPendukungApk($sCabang, $sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
+		
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'fs_kode_dokumen' => trim($xRow->fs_kode_dokumen),
+					'fs_jenis_pembiayaan' => trim($xRow->fs_jenis_pembiayaan),
+					'fs_jenis_dokumen' => trim($xRow->fs_jenis_dokumen),
+					'fs_nama_dokumen' => trim($xRow->fs_nama_dokumen),
+					'fs_wajib' => trim($xRow->fs_wajib),
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
+	}
+
 	public function gridlembaga() {
 		$sKode = $this->encryption->decrypt($this->session->userdata('kodecabang'));
 
@@ -632,8 +659,70 @@ class Apkperorangan extends CI_Controller {
 		$pdf->Output('daftar-pemeriksaan-perorangan.pdf', 'I');
 	}
 
-	public function duplikasi() {
+	// ACTION DUPLIKASI
+	public function cekduplikasi($cabang, $noapk) {
+		if (!empty($cabang) && !empty($noapk)) {
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Apakah Anda ingin yakin, akan duplikasi APK '.trim($noapk).' ?'
+			);
+			echo json_encode($hasil);
+		} else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Duplikasi APK, Gagal...'
+			);
+			echo json_encode($hasil);
+		}
+	}
+
+	public function duplikasi($cabang, $noapk) {
+		if (!empty($cabang) && !empty($noapk)) {
+			// GET COUNTER
+			$newapk = $this->getapk();
+			$this->load->model('MSearch');
+			$this->MSearch->setDuplicate($cabang, $noapk, $newapk);
+
+			$hasil = array(
+				'sukses' => true,
+				'hasil' => 'Duplikasi APK '.trim($newapk).', Sukses!!'
+			);
+			echo json_encode($hasil);
+
+			// UPDATE COUNTER
+			$this->setapk($newapk);
+		} else {
+			$hasil = array(
+				'sukses' => false,
+				'hasil' => 'Duplikasi APK, Gagal...'
+			);
+			echo json_encode($hasil);
+		}
+	}
+
+	// SHOW DATA PENDUKUNG
+	public function pendukungapk($cabang, $noapk) {
+		$sCari = trim($this->input->post('fs_cari'));
+		$nStart = trim($this->input->post('start'));
+		$nLimit = trim($this->input->post('limit'));
+
+		$this->db->trans_start();
+		$this->load->model('MSearch');
+		$sSQL = $this->MSearch->listDataPendukungAll($cabang, $noapk, $sCari);
+		$xTotal = $sSQL->num_rows();
+		$sSQL = $this->MSearch->listDataPendukung($cabang, $noapk, $sCari, $nStart, $nLimit);
+		$this->db->trans_complete();
 		
+		$xArr = array();
+		if ($sSQL->num_rows() > 0) {
+			foreach ($sSQL->result() as $xRow) {
+				$xArr[] = array(
+					'' => '',
+					'' => '',
+				);
+			}
+		}
+		echo '({"total":"'.$xTotal.'","hasil":'.json_encode($xArr).'})';
 	}
 
 	// TAB DATA UTAMA
@@ -1475,6 +1564,24 @@ class Apkperorangan extends CI_Controller {
 						'hasil' => 'Simpan Gagal, APK Tidak Ada...'
 					);
 			echo json_encode($hasil);
+		}
+	}
+
+	public function uploadfile() {
+		if(!empty($_FILES['uploadFile']['name'])) {
+			$config['upload_path'] = './uploads/';
+			$config['max_size'] = 1000;
+			$config['allowed_types'] = 'pdf';
+			$config['file_name'] = $_FILES['uploadFile']['name'];
+			$config['encrypt_name'] = TRUE;
+
+			$this->load->library('upload', $config);
+			$this->upload->initialize($config);
+
+			if ($this->upload->do_upload('uploadFile')) {
+				$filedata = $this->upload->data();
+				$filename = $filedata['file_name'];
+			}
 		}
 	}
 }

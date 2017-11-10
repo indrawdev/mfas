@@ -224,7 +224,7 @@ class Group extends CI_Controller {
 		if (trim($nobatch) <> 0) {
 			$hasil = array(
 				'sukses' => true,
-				'hasil' => 'UnGroup '. trim($nobatch). 'Record No. Batch';
+				'hasil' => 'UnGroup '. trim($nobatch). 'Record No. Batch'
 			);
 			echo json_encode($hasil);
 		} else {

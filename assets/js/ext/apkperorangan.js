@@ -29,6 +29,18 @@ Ext.onReady(function() {
 		]
 	});
 
+	Ext.define('DataGridDataPendukung', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{name: 'fs_kode_cabang', type: 'string'},
+			{name: 'fn_no_apk', type: 'string'},
+			{name: 'fs_kode_dokumen', type: 'string'},
+			{name: 'fs_nama_dokumen', type: 'string'},
+			{name: 'fs_jenis_pembiayaan', type: 'string'},
+			{name: 'fs_dokumen_upload', type: 'string'}
+		]
+	});
+
 	Ext.define('DataGridKodePos', {
 		extend: 'Ext.data.Model',
 		fields: [
@@ -191,7 +203,7 @@ Ext.onReady(function() {
 							handler: function() {
 								var xkdcabang = rec.get('fs_kode_cabang');
 								var xnoapk = rec.get('fn_no_apk');
-								// CALL BACK
+								// CALLBACK
 								fnShowPreview(xkdcabang, xnoapk);
 							}
 						});
@@ -212,6 +224,8 @@ Ext.onReady(function() {
 							handler: function() {
 								var xkdcabang = rec.get('fs_kode_cabang');
 								var xnoapk = rec.get('fn_no_apk');
+								// CALLBACK
+								fnCekDuplikasi(xkdcabang, xnoapk);
 							}
 						});
 					}, 50);
@@ -230,6 +244,9 @@ Ext.onReady(function() {
 							handler: function() {
 								var xkdcabang = rec.get('fs_kode_cabang');
 								var xnoapk = rec.get('fn_no_apk');
+
+								// CALLBACK
+								fnShowDataPendukung(xkdcabang, xnoapk);
 							}
 						});
 					}, 50);
@@ -563,6 +580,33 @@ Ext.onReady(function() {
 			},
 			markDirty: false,
 			stripeRows: true
+		}
+	});
+
+	var grupDataPendukung = Ext.create('Ext.data.Store', {
+		autoLoad: false,
+		model: 'DataGridDataPendukung',
+		pageSize: 25,
+		proxy: {
+			actionMethods: {
+				read: 'POST'
+			},
+			reader: {
+				rootProperty: 'hasil',
+				totalProperty: 'total',
+				type: 'json'
+			},
+			type: 'ajax',
+			url: 'apkperorangan/pendukungapk'
+		},
+		listeners: {
+			beforeload: function(store) {
+				Ext.apply(store.getProxy().extraParams, {
+					'fs_kode_cabang': Ext.getCmp('txtKodeCabang').getValue(),
+					'fn_no_apk': Ext.getCmp('txtNoAPKTab1').getValue(),
+					'fs_cari': Ext.getCmp('txtCariPendukung').getValue()
+				});
+			}
 		}
 	});
 
@@ -1441,11 +1485,94 @@ Ext.onReady(function() {
 	});
 
 	var winGrid2 = Ext.create('Ext.grid.Panel', {
-		// KOSONG
+		anchor: '100%',
+		autoDestroy: true,
+		height: 450,
+		width: 550,
+		sortableColumns: false,
+		store: grupDataPendukung,
+		columns: [
+			{xtype: 'rownumberer', width: 45},
+			{text: "Kode Dokumen", dataIndex: 'fs_kode_dokumen', menuDisabled: true, flex: 1},
+			{text: "Nama Dokumen", dataIndex: 'fs_nama_dokumen', menuDisabled: true, flex: 2},
+			{text: "File Upload", dataIndex: 'fs_dokumen_upload', menuDisabled: true, hidden: true}
+		],
+		tbar: [{
+			flex: 1,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '98%',
+				emptyText: 'Nama Dokumen',
+				id: 'txtCariPendukung',
+				name: 'txtCariPendukung',
+				xtype: 'textfield'
+			}]
+		},{
+			flex: 0.2,
+			layout: 'anchor',
+			xtype: 'container',
+			items: [{
+				anchor: '100%',
+				text: 'Search',
+				xtype: 'button',
+				handler: function() {
+					grupDataPendukung.load();
+				}
+			}]
+		},{
+			flex: 0.5,
+			layout: 'anchor',
+			xtype: 'container',
+			items: []
+		}],
+		bbar: Ext.create('Ext.PagingToolbar', {
+			displayInfo: true,
+			pageSize: 25,
+			plugins: Ext.create('Ext.ux.ProgressBarPager', {}),
+			store: grupDataPendukung,
+			items:[
+				'-', {
+				text: 'Exit',
+				handler: function() {
+					winCari2.hide();
+				}
+			}]
+		}),
+		listeners: {
+			itemdblclick: function(grid, record) {
+				winCari2.hide();
+			}
+		},
+		viewConfig: {
+			getRowClass: function() {
+				return 'rowwrap';
+			},
+			markDirty: false
+		}
 	});
 
 	var winCari2 = Ext.create('Ext.window.Window', {
-		// KOSONG
+		border: false,
+		closable: false,
+		draggable: true,
+		frame: false,
+		layout: 'fit',
+		plain: true,
+		resizable: false,
+		title: 'Searching...',
+		items: [
+			winGrid2
+		],
+		listeners: {
+			beforehide: function() {
+				vMask.hide();
+			},
+			beforeshow: function() {
+				grupDataPendukung.load();
+				vMask.show();
+			}
+		}
 	});
 
 	var winGrid3 = Ext.create('Ext.grid.Panel', {
@@ -2375,10 +2502,32 @@ Ext.onReady(function() {
 				handler: function() {
 					var total = grupPerluasan.getCount();
 
+					var xjenis = Ext.getCmp('cboJnsPerluasan').getValue();
 					var data = Ext.create('DataGridPerluasan', {
 						fs_jenis_perluasan: Ext.getCmp('cboJnsPerluasan').getValue(),
 						fn_tahun_ke: Ext.getCmp('txtTenorPerluasan').getValue(),
 					});
+
+					var store = winGrid11.getStore();
+					var xlanjut = true;
+
+					store.each(function(record, idx) {
+						var xtext = record.get('fs_jenis_perluasan');
+						if (xtext == xjenis) {
+							Ext.MessageBox.show({
+								buttons: Ext.MessageBox.OK,
+								closable: false,
+								icon: Ext.Msg.WARNING,
+								msg: 'Jenis perluasan sudah ada di List...',
+								title: 'MFAS'
+							});
+							xlanjut = false;
+						}
+					});
+
+					if (xlanjut === false) {
+						return;
+					}
 
 					var fs_jenis_perluasan = Ext.getCmp('cboJnsPerluasan').getValue();
 					if (fs_jenis_perluasan === '') {
@@ -2638,6 +2787,7 @@ Ext.onReady(function() {
 				text: 'Add',
 				handler: function() {
 					var total = grupTransaksi.getCount();
+					var xkode = Ext.getCmp('cboKodeTransaksi').getValue();
 
 					var data = Ext.create('DataGridTransaksi', {
 						fs_kode_transaksi: Ext.getCmp('cboKodeTransaksi').getValue(),
@@ -2647,6 +2797,27 @@ Ext.onReady(function() {
 						fs_tagih_ke_konsumen: Ext.getCmp('cboDitagihKonsumen').getValue(),
 						fs_cair_ke_dealer: Ext.getCmp('cboCairKeDealer').getValue()
 					});
+
+					var store = winGrid12.getStore();
+					var xlanjut = true;
+
+					store.each(function(record, idx) {
+						var xtext = record.get('fs_kode_transaksi');
+						if (xtext == xkode) {
+							Ext.MessageBox.show({
+								buttons: Ext.MessageBox.OK,
+								closable: false,
+								icon: Ext.Msg.WARNING,
+								msg: 'Kode Transaksi sudah ada di List...',
+								title: 'MFAS'
+							});
+							xlanjut = false;
+						}
+					});
+
+					if (xlanjut === false) {
+						return;
+					}
 
 					var fs_kode_transaksi = Ext.getCmp('cboKodeTransaksi').getValue();
 					if (fs_kode_transaksi === '') {
@@ -3184,6 +3355,23 @@ Ext.onReady(function() {
 			}
 		}
 	});
+
+	// COUNTING FUNCTION STRUKTUR KREDIT
+
+	// COMPONENT GRID DAFTAR PERORANGAN
+	var txtKodeCabang = {
+		id: 'txtKodeCabang',
+		name: 'txtKodeCabang',
+		xtype: 'textfield',
+		hidden: true
+	};
+
+	var txtNoAPKTab1 = {
+		id: 'txtNoAPKTab1',
+		name: 'txtNoAPKTab1',
+		xtype: 'textfield',
+		hidden: true
+	};
 
 	// COMPONENT FORM DATA UTAMA
 	var txtNoAPK = {
@@ -4379,13 +4567,21 @@ Ext.onReady(function() {
 	};
 
 	var txtBiayaADM = {
+		alwaysDisplayDecimals: true,
 		anchor: '100%',
+		currencySymbol: '',
+		decimalPrecision: 0,
+		decimalSeparator: '.',
+		editable: true,
 		fieldLabel: 'Biaya Administrasi',
-		fieldStyle: 'text-transform: uppercase;',
-		emptyText: '',
+		hideTrigger: true,
 		id: 'txtBiayaADM',
 		name: 'txtBiayaADM',
-		xtype: 'textfield'
+		xtype: 'numericfield',
+		keyNavEnabled: false,
+		mouseWheelEnabled: false,
+		thousandSeparator: ',',
+		useThousandSeparator: true,
 	};	
 
 	var txtPremiAsuransi = {
@@ -5449,8 +5645,6 @@ Ext.onReady(function() {
         xtype: 'displayfield'
 	};
 
-	// FUNCTIONS PERHITUNGAN STRUKTUR KREDIT
-
 	// FUNCTION BUTTON POPUP
 	function fnShowPerluasan() {
 		winCari11.show();
@@ -5484,12 +5678,94 @@ Ext.onReady(function() {
 		popUp.show();
 	}
 
-	function fnDuplikasi() {
+	function fnCekDuplikasi(xkdcabang, xnoapk) {
+		Ext.Ajax.on('beforerequest', fnMaskShow);
+		Ext.Ajax.on('requestcomplete', fnMaskHide);
+		Ext.Ajax.on('requestexception', fnMaskHide);
 
+		Ext.Ajax.request({
+			method: 'GET',
+			url: 'apkperorangan/cekduplikasi/' + xkdcabang + '/' + xnoapk,
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				if (xtext.sukses === false) {
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.OK,
+						closable: false,
+						icon: Ext.MessageBox.INFO,
+						msg: xtext.hasil,
+						title: 'MFAS'
+					});
+				} else {
+					Ext.MessageBox.show({
+						buttons: Ext.MessageBox.YESNO,
+						closable: false,
+						icon: Ext.Msg.QUESTION,
+						msg: xtext.hasil,
+						title: 'MFAS',
+						fn: function(btn) {
+							if (btn == 'yes') {
+								fnDuplikasi(xkdcabang, xnoapk);
+							}
+						}
+					});
+				}
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					message: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+			}
+		});
 	}
 
-	function fnShowDataPendukung() {
+	function fnDuplikasi(xkdcabang, xnoapk) {
+		Ext.Ajax.on('beforerequest', fnMaskShow);
+		Ext.Ajax.on('requestcomplete', fnMaskHide);
+		Ext.Ajax.on('requestexception', fnMaskHide);
 
+		Ext.Ajax.request({
+			method: 'GET',
+			url: 'apkperorangan/duplikasi/' + xkdcabang + '/' + xnoapk,
+			success: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					msg: xtext.hasil,
+					title: 'MFAS'
+				});
+
+				// LOAD DATA
+				grupPerorangan.load();
+			},
+			failure: function(response) {
+				var xtext = Ext.decode(response.responseText);
+				Ext.MessageBox.show({
+					buttons: Ext.MessageBox.OK,
+					closable: false,
+					icon: Ext.MessageBox.INFO,
+					message: 'Saving Failed, Connection Failed!!',
+					title: 'MFAS'
+				});
+			}
+		});
+	}
+
+	// SHOW POPUP DATA PENDUKUNG
+	function fnShowDataPendukung(xkdcabang, xnoapk) {
+		// SET VALUE
+		Ext.getCmp('txtKodeCabang').setValue(xkdcabang);
+		Ext.getCmp('txtNoAPKTab1').setValue(xnoapk);
+		
+		winCari2.show();
+		winCari2.center();
 	}
 
 	// FUNCTIONS FIELD DISABLED
@@ -6670,7 +6946,9 @@ Ext.onReady(function() {
 					title: 'Data APK Perorangan',
 					xtype: 'fieldset',
 					items: [
-						gridPerorangan
+						gridPerorangan,
+						txtKodeCabang,
+						txtNoAPKTab1
 					]
 				}]
 			},{

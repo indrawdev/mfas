@@ -467,11 +467,33 @@ Ext.onReady(function() {
 				text: 'Add',
 				handler: function() {
 					var total = grupAksesCabang.getCount();
-
+					var xkode = Ext.getCmp('cboKodeCabang').getValue();
+					
 					var data = Ext.create('DataGridAksesCabang', {
 						fs_kode_cabang: Ext.getCmp('cboKodeCabang').getValue(),
 						fs_nama_cabang: Ext.getCmp('txtNamaCabang').getValue()
 					});
+
+					var store = gridAksesCabang.getStore();
+					var xlanjut = true;
+
+					store.each(function(record, idx) {
+						var xtext = record.get('fs_kode_cabang');
+						if (xtext == xkode) {
+							Ext.MessageBox.show({
+								buttons: Ext.MessageBox.OK,
+								closable: false,
+								icon: Ext.Msg.WARNING,
+								msg: 'Kode Cabang, sudah ada di List...',
+								title: 'MFAS'
+							});
+							xlanjut = false;
+						}
+					});
+
+					if (xlanjut === false) {
+						return;
+					}
 
 					var kode_cabang = Ext.getCmp('cboKodeCabang').getValue();
 					if (kode_cabang === '') {

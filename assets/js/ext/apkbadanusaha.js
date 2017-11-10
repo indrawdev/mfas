@@ -2390,10 +2390,32 @@ Ext.onReady(function() {
 				handler: function() {
 					var total = grupPerluasan.getCount();
 
+					var xjenis = Ext.getCmp('cboJnsPerluasan').getValue();
 					var data = Ext.create('DataGridPerluasan', {
 						fs_jenis_perluasan: Ext.getCmp('cboJnsPerluasan').getValue(),
 						fn_tahun_ke: Ext.getCmp('txtTenorPerluasan').getValue(),
 					});
+
+					var store = winGrid11.getStore();
+					var xlanjut = true;
+
+					store.each(function(record, idx) {
+						var xtext = record.get('fs_jenis_perluasan');
+						if (xtext == xjenis) {
+							Ext.MessageBox.show({
+								buttons: Ext.MessageBox.OK,
+								closable: false,
+								icon: Ext.Msg.WARNING,
+								msg: 'Jenis perluasan sudah ada di List...',
+								title: 'MFAS'
+							});
+							xlanjut = false;
+						}
+					});
+
+					if (xlanjut === false) {
+						return;
+					}
 
 					var fs_jenis_perluasan = Ext.getCmp('cboJnsPerluasan').getValue();
 					if (fs_jenis_perluasan === '') {
@@ -2653,6 +2675,7 @@ Ext.onReady(function() {
 				text: 'Add',
 				handler: function() {
 					var total = grupTransaksi.getCount();
+					var xkode = Ext.getCmp('cboKodeTransaksi').getValue();
 
 					var data = Ext.create('DataGridTransaksi', {
 						fs_kode_transaksi: Ext.getCmp('cboKodeTransaksi').getValue(),
@@ -2662,6 +2685,27 @@ Ext.onReady(function() {
 						fs_tagih_ke_konsumen: Ext.getCmp('cboDitagihKonsumen').getValue(),
 						fs_cair_ke_dealer: Ext.getCmp('cboCairKeDealer').getValue()
 					});
+
+					var store = winGrid12.getStore();
+					var xlanjut = true;
+
+					store.each(function(record, idx) {
+						var xtext = record.get('fs_kode_transaksi');
+						if (xtext == xkode) {
+							Ext.MessageBox.show({
+								buttons: Ext.MessageBox.OK,
+								closable: false,
+								icon: Ext.Msg.WARNING,
+								msg: 'Kode Transaksi sudah ada di List...',
+								title: 'MFAS'
+							});
+							xlanjut = false;
+						}
+					});
+
+					if (xlanjut === false) {
+						return;
+					}
 
 					var fs_kode_transaksi = Ext.getCmp('cboKodeTransaksi').getValue();
 					if (fs_kode_transaksi === '') {
